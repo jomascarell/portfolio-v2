@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import './tokens.css'
 import './globals.css'
 
 /* Phase 2 decision: the root layout owns everything that must survive a
@@ -6,8 +7,12 @@ import './globals.css'
    the footer and the skip link are persistent for free — that is what lets the
    shell feel continuous over real routes instead of a client-side pseudo-router.
 
+   tokens.css is imported before globals.css so the custom properties are
+   declared before anything could read them. It was generated from Figma once
+   (Gate 03) rather than by a pipeline, so unlike the original plan it IS
+   hand-editable — see its header for how to regenerate.
+
    Still to come:
-   - Phase 3: `import './tokens.css'` (generated from Figma, never hand-edited).
    - Phase 4: the typefaces, via next/font.
    - Phase 5: the fixed frame, the skip-link target and <Footer />. */
 
