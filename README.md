@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# portfolio-v2
 
-## Getting Started
+Joan Mascarell's portfolio. Next.js 16 (App Router), React 19, TypeScript strict, CSS Modules.
 
-First, run the development server:
+The Figma file is the source of truth for design; this repo is the build of it.
+
+## Running it
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run dev      # http://localhost:3000
+npm run build    # production build — every route is prerendered
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## How it is arranged
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Decisions that are easy to reverse are not documented here; decisions that are
+not, are.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Everything is static.** All content lives in typed modules under `lib/`, so
+  no route needs a request to render. `cacheComponents` is off, nothing reads
+  `searchParams`, and there is no `loading.tsx`.
+- **Real routes, with a shell that survives them.** The root layout owns the
+  persistent chrome and does not re-render on navigation. Continuity between
+  pages comes from React's `<ViewTransition>`, not from a client-side router.
+- **Three client components, and no more:** `ProjectDeck`, `JoanMark`,
+  `FooterReveal`. Everything else is a Server Component that ships no JS.
+- **Styles are scoped.** `app/globals.css` holds the reset, the token import
+  and the view-transition keyframes. Everything else is a `.module.css` sitting
+  next to its component.
+- **`app/tokens.css` is generated** from the Figma variables. Never hand-edit it.
 
-## Learn More
+## Before writing any code
 
-To learn more about Next.js, take a look at the following resources:
+Read `AGENTS.md`. This version of Next has breaking changes against most
+published examples — `params` is a Promise, `PageProps`/`LayoutProps` are
+generated globals, `middleware` is now `proxy` — and the authoritative docs are
+installed locally at `node_modules/next/dist/docs/`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Routes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Route              | Screen           |
+| ------------------ | ---------------- |
+| `/`                | landing          |
+| `/projects`        | the project deck |
+| `/projects/[slug]` | project detail   |
+| `/about`           | about            |
+| `/photos`          | photos           |
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+There is no `/contact` — contact was cut in the design; the email and social
+links live in the footer and on the about page.
