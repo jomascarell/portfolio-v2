@@ -16,7 +16,14 @@ import styles from './SocialIcons.module.css'
  * react-icons' read.cv brand mark here, but Figma names this slot
  * `icon-document` and draws a generic document — the CV is a file, not an
  * account on a service. A document glyph is therefore correct and the brand
- * mark was not. */
+ * mark was not.
+ *
+ * The hover handle is carried over from the retired build's contact page at
+ * the user's explicit request. Worth knowing when reading this against the
+ * design: Figma's SocialIcons has a Size axis only and defines NO hover state,
+ * while MailLink and NavLink in the same file both define one. So this
+ * behaviour is ahead of the design rather than derived from it — if the two
+ * are ever reconciled, this is the side that was written first. */
 
 const SIZES = {
   lg: styles.lg,
@@ -29,9 +36,6 @@ type SocialIconsProps = {
   className?: string
 }
 
-/* aria-label carries the accessible name because the glyph is decorative and
-   the visible text (the handle) is not rendered here. react-icons emits
-   aria-hidden on its <svg> by default, so the label is the only name. */
 const LINKS = [
   { key: 'github', label: 'GitHub', Icon: SiGithub },
   { key: 'linkedin', label: 'LinkedIn', Icon: FaLinkedin },
@@ -49,6 +53,11 @@ export default function SocialIcons({
     >
       {LINKS.map(({ key, label, Icon }) => (
         <li key={key}>
+          {/* aria-label carries the accessible name; react-icons marks its own
+              <svg> aria-hidden, so the label is the only name this link has.
+              The handle is aria-hidden on purpose — without it a screen reader
+              announces the same network twice, once from the label and once
+              from the visible text. */}
           <a
             className={styles.link}
             href={siteConfig.social[key].href}
@@ -56,6 +65,9 @@ export default function SocialIcons({
             rel="noopener noreferrer"
             aria-label={label}
           >
+            <span className={styles.handle} aria-hidden="true">
+              {siteConfig.social[key].handle}
+            </span>
             <Icon className={styles.glyph} />
           </a>
         </li>

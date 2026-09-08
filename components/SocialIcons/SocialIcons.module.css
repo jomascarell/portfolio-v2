@@ -26,10 +26,14 @@
 }
 
 .link {
-  display: block;
+  /* Anchor for .handle. Without this the label positions against the viewport
+     and turns up in the corner of the screen. */
+  position: relative;
+  display: inline-flex;
   width: var(--icon-size);
   height: var(--icon-size);
   color: inherit;
+  flex-shrink: 0;
   transition: color var(--duration-fast) var(--ease-standard);
 }
 
@@ -43,4 +47,121 @@
   display: block;
   width: 100%;
   height: 100%;
+}
+
+/* ---- The handle ----------------------------------------------------------
+
+   Ported from the retired build's contact page, with its reasoning intact.
+   Originally modelled on seiz.design's hover: a label carrying the username
+   appears under the icon, fading in while it travels a couple of pixels down.
+   There it is ~200ms; here the duration and curve come from the tokens.
+
+   Three things are done differently from that reference, all deliberate:
+
+   1. Centring. The reference uses `margin-left: -48px` — half the width it
+      expects the text to be — and therefore has to hand-correct it twice more
+      for the labels that are not that width. Here `translate(-50%)` does it,
+      which holds for any width and needs no touching when a handle changes.
+
+   2. `transform` is animated, not `top`. The reference transitions top from
+      90% to 120%, which recalculates position every frame. Here the travel
+      rides inside the same translate that does the centring, which the
+      compositor can animate on its own.
+
+   3. It opens on `:focus-visible` too. The reference answers only to the
+      mouse, so with a keyboard the label does not exist at all.
+
+   --handle-x / --handle-caret-x are the escape hatch for a row that ends up
+   against a viewport edge: the label of an edge icon would overflow, and with
+   no horizontal inset at sm there is no margin to absorb it. They exist so
+   that case is fixed by changing two values rather than duplicating the hover
+   and focus rules with a second translate. */
+
+.handle {
+  /* How far the label shifts from its own left edge (-50% = centred over the
+     icon) and where the caret points. */
+  --handle-x: -50%;
+  --handle-caret-x: 50%;
+
+  position: absolute;
+  /* The gap against the icon comes from the margin, not `top`, so that `top`
+     stays a clean 100% of the icon's height. */
+  top: 100%;
+  left: 50%;
+  margin-block-start: var(--space-sm);
+  z-index: 1;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-neutral-100);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  /* The body's line-height would inflate the box; here the padding sets the
+     height. */
+  line-height: 1;
+  /* Without this "@joanmascarelljuan" breaks onto two lines inside the icon. */
+  white-space: nowrap;
+  /* Not selectable text: it is a visual aid. And while hidden it would still
+     be selectable despite opacity 0. */
+  user-select: none;
+
+  /* Closed state. `visibility` as well as `opacity` so it does not take part
+     in find-on-page while it cannot be seen. */
+  visibility: hidden;
+  opacity: 0;
+  transform: translate(var(--handle-x), -4px);
+  /* visibility does not interpolate: it is delayed to the end so the fade has
+     time to finish on the way out. On the way in, the :hover rule pulls it
+     forward to 0s. */
+  transition:
+    opacity var(--duration-base) var(--ease-standard),
+    transform var(--duration-base) var(--ease-standard),
+    visibility 0s var(--ease-standard) var(--duration-base);
+}
+
+/* The caret. A triangle by the border trick: a 0x0 box with only the bottom
+   border coloured. Anchored to --handle-caret-x rather than a fixed 50%
+   because it has to keep pointing at the CENTRE OF THE ICON, which is not
+   always the centre of the label. */
+.handle::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: var(--handle-caret-x);
+  transform: translateX(-50%);
+  border: var(--space-xs) solid transparent;
+  border-bottom-color: var(--color-neutral-100);
+}
+
+/* Keyboard is deliberately outside the `hover` query: a laptop with a touch
+   screen resolves (hover: none) and that would leave the keyboard with no
+   label at all. */
+.link:focus-visible .handle {
+  visibility: visible;
+  opacity: 1;
+  transform: translate(var(--handle-x), 0);
+  transition-delay: 0s;
+}
+
+/* On a touch device :hover sticks after a tap and the label would not leave
+   until something else was touched. */
+@media (hover: hover) {
+  .link:hover .handle {
+    visibility: visible;
+    opacity: 1;
+    transform: translate(var(--handle-x), 0);
+    transition-delay: 0s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Drops the travel so the label is already in place. The retired build's
+     note here said "keep the fade, drop the travel", and that is no longer
+     true in this project: globals.css carries a blanket
+     `transition-duration: 0.01ms !important` under the same query, so the fade
+     does not survive either and the label simply appears. That blanket is
+     deliberate — a component that forgets is still covered — so this rule is
+     the belt to its braces, not the thing doing the work. */
+  .handle {
+    transform: translate(var(--handle-x), 0);
+  }
 }
