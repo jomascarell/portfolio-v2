@@ -22,6 +22,18 @@ body {
   min-height: 100%;
   margin: 0;
   -webkit-font-smoothing: antialiased;
+
+  /* Phase 4. --font-figtree is published by next/font in the root layout and
+     already carries the metric-adjusted fallback and the system stack, so this
+     is the whole family declaration — nothing to append.
+
+     The rest is the document default every component inherits from and then
+     overrides: lg is the default body size in this scale (18/30), and the
+     ramp's fractional 20.2px belongs to the md tier, not here. */
+  font-family: var(--font-figtree);
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-lg);
+  font-weight: var(--font-weight-regular);
 }
 
 h1,
