@@ -1,0 +1,32 @@
+.skipLink {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+
+  /* Clipped rather than hidden: still focusable, still announced. */
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-surface-inverse);
+  color: var(--color-text-inverse);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
+  text-decoration: none;
+}
+
+/* :focus-visible rather than :focus so a mouse user who happens to click it
+   does not get a panel they did not ask for. */
+.skipLink:focus-visible {
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip-path: none;
+  margin: var(--space-sm);
+  outline: 2px solid var(--color-text-accent);
+  outline-offset: 2px;
+}

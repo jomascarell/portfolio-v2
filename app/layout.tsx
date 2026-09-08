@@ -1,5 +1,8 @@
 import type { Metadata } from 'next'
 import { Figtree } from 'next/font/google'
+import Footer from '@/components/Footer/Footer'
+import SkipLink, { SKIP_TARGET_ID } from '@/components/SkipLink/SkipLink'
+import shell from './layout.module.css'
 import './tokens.css'
 import './globals.css'
 
@@ -51,8 +54,10 @@ const figtree = Figtree({
    (Gate 03) rather than by a pipeline, so unlike the original plan it IS
    hand-editable — see its header for how to regenerate.
 
-   Still to come:
-   - Phase 5: the fixed frame, the skip-link target and <Footer />. */
+   Phase 5 added the persistent frame, the skip-link target and <Footer />.
+   See layout.module.css for why the frame lives in the layout, and
+   components/Footer for why the footer renders in flow rather than as the
+   reveal the design also shows. */
 
 export const metadata: Metadata = {
   // The retired build shipped "Jan Mascarell" here for months. It is Joan.
@@ -63,7 +68,17 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="en" className={figtree.variable}>
-      <body>{children}</body>
+      <body>
+        <div className={shell.shell}>
+          <SkipLink />
+          {/* tabIndex={-1} so the skip link can actually move focus here;
+              without it the jump changes the URL and leaves focus behind. */}
+          <main className={shell.content} id={SKIP_TARGET_ID} tabIndex={-1}>
+            {children}
+          </main>
+          <Footer />
+        </div>
+      </body>
     </html>
   )
 }

@@ -1,0 +1,46 @@
+/* The row sets one --icon-size and both the box and the glyph read it, so a
+   size variant changes one value rather than two that can disagree. */
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px; /* Figma: SocialIcons itemSpacing. Not on the space scale — it
+                sits between --space-md (16) and --space-lg (24). Left as the
+                literal rather than rounded to a token, because rounding it
+                would silently move the design. */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.lg {
+  --icon-size: var(--size-icon-lg);
+}
+
+.md {
+  --icon-size: var(--size-icon-md);
+}
+
+.sm {
+  --icon-size: var(--size-icon-sm);
+}
+
+.link {
+  display: block;
+  width: var(--icon-size);
+  height: var(--icon-size);
+  color: inherit;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.link:hover {
+  color: var(--color-text-accent);
+}
+
+/* Both dimensions set explicitly. width alone lets the intrinsic height win
+   and the row grows by a pixel or two at some sizes. */
+.glyph {
+  display: block;
+  width: 100%;
+  height: 100%;
+}

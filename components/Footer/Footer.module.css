@@ -1,0 +1,88 @@
+/* Column spans are read from the Figma component (Breakpoint=lg, 236:2623).
+   The grid is 12 columns at every breakpoint; what changes is which columns
+   each block occupies. */
+
+.footer {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-rows: minmax(0, 2fr) minmax(0, 1fr);
+  column-gap: var(--space-sm);
+  row-gap: var(--space-lg);
+
+  padding-block: var(--space-lg);
+  padding-inline: var(--container-inset);
+
+  /* Figma binds this fill to color/text/primary. Both resolve to #292929, but
+     a text role on a surface is a mis-binding in the file, not an intent —
+     --color-surface-inverse is the same value in the correct role, and its
+     partner --color-text-inverse is what makes the contrast pair explicit. */
+  background: var(--color-surface-inverse);
+  color: var(--color-text-inverse);
+
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
+  letter-spacing: var(--letter-spacing-normal);
+}
+
+.intro {
+  grid-column: 1 / span 3;
+  grid-row: 1;
+  align-self: start;
+}
+
+.mail {
+  grid-column: 6 / span 3;
+  grid-row: 1;
+  align-self: start;
+}
+
+.social {
+  grid-column: 10 / span 3;
+  grid-row: 1;
+  align-self: start;
+  justify-content: flex-end;
+}
+
+/* The only text in the footer that is not full white. Figma has it at 80%,
+   which has no token — the neutral ramp has no alpha steps. Written as a
+   literal so it is visibly not a token rather than being rounded onto one. */
+.changelog {
+  grid-column: 1 / span 2;
+  grid-row: 2;
+  color: rgb(255 255 255 / 0.8);
+}
+
+.language {
+  grid-column: 3 / span 2;
+  grid-row: 2;
+}
+
+.credits {
+  grid-column: 9 / span 4;
+  grid-row: 2;
+  text-align: right;
+}
+
+/* Below lg the twelve columns stop earning their keep — the three row-1 blocks
+   cannot sit side by side at 768 and under. Figma's md and sm variants stack
+   them, so the grid collapses to a single column and the row assignments go
+   with it. */
+@media (max-width: 1023px) {
+  .footer {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+    row-gap: var(--space-lg);
+  }
+
+  .intro,
+  .mail,
+  .social,
+  .changelog,
+  .language,
+  .credits {
+    grid-column: 1;
+    grid-row: auto;
+    text-align: left;
+    justify-content: flex-start;
+  }
+}

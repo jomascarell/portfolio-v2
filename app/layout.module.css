@@ -1,0 +1,42 @@
+/* The persistent frame.
+ *
+ * Phase 2 settled that this is a real-routes app with a *visually* persistent
+ * shell, not a client-side pseudo-router. This file is what makes the shell
+ * visually persistent: the layout does not re-render across navigations, so
+ * the frame, the skip link and the footer are the same DOM nodes on every
+ * route, and nothing here has to be re-created or re-animated on arrival.
+ *
+ * The inset is the whole frame at this stage. --container-inset already
+ * resolves the breakpoint step for us — 32px at sm and md, 64px from 1024 up —
+ * so this reads one value and the step lives in tokens.css, in one place. */
+
+.shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh; /* svh, not vh: on mobile the toolbars make 100vh taller
+                         than the visible viewport, which leaves a permanent
+                         sliver of scroll below the fold on a screen that is
+                         supposed to be exactly one screen. */
+  background: var(--color-surface-page);
+  color: var(--color-text-primary);
+}
+
+/* The inset applies to page content only. The footer is full-bleed and carries
+   its own inset internally, which is why it sits outside this. */
+.content {
+  flex: 1;
+  padding-inline: var(--container-inset);
+}
+
+/* The skip link's target. Focusing a container that is not natively focusable
+   is a no-op in several browsers unless it can take focus, so it gets
+   tabindex="-1" in the markup; this removes the focus ring that would then
+   appear on a click, while leaving it for real keyboard focus. */
+.content:focus {
+  outline: none;
+}
+
+.content:focus-visible {
+  outline: 2px solid var(--color-text-accent);
+  outline-offset: -2px;
+}
