@@ -1,0 +1,41 @@
+import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
+import { getProject, projects } from '@/lib/projects'
+
+/* Project detail. Phase 6 builds the template, Phase 8 fills it.
+
+   dynamicParams = false: generateStaticParams enumerates every project, so a
+   slug outside that list is a 404 rather than an on-demand render. It keeps the
+   route fully static — and it is also incompatible with cacheComponents, which
+   is one more reason that flag stays off (Phase 2 decision). */
+
+export const dynamicParams = false
+
+export function generateStaticParams() {
+  return projects.map((project) => ({ slug: project.slug }))
+}
+
+export async function generateMetadata(
+  props: PageProps<'/projects/[slug]'>,
+): Promise<Metadata> {
+  const { slug } = await props.params
+  const project = getProject(slug)
+
+  return { title: `${project?.title ?? 'Project'} — Joan Mascarell` }
+}
+
+export default async function ProjectDetailPage(
+  props: PageProps<'/projects/[slug]'>,
+) {
+  // params is a Promise in Next 16 — it has to be awaited, not destructured.
+  const { slug } = await props.params
+  const project = getProject(slug)
+
+  if (!project) notFound()
+
+  return (
+    <main>
+      <h1>{project.title}</h1>
+    </main>
+  )
+}
