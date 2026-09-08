@@ -1,0 +1,381 @@
+/* Design tokens — generated from Figma on 2026-09-08.
+
+   Source: file MjXkk2CuOKS0mPLBPItnuM, page "Tokens" (node 148:2).
+   103 variables across 9 collections, read through the Figma plugin API and
+   written out mechanically, so both the values and the alias structure match
+   the file exactly instead of being retyped by eye.
+
+   GENERATED ONCE — THERE IS NO PIPELINE. (Gate 03 decision.)
+   Reading Figma variables needs an authenticated Figma session, which CI does
+   not have; the REST variables endpoint is Enterprise-only. A generator that
+   can only run when a human is present is not a pipeline, so we did not build
+   one. This is now an ordinary source file: edit it by hand when you need to,
+   and when Figma moves, ask Claude to re-read the file and regenerate it.
+
+   Drift protection is therefore a discipline, not a gate — regenerate, then
+   `git diff`. That is an accepted risk, taken deliberately: the token system
+   was audited and frozen before this file existed, so the expected rate of
+   change is close to zero. The failure it replaces was different in kind — the
+   retired build drifted because the design was still moving while code was
+   being written.
+
+   Structure mirrors the Figma collections:
+     Primitives  raw values. Do not reference these from components.
+     Semantic    roles. This is the layer components use.
+     System      layout and motion.
+
+   Comments carry the Figma description wherever that description records a
+   decision. Mechanical ramps get one group comment rather than twenty-four
+   identical lines. Two unit conversions happen on the way out of Figma and are
+   noted where they occur: letter-spacing (percent to em) and the alias
+   structure (Figma aliases become var() references). */
+
+:root {
+  /* ---- Primitives / Color -------------------------------------------------
+
+     Two ramps, 24 steps. Every one of these was "Black Haze/N" or "Malibu/N"
+     before the audit renamed them by role rather than by Figma's colour-name
+     generator. Primitives are never referenced directly from a component —
+     reach for a Semantic role below, so that a theme change stays a change to
+     one alias. */
+
+  --color-neutral-0: #ffffff;
+  --color-neutral-50: #f7f7f7;
+  --color-neutral-100: #efefef;
+  --color-neutral-200: #dcdcdc;
+  --color-neutral-300: #bdbdbd;
+  --color-neutral-400: #989898;
+  --color-neutral-500: #7c7c7c;
+  --color-neutral-600: #656565;
+  --color-neutral-700: #525252;
+  --color-neutral-800: #464646;
+  --color-neutral-900: #3d3d3d;
+  --color-neutral-950: #292929;
+  --color-neutral-1000: #000000;
+
+  --color-blue-50: #f1f8fe;
+  --color-blue-100: #e1f0fd;
+  --color-blue-200: #bde2fa;
+  --color-blue-300: #6bc0f4;
+  --color-blue-400: #41afef;
+  --color-blue-500: #1996de;
+  --color-blue-600: #0c77bd;
+  --color-blue-700: #0b5f99;
+  --color-blue-800: #0d517f;
+  --color-blue-900: #114469;
+  --color-blue-950: #0b2b46;
+
+  /* ---- Primitives / Space -------------------------------------------------
+
+     One scale for gap AND padding alike — the Figma descriptions say so on
+     every step, which is what stops a second, parallel padding scale from
+     appearing later. */
+
+  --space-2xs: 2px; /* Hairline separation — icon-to-label, badge internals. */
+  --space-xs: 4px; /* Tight pairing inside a single control. */
+  --space-sm: 8px; /* Related items inside a block. */
+  --space-md: 16px; /* Default gap between elements in a group. */
+  --space-lg: 24px; /* Between groups inside a section. */
+  --space-xl: 32px; /* Section padding; container inset at sm and md. */
+  --space-2xl: 48px; /* Between sections. */
+  --space-3xl: 64px; /* Container inset at lg and above; nav band height. */
+  --space-4xl: 96px; /* Major page-level separation. */
+
+  /* ---- Primitives / Type — weight ---------------------------------------- */
+
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-weight-black: 900;
+
+  /* ---- Primitives / Type — size ------------------------------------------
+
+     Rebuilt on whole pixels by the audit. The old scale's trap is gone: it
+     named 16px "text-base" and 18px "text", so "base" was SMALLER than the
+     unqualified name. Here md is 16 and lg is 18, and lg is the default body
+     size. Old values in parentheses, kept so an old screen can be traced. */
+
+  --font-size-xs: 12px; /* Tooltips and the smallest UI labels. */
+  --font-size-sm: 14px; /* UI labels, meta rows, captions. */
+  --font-size-md: 16px; /* Secondary body copy. (was 16, "text-base") */
+  --font-size-lg: 18px; /* Default body copy. (was 18, "text") */
+  --font-size-xl: 28px; /* Card and section titles. (was 28.48) */
+  --font-size-2xl: 46px; /* Page headings and the wordmark. (was 46.08) */
+  --font-size-3xl: 74px; /* Display. Defined, not currently used. (was 74.56) */
+  --font-size-4xl: 120px; /* Display XL. Defined, not currently used. (was 120.64) */
+
+  /* ---- Primitives / Type — line height -----------------------------------
+
+     Absolute pixels, not multipliers: Figma resolves line-height variables in
+     pixels, and keeping the same unit here is what makes the two comparable at
+     a glance. Each step is paired with one font-size step. */
+
+  --line-height-xs: 18px; /* with font-size-xs (12px) — 1.50 */
+  --line-height-sm: 20px; /* with font-size-sm (14px) — 1.43 */
+
+  /* 20.2px with font-size-md (16px) — 1.26. The body rhythm, confirmed
+     2026-09-08, and the one fractional value in the ramp. Carried over
+     verbatim from the retired build's text-base/font-Regular rather than
+     rounded, so the number matches that build exactly. Two earlier values are
+     superseded and must not come back: 27.2px (shipped build) and 28px (this
+     Figma file, before the decision). 1.26 sits close to the ~1.2 default the
+     rebuild removed — this is the number to revisit if paragraphs read
+     cramped in the Phase 11 audit. */
+  --line-height-md: 20.2px;
+
+  /* 28px, also with font-size-md (16px) — 1.75. The looser setting for the
+     16px tier, split out so heading/h4 could keep its 28px when body
+     standardised on 20.2px. A short heading wants air a paragraph does not. */
+  --line-height-md-loose: 28px;
+
+  --line-height-lg: 30px; /* with font-size-lg (18px) — 1.67 */
+  --line-height-xl: 36px; /* with font-size-xl (28px) — 1.29 */
+  --line-height-2xl: 52px; /* with font-size-2xl (46px) — 1.13 */
+  --line-height-3xl: 80px; /* with font-size-3xl (74px) — 1.08 */
+  --line-height-4xl: 128px; /* with font-size-4xl (120px) — 1.07 */
+
+  /* ---- Primitives / Type — letter spacing --------------------------------
+
+     UNIT CONVERSION: Figma stores these as percentages (-2, 0, 1.4); CSS has
+     no percentage letter-spacing, so they are emitted as em, which is the same
+     proportional quantity. 1.4% of the 16px body size is 0.224px, which is
+     exactly what the retired build hardcoded. */
+
+  --letter-spacing-tight: -0.02em; /* -2%. Display sizes (xl and up), where default tracking reads loose. */
+  --letter-spacing-normal: 0em; /* 0%. Body and UI text. The default. */
+  --letter-spacing-wide: 0.014em; /* +1.4%. Small uppercase labels only. */
+
+  /* ---- Primitives / Radius ----------------------------------------------- */
+
+  --radius-sm: 4px; /* Logo marks, project covers, gallery photos. */
+  --radius-md: 8px; /* Default: controls, badges, inline chips. */
+  --radius-lg: 16px; /* Cards and full-bleed media surfaces. */
+
+  /* ---- Primitives / Size ------------------------------------------------- */
+
+  --size-icon-sm: 16px; /* Inline icons sitting alongside text. */
+  --size-icon-md: 24px; /* Default — nav and menu. */
+  --size-icon-lg: 32px; /* Large — social row in the footer. */
+
+  /* ---- Primitives / Shadow -----------------------------------------------
+
+     Six steps, stored in Figma as ready-made CSS strings alongside matching
+     effect styles, so the canvas and the stylesheet cannot disagree about
+     them. Each step is four stacked DROP_SHADOWs, ordered nearest layer first,
+     which is how Figma stacks them.
+
+     The ink is #101010 in every layer of every step — a warm near-black that
+     is deliberately neither pure black nor --color-neutral-950 (#292929).
+
+     They are box-shadow, never filter: drop-shadow(). Not interchangeable —
+     `filter` creates a backdrop root, and the retired build documented what
+     that breaks (it cost that build its blur scope). box-shadow creates none.
+
+     The ramp is a state ramp, not just a size ramp:
+       xs   flat — flush surfaces: inputs, list rows, table cells
+       sm   press — card pushed toward the page. Below rest, on purpose
+       md   rest — the default resting card, the landing-card baseline
+       lg   hover — card lifts under the cursor. Pairs with md
+       xl   drag — card carried above the surface while moving
+       2xl  overlay — modals, popovers, detached panels */
+
+  --shadow-xs:
+    0 0px 0.1px rgba(16, 16, 16, 0.05), 0 0.5px 0.5px rgba(16, 16, 16, 0.02),
+    0 2px 2px rgba(16, 16, 16, 0.04);
+  --shadow-sm:
+    0 0px 0.15px rgba(16, 16, 16, 0.06), 0 1px 0.5px rgba(16, 16, 16, 0.03),
+    0 3px 1.5px rgba(16, 16, 16, 0.03), 0 8px 5px rgba(16, 16, 16, 0.06);
+  --shadow-md:
+    0 0px 0.2px rgba(16, 16, 16, 0.08), 0 2.5px 1.2px rgba(16, 16, 16, 0.04),
+    0 6.6px 3.3px rgba(16, 16, 16, 0.04), 0 23px 13px rgba(16, 16, 16, 0.08);
+  --shadow-lg:
+    0 0px 0.3px rgba(16, 16, 16, 0.1), 0 4px 2px rgba(16, 16, 16, 0.06),
+    0 10px 5px rgba(16, 16, 16, 0.06), 0 30px 18px rgba(16, 16, 16, 0.12);
+  --shadow-xl:
+    0 0px 0.4px rgba(16, 16, 16, 0.12), 0 6px 3px rgba(16, 16, 16, 0.07),
+    0 16px 8px rgba(16, 16, 16, 0.07), 0 44px 26px rgba(16, 16, 16, 0.16);
+  --shadow-2xl:
+    0 0px 0.5px rgba(16, 16, 16, 0.14), 0 9px 4.5px rgba(16, 16, 16, 0.08),
+    0 24px 12px rgba(16, 16, 16, 0.08), 0 64px 38px rgba(16, 16, 16, 0.2);
+
+  /* ---- Semantic / Color ---------------------------------------------------
+
+     Roles, not values. Components reference this block and nothing above it.
+     Every entry is an alias in Figma and stays an alias here — that
+     indirection is the whole point: a dark theme, or a future tinted ground,
+     changes these fifteen lines and no others.
+
+     Figma holds one mode, "Light". The collection is structured for dark but
+     no dark values exist yet, so none are invented here — see the note at the
+     foot of this file. */
+
+  --color-text-primary: var(--color-neutral-950); /* Body and heading text. */
+  /* Supporting copy and meta text. */
+  --color-text-secondary: var(--color-neutral-600);
+  /* De-emphasised: timestamps, disabled labels. */
+  --color-text-muted: var(--color-neutral-400);
+
+  /* Lowest-emphasis text: the resting state of project-list rows, which sit
+     back until hovered. Lighter than --color-text-muted on purpose. */
+  --color-text-subtle: var(--color-neutral-200);
+
+  --color-text-accent: var(--color-blue-500); /* Links and accent marks. */
+
+  /* Hover/active for accent text. Currently bound to nothing — the hover
+     states it exists for have not been built yet (Phase 9). */
+  --color-text-accent-hover: var(--color-blue-800);
+
+  /* Text on a dark surface — the footer band. */
+  --color-text-inverse: var(--color-neutral-0);
+
+  /* Page ground. DECIDED: the site moves to a fully white ground. The retired
+     build used #f8f8f8 here with white reserved for a raised card; that split
+     is retired with it, and #f8f8f8 must not reappear. */
+  --color-surface-page: var(--color-neutral-0);
+
+  /* A surface above the page ground: cards, menu sheet, tooltips. Same value
+     as --color-surface-page BY DESIGN — on a white ground, elevation is
+     carried by shadow, not by a change of fill. The role stays separate so a
+     theme change only has to touch one alias. Do not "simplify" these two
+     into one token. */
+  --color-surface-raised: var(--color-neutral-0);
+
+  /* Chips, inactive nav pills, inset wells. */
+  --color-surface-subtle: var(--color-neutral-50);
+
+  /* Hover ground for quiet controls sitting on --color-surface-subtle —
+     nav pills and the breadcrumb. */
+  --color-surface-subtle-hover: var(--color-neutral-100);
+
+  /* Dark surface — the footer band. */
+  --color-surface-inverse: var(--color-neutral-950);
+
+  /* Accent ground for the current section marker. Mirrors calebwu.ca, where
+     the active pagination thumb takes the accent while the rest sit at
+     neutral/200. */
+  --color-surface-accent: var(--color-blue-500);
+
+  /* Default hairline border and divider. */
+  --color-border-default: var(--color-neutral-200);
+  /* Focus rings and active outlines. */
+  --color-border-strong: var(--color-neutral-400);
+
+  /* ---- System / Layout ----------------------------------------------------
+
+     CAUTION: the four breakpoints are documentation, not machinery. CSS cannot
+     read a custom property inside a media query — `@media (min-width:
+     var(--breakpoint-lg))` does not work and fails silently. Write the literal
+     in the query and keep these as the record of what the literal means. */
+
+  --breakpoint-sm: 0px; /* Base. Everything below md. Canvases 412 and 640 both land here. */
+  --breakpoint-md: 768px; /* Tablet. */
+  --breakpoint-lg: 1024px; /* Desktop — where layout structure actually changes. */
+  --breakpoint-xl: 1440px; /* Wide desktop. Replaces the old 1280/1362/1448 spread. */
+
+  /* Horizontal page inset at sm AND md. The 8-column md grid uses a 32px
+     offset, so the inset does NOT step up until lg. Confirmed 2026-09-08:
+     tablet is always 32px. */
+  --container-inset-sm: var(--space-xl);
+
+  /* Horizontal page inset at lg and xl, matching the 12-column grid's offset.
+     Confirmed 2026-09-08: desktop is always 64px. The retired build stepped up
+     at 768 instead — that build was wrong, not these grids. */
+  --container-inset-lg: var(--space-3xl);
+
+  /* Nav band height — also the scroll-anchor offset and the gap the menu
+     reserves. One value for all three, which is why anchors land correctly. */
+  --nav-height: var(--space-3xl);
+
+  /* ---- System / Motion ----------------------------------------------------
+
+     Durations and curves. The first three and ease/standard are ours; the rest
+     were READ from calebwu.ca rather than chosen, which is why the scale is
+     not a neat progression. Rule of use: if something moves, its timing comes
+     from here. */
+
+  --duration-fast: 160ms; /* Small state changes: hover, focus ring, icon swaps. */
+  --duration-base: 240ms; /* Default. Most transitions. */
+  --duration-slow: 320ms; /* Large surfaces entering or leaving. */
+
+  /* 500ms. The footer reveal — a full-width bar translating its own height.
+     Read from the reference, which runs transform 500ms. Longer than
+     --duration-slow because the surface is larger than anything
+     --duration-slow was written for. */
+  --duration-reveal: 500ms;
+
+  /* 700ms. A card entering or changing in the project deck. The slowest value
+     in the system, and deliberately slower than the text inside the card
+     (450ms): the eye follows the surface, and the content should be settled by
+     the time it arrives. */
+  --duration-deck: 700ms;
+
+  /* The system curve. Everything that moves uses this unless it is
+     scroll-driven. */
+  --ease-standard: cubic-bezier(0.4, 0, 0.6, 1);
+
+  /* Scroll-linked motion only. A curve on top of scroll makes content appear
+     to brake when the scroll does not. */
+  --ease-scroll: linear;
+
+  /* Entrances and reveals — anything appearing for the first time. Read from
+     the reference's :root, where it is --ease-fast and carries every entry
+     transition on the site. Distinct from --ease-standard, which stays the
+     curve for state changes on things already on screen. */
+  --ease-entrance: cubic-bezier(0.62, 0.61, 0.02, 1);
+
+  /* Passes its target and settles back. For pills and badges that expand — the
+     reference uses it on exactly one width transition, which is the right
+     dose. Never for entrances, and never on a large surface: overshoot on
+     something page-sized reads as a bug. */
+  --ease-overshoot: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ---- Derived ------------------------------------------------------------
+
+     NOT FROM FIGMA. One resolved value so components can write
+     `padding-inline: var(--container-inset)` without repeating the breakpoint
+     logic. It resolves the two System / Layout insets at the lg breakpoint —
+     32px at sm and md, 64px from 1024 up. The media query is at the bottom of
+     this file.
+
+     There is deliberately NO --container-max. 1280px is a breakpoint, not a
+     container cap, and the retired build's file warned explicitly against
+     using it as a max-width because the frames above 1280 keep stretching to
+     the viewport edge. Confirmed 2026-09-08. Do not add one. */
+  --container-inset: var(--container-inset-sm);
+
+  /* ---- Held outside the system --------------------------------------------
+
+     Values the retired build recorded as loose hexes and that have no Figma
+     variable. Carried here so they are not lost, and marked so they are not
+     mistaken for tokens.
+
+     The wordmark ink. Neither --color-neutral-950 (#292929) nor black. It was
+     annotated as a loose value in the retired build and is still one. FLAG:
+     this is the one open question in this file — either promote it to a Figma
+     variable, or decide the wordmark should use --color-text-primary and
+     delete this. Do not let it quietly become a third text colour. */
+  --color-wordmark-ink: #181614;
+}
+
+/* The container inset steps up at lg — 1024, not 768. The literal is repeated
+   here because a media query cannot read --breakpoint-lg; see the caution in
+   System / Layout above. */
+@media (min-width: 1024px) {
+  :root {
+    --container-inset: var(--container-inset-lg);
+  }
+}
+
+/* ---- Adding a dark theme later -------------------------------------------
+
+   Everything needed is already in place structurally: redefine only the
+   Semantic / Color block, pointing the same fifteen role names at different
+   primitive steps. Nothing above that block changes, and no component changes.
+
+   It is not written here because Figma has no dark values yet — the Semantic
+   collection holds a single mode named "Light". Inventing them in CSS would
+   put the design decision in the wrong file and guarantee the drift this
+   system exists to prevent. Add the mode in Figma first, then regenerate. */
