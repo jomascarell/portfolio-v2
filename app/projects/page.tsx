@@ -15,13 +15,13 @@ export const metadata: Metadata = {
 
 export default function ProjectsPage() {
   return (
-    <main>
+    <>
       <h1>Projects</h1>
       <ul>
         {projects.map((project) => (
           <li key={project.slug}>{project.title}</li>
         ))}
       </ul>
-    </main>
+    </>
   )
 }

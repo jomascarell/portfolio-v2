@@ -4,8 +4,8 @@
 
 export default function LandingPage() {
   return (
-    <main>
+    <>
       <h1>Joan Mascarell</h1>
-    </main>
+    </>
   )
 }

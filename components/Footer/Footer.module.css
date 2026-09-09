@@ -1,0 +1,178 @@
+/* Three breakpoints, three genuinely different grids — not one grid reflowing.
+   Read from the Figma variants (236:2623 lg, 236:2746 md, 236:2752 sm):
+
+     lg  >= 1024   12 cols x 2 rows   inset 64   intro on row 1
+     md  768-1023   8 cols x 3 rows   inset 32   intro spans rows 1-2
+     sm  < 768      4 cols x 5 rows   inset  0   intro absent, everything centred
+
+   Written mobile-first so each tier adds to the one below it, matching the
+   direction tokens.css already steps --container-inset in. The breakpoint
+   literals are repeated here because a media query cannot read
+   --breakpoint-md/lg — see the caution in tokens.css System / Layout.
+
+   The column spans are the only description of this layout anywhere in the
+   codebase, which is why each tier is written out in full rather than patched
+   from the previous one. */
+
+.footer {
+  display: grid;
+  column-gap: var(--space-sm);
+  row-gap: var(--space-xl);
+
+  background: var(--color-surface-inverse);
+  color: var(--color-text-inverse);
+
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
+  letter-spacing: var(--letter-spacing-normal);
+}
+
+/* ---- sm: < 768 ----------------------------------------------------------
+   Four columns, five rows, and the only tier that goes edge to edge — Figma
+   gives it padding [32, 0, 32, 0], so no horizontal inset at all. The centred
+   items sit in columns 2-3 of 4 rather than being centred by alignment, which
+   is what keeps them on the same axis as each other.
+
+   Note the visual order is NOT the DOM order here: language comes before
+   changelog on screen. Both are static text, so nothing interactive is
+   reordered and the tab sequence is unaffected. */
+
+.footer {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: repeat(5, min-content);
+  padding-block: var(--space-xl);
+  padding-inline: 0;
+}
+
+/* The sm variant drops this copy entirely — it is not hidden in the design,
+   it is absent. display:none rather than visual-only hiding, so it is gone
+   for screen readers too and the footer reads the same way it looks. */
+.intro {
+  display: none;
+}
+
+.mail {
+  grid-column: 1 / span 4;
+  grid-row: 1;
+  text-align: center;
+}
+
+.social {
+  grid-column: 2 / span 2;
+  grid-row: 2;
+  justify-content: center;
+}
+
+.language {
+  grid-column: 2 / span 2;
+  grid-row: 3;
+  text-align: center;
+}
+
+.changelog {
+  grid-column: 2 / span 2;
+  grid-row: 4;
+  text-align: center;
+  /* The only text in the footer that is not full white. Figma has it at 80%,
+     which has no token — the neutral ramp carries no alpha steps. Left as a
+     literal so it reads as deliberately outside the system. */
+  color: rgb(255 255 255 / 0.8);
+}
+
+.credits {
+  grid-column: 1 / span 4;
+  grid-row: 5;
+  text-align: center;
+}
+
+/* ---- md: 768-1023 -------------------------------------------------------
+   Eight columns, three rows. The intro returns and spans both of the first
+   two rows, which is what pushes the meta row down to row 3. --container-inset
+   is already 32px below 1024, so the inset needs no literal here. */
+
+@media (min-width: 768px) {
+  .footer {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    grid-template-rows: repeat(3, min-content);
+    padding-block: var(--space-lg);
+    padding-inline: var(--container-inset);
+  }
+
+  .intro {
+    display: block;
+    grid-column: 1 / span 2;
+    grid-row: 1 / span 2;
+    align-self: start;
+  }
+
+  .mail {
+    grid-column: 4 / span 3;
+    grid-row: 1;
+    text-align: left;
+  }
+
+  .social {
+    grid-column: 7 / span 2;
+    grid-row: 1;
+    justify-content: flex-end;
+  }
+
+  .changelog {
+    grid-column: 1 / span 2;
+    grid-row: 3;
+    text-align: left;
+  }
+
+  .language {
+    grid-column: 3 / span 2;
+    grid-row: 3;
+    text-align: left;
+  }
+
+  .credits {
+    grid-column: 6 / span 3;
+    grid-row: 3;
+    text-align: right;
+  }
+}
+
+/* ---- lg: >= 1024 --------------------------------------------------------
+   Twelve columns, two rows. The intro drops back to a single row and the meta
+   row moves up to row 2. --container-inset steps to 64px on the same query. */
+
+@media (min-width: 1024px) {
+  .footer {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-rows: minmax(0, 2fr) minmax(0, 1fr);
+  }
+
+  .intro {
+    grid-column: 1 / span 3;
+    grid-row: 1;
+  }
+
+  .mail {
+    grid-column: 6 / span 3;
+    grid-row: 1;
+  }
+
+  .social {
+    grid-column: 10 / span 3;
+    grid-row: 1;
+  }
+
+  .changelog {
+    grid-column: 1 / span 2;
+    grid-row: 2;
+  }
+
+  .language {
+    grid-column: 3 / span 2;
+    grid-row: 2;
+  }
+
+  .credits {
+    grid-column: 9 / span 4;
+    grid-row: 2;
+  }
+}
