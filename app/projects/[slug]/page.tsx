@@ -34,8 +34,8 @@ export default async function ProjectDetailPage(
   if (!project) notFound()
 
   return (
-    <main>
+    <>
       <h1>{project.title}</h1>
-    </main>
+    </>
   )
 }

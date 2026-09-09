@@ -71,7 +71,16 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       <body>
         <div className={shell.shell}>
           <SkipLink />
-          {/* tabIndex={-1} so the skip link can actually move focus here;
+          {/* The layout owns the document's ONE <main>, so pages must not
+              render their own — they return a fragment. Every route did render
+              its own until this was caught: the scaffold in Phase 2 gave each
+              page a <main> before Phase 5 put one in the shell, which left two
+              nested in the built HTML. That is invalid (main may not descend
+              from main) and it costs exactly what the skip link is for — "jump
+              to main" stops being a single unambiguous destination. jsx-a11y
+              cannot see it because neither file is wrong on its own.
+
+              tabIndex={-1} so the skip link can actually move focus here;
               without it the jump changes the URL and leaves focus behind. */}
           <main className={shell.content} id={SKIP_TARGET_ID} tabIndex={-1}>
             {children}
