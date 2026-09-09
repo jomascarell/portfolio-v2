@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Figtree } from 'next/font/google'
 import Footer from '@/components/Footer/Footer'
+import FooterReveal from '@/components/FooterReveal/FooterReveal'
 import SkipLink, { SKIP_TARGET_ID } from '@/components/SkipLink/SkipLink'
 import shell from './layout.module.css'
 import './tokens.css'
@@ -54,10 +55,10 @@ const figtree = Figtree({
    (Gate 03) rather than by a pipeline, so unlike the original plan it IS
    hand-editable — see its header for how to regenerate.
 
-   Phase 5 added the persistent frame, the skip-link target and <Footer />.
-   See layout.module.css for why the frame lives in the layout, and
-   components/Footer for why the footer renders in flow rather than as the
-   reveal the design also shows. */
+   Phase 5 added the persistent frame, the skip-link target, <Footer /> and the
+   footer reveal. See layout.module.css for why the frame lives in the layout,
+   and components/FooterReveal for how the reveal is triggered and why it sits
+   in normal flow rather than fixed as the design's wording suggests. */
 
 export const metadata: Metadata = {
   // The retired build shipped "Jan Mascarell" here for months. It is Joan.
@@ -85,7 +86,15 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           <main className={shell.content} id={SKIP_TARGET_ID} tabIndex={-1}>
             {children}
           </main>
-          <Footer />
+          {/* <Footer /> is passed as children, not imported by FooterReveal.
+              A Server Component handed to a Client Component as a prop is not
+              part of that component's module graph — it is rendered on the
+              server and passed in as output. So the footer, and react-icons
+              with it, stay out of the client bundle exactly as Phase 5
+              verified; the island ships only the observer. */}
+          <FooterReveal>
+            <Footer />
+          </FooterReveal>
         </div>
       </body>
     </html>

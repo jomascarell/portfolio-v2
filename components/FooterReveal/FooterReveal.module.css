@@ -1,0 +1,66 @@
+/* Motion for the footer reveal. The mechanic and the deviation from Figma's
+   "position: fixed" are argued in FooterReveal.tsx; this file is only the
+   values, and every one of them is a token.
+
+   Nothing here applies until FooterReveal sets data-state to hidden or
+   revealed after mount. In the default `static` state these rules do not match,
+   so the footer is an ordinary block at the end of the document — which is also
+   what a visitor without JavaScript gets. */
+
+.reveal {
+  /* The anchor for .sentinel. */
+  position: relative;
+
+  /* Contains the slide. Without this, a footer translated down by its own
+     height hangs below the end of the document and adds exactly that much
+     scroll — a page that grows a dead band at the bottom the moment the footer
+     hides.
+
+     `clip` rather than `hidden` deliberately: both clip, but `hidden` makes this
+     a scroll container, and a scrollable box here can be scrolled by an errant
+     focus or an anchor jump and leave the footer visibly offset inside its own
+     frame. `clip` cannot. (Note this is the opposite of the choice recorded for
+     the carousel, where being scrollable from code is the whole point.) */
+  overflow: clip;
+}
+
+.sentinel {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  height: 1px;
+  pointer-events: none;
+}
+
+/* The only moving part. Both properties are on the compositor, so the reveal
+   does not touch layout while it runs. */
+.slide {
+  transition:
+    transform var(--duration-reveal) var(--ease-entrance),
+    opacity var(--duration-reveal) var(--ease-entrance);
+}
+
+/* Pushed down by exactly its own height, so nothing peeks — the reference's
+   value, and the reason the wrapper clips. */
+.reveal[data-state='hidden'] .slide {
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+.reveal[data-state='revealed'] .slide {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* "Under prefers-reduced-motion the bar appears in place, opacity only, no
+   transform." Dropping the transform is this rule's job; the fade is not, and
+   is not ours to keep — globals.css blankets transition-duration to 0.01ms
+   under the same query, so the footer simply appears. That is the intent
+   ("appears in place"), but it is worth stating, because the retired build
+   carried a comment claiming a fade survives this and it does not — the same
+   correction already made on the social-icon handle in Phase 5. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal[data-state='hidden'] .slide {
+    transform: none;
+  }
+}

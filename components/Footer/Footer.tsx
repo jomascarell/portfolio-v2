@@ -11,14 +11,15 @@ import styles from './Footer.module.css'
  * credits. The column spans come straight from the Figma component and are the
  * only place this layout is described.
  *
- * NOT the reveal. The design also has a "landing-footer" screen showing this
- * footer slid up over the landing, and the reference's mechanic is recorded
- * (fixed, bottom 0, hidden at translateY(100%), 500ms). It is deliberately not
- * implemented yet: the *trigger* was never established — wheel, wheel-up,
- * bottom hover, drag, arrow keys and touch swipe were all tried against the
- * reference and none of them fire it. Shipping a fixed, translated-off-screen
- * footer with no working trigger would ship a footer nobody can reach, so this
- * renders in normal flow until the trigger is decided. */
+ * This component knows nothing about the reveal, and should stay that way. It
+ * renders the footer; components/FooterReveal wraps it in the root layout and
+ * owns when it arrives. Keeping the two apart is what lets this stay a Server
+ * Component — see the note at the wrapper in app/layout.tsx.
+ *
+ * The height is the one number NOT taken from the reference. calebwu.ca's bar
+ * is 10vh, but that is an observation of a site whose footer holds a line of
+ * copy and a reset control; ours is drawn at its own content height (172px at
+ * xl) and holds real links. Let it size to its content. */
 
 export default function Footer() {
   return (
