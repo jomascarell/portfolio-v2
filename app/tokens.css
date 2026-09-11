@@ -1,5 +1,44 @@
+/* Design tokens — generated from Figma on 2026-09-08.
+
+   Source: file MjXkk2CuOKS0mPLBPItnuM, page "Tokens" (node 148:2).
+   104 variables across 9 collections (Primitives / Size gained size/icon/xl
+   after this file was first generated), read through the Figma plugin API and
+   written out mechanically, so both the values and the alias structure match
+   the file exactly instead of being retyped by eye.
+
+   GENERATED ONCE — THERE IS NO PIPELINE. (Gate 03 decision.)
+   Reading Figma variables needs an authenticated Figma session, which CI does
+   not have; the REST variables endpoint is Enterprise-only. A generator that
+   can only run when a human is present is not a pipeline, so we did not build
+   one. This is now an ordinary source file: edit it by hand when you need to,
+   and when Figma moves, ask Claude to re-read the file and regenerate it.
+
+   Drift protection is therefore a discipline, not a gate — regenerate, then
+   `git diff`. That is an accepted risk, taken deliberately: the token system
+   was audited and frozen before this file existed, so the expected rate of
+   change is close to zero. The failure it replaces was different in kind — the
+   retired build drifted because the design was still moving while code was
+   being written.
+
+   Structure mirrors the Figma collections:
+     Primitives  raw values. Do not reference these from components.
+     Semantic    roles. This is the layer components use.
+     System      layout and motion.
+
+   Comments carry the Figma description wherever that description records a
+   decision. Mechanical ramps get one group comment rather than twenty-four
+   identical lines. Two unit conversions happen on the way out of Figma and are
+   noted where they occur: letter-spacing (percent to em) and the alias
+   structure (Figma aliases become var() references). */
+
 :root {
-  /* ---- Primitives / Color ------------------------------------------------- */
+  /* ---- Primitives / Color -------------------------------------------------
+
+     Two ramps, 24 steps. Every one of these was "Black Haze/N" or "Malibu/N"
+     before the audit renamed them by role rather than by Figma's colour-name
+     generator. Primitives are never referenced directly from a component —
+     reach for a Semantic role below, so that a theme change stays a change to
+     one alias. */
 
   --color-neutral-0: #ffffff;
   --color-neutral-50: #f7f7f7;
@@ -27,7 +66,11 @@
   --color-blue-900: #114469;
   --color-blue-950: #0b2b46;
 
-  /* ---- Primitives / Space ------------------------------------------------- */
+  /* ---- Primitives / Space -------------------------------------------------
+
+     One scale for gap AND padding alike — the Figma descriptions say so on
+     every step, which is what stops a second, parallel padding scale from
+     appearing later. */
 
   --space-2xs: 2px; /* Hairline separation — icon-to-label, badge internals. */
   --space-xs: 4px; /* Tight pairing inside a single control. */
@@ -49,7 +92,12 @@
   --font-weight-extrabold: 800;
   --font-weight-black: 900;
 
-  /* ---- Primitives / Type — size ------------------------------------------ */
+  /* ---- Primitives / Type — size ------------------------------------------
+
+     Rebuilt on whole pixels by the audit. The old scale's trap is gone: it
+     named 16px "text-base" and 18px "text", so "base" was SMALLER than the
+     unqualified name. Here md is 16 and lg is 18, and lg is the default body
+     size. Old values in parentheses, kept so an old screen can be traced. */
 
   --font-size-xs: 12px; /* Tooltips and the smallest UI labels. */
   --font-size-sm: 14px; /* UI labels, meta rows, captions. */
@@ -60,19 +108,42 @@
   --font-size-3xl: 74px; /* Display. Defined, not currently used. (was 74.56) */
   --font-size-4xl: 120px; /* Display XL. Defined, not currently used. (was 120.64) */
 
-  /* ---- Primitives / Type — line height ----------------------------------- */
+  /* ---- Primitives / Type — line height -----------------------------------
+
+     Absolute pixels, not multipliers: Figma resolves line-height variables in
+     pixels, and keeping the same unit here is what makes the two comparable at
+     a glance. Each step is paired with one font-size step. */
 
   --line-height-xs: 18px; /* with font-size-xs (12px) — 1.50 */
   --line-height-sm: 20px; /* with font-size-sm (14px) — 1.43 */
+
+  /* 20.2px with font-size-md (16px) — 1.26. The body rhythm, confirmed
+     2026-09-08, and the one fractional value in the ramp. Carried over
+     verbatim from the retired build's text-base/font-Regular rather than
+     rounded, so the number matches that build exactly. Two earlier values are
+     superseded and must not come back: 27.2px (shipped build) and 28px (this
+     Figma file, before the decision). 1.26 sits close to the ~1.2 default the
+     rebuild removed — this is the number to revisit if paragraphs read
+     cramped in the Phase 11 audit. */
   --line-height-md: 20.2px;
+
+  /* 28px, also with font-size-md (16px) — 1.75. The looser setting for the
+     16px tier, split out so heading/h4 could keep its 28px when body
+     standardised on 20.2px. A short heading wants air a paragraph does not. */
   --line-height-md-loose: 28px;
+
   --line-height-lg: 30px; /* with font-size-lg (18px) — 1.67 */
   --line-height-xl: 36px; /* with font-size-xl (28px) — 1.29 */
   --line-height-2xl: 52px; /* with font-size-2xl (46px) — 1.13 */
   --line-height-3xl: 80px; /* with font-size-3xl (74px) — 1.08 */
   --line-height-4xl: 128px; /* with font-size-4xl (120px) — 1.07 */
 
-  /* ---- Primitives / Type — letter spacing -------------------------------- */
+  /* ---- Primitives / Type — letter spacing --------------------------------
+
+     UNIT CONVERSION: Figma stores these as percentages (-2, 0, 1.4); CSS has
+     no percentage letter-spacing, so they are emitted as em, which is the same
+     proportional quantity. 1.4% of the 16px body size is 0.224px, which is
+     exactly what the retired build hardcoded. */
 
   --letter-spacing-tight: -0.02em; /* -2%. Display sizes (xl and up), where default tracking reads loose. */
   --letter-spacing-normal: 0em; /* 0%. Body and UI text. The default. */
@@ -89,6 +160,7 @@
   --size-icon-sm: 16px; /* Inline icons sitting alongside text. */
   --size-icon-md: 24px; /* Default — nav and menu. */
   --size-icon-lg: 32px; /* Large — social row in the footer. */
+
   /* 64px. No consumer yet: nothing in the twelve components reaches for it.
      Its description in Figma is a copy of size/icon/lg's and reads "32px.
      Large icons — social row in the footer", which is wrong twice over — the
@@ -96,7 +168,27 @@
      itself; corrected here. */
   --size-icon-xl: 64px;
 
-  /* ---- Primitives / Shadow ----------------------------------------------- */
+  /* ---- Primitives / Shadow -----------------------------------------------
+
+     Six steps, stored in Figma as ready-made CSS strings alongside matching
+     effect styles, so the canvas and the stylesheet cannot disagree about
+     them. Each step is four stacked DROP_SHADOWs, ordered nearest layer first,
+     which is how Figma stacks them.
+
+     The ink is #101010 in every layer of every step — a warm near-black that
+     is deliberately neither pure black nor --color-neutral-950 (#292929).
+
+     They are box-shadow, never filter: drop-shadow(). Not interchangeable —
+     `filter` creates a backdrop root, and the retired build documented what
+     that breaks (it cost that build its blur scope). box-shadow creates none.
+
+     The ramp is a state ramp, not just a size ramp:
+       xs   flat — flush surfaces: inputs, list rows, table cells
+       sm   press — card pushed toward the page. Below rest, on purpose
+       md   rest — the default resting card, the landing-card baseline
+       lg   hover — card lifts under the cursor. Pairs with md
+       xl   drag — card carried above the surface while moving
+       2xl  overlay — modals, popovers, detached panels */
 
   --shadow-xs:
     0 0px 0.1px rgba(16, 16, 16, 0.05), 0 0.5px 0.5px rgba(16, 16, 16, 0.02),
@@ -117,7 +209,16 @@
     0 0px 0.5px rgba(16, 16, 16, 0.14), 0 9px 4.5px rgba(16, 16, 16, 0.08),
     0 24px 12px rgba(16, 16, 16, 0.08), 0 64px 38px rgba(16, 16, 16, 0.2);
 
-  /* ---- Semantic / Color --------------------------------------------------- */
+  /* ---- Semantic / Color ---------------------------------------------------
+
+     Roles, not values. Components reference this block and nothing above it.
+     Every entry is an alias in Figma and stays an alias here — that
+     indirection is the whole point: a dark theme, or a future tinted ground,
+     changes these fifteen lines and no others.
+
+     Figma holds one mode, "Light". The collection is structured for dark but
+     no dark values exist yet, so none are invented here — see the note at the
+     foot of this file. */
 
   --color-text-primary: var(--color-neutral-950); /* Body and heading text. */
   /* Supporting copy and meta text. */
