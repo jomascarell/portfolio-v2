@@ -1,0 +1,20 @@
+/* Figma text style: body/lg — 18/30 Regular, which is also the document
+   default, so this block only has to state the things that differ from it.
+
+   The 64px band above and below is the component's own padding in Figma, and
+   it matches the band NavLinks and Breadcrumb reserve above the card on the
+   other side of the about screen. That is what lines the two columns up. */
+
+.bio {
+  padding-block: var(--space-3xl);
+  max-inline-size: 652px;
+  color: var(--color-text-primary);
+}
+
+/* Paragraphs are separated by exactly one empty line in the drawing, so the
+   gap is one line-height rather than a spacing token. Using --space-xl (32)
+   would be close enough to look right and wrong enough to break the rhythm
+   against the 30px baseline. */
+.bio p + p {
+  margin-block-start: var(--line-height-lg);
+}

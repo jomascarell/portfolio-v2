@@ -1,0 +1,17 @@
+/* No gap and no padding of its own. Figma's PageIntro is a bare stack, and it
+   can be: the nav component above already carries the 64/32 band as its own
+   padding, and both NavLinks and Breadcrumb carry the same one, so the card
+   sits at the same height whichever of the two the slot holds. */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* The card stretches to the panel's width — Figma's instance is FILL, and
+   every screen draws it edge to edge inside the panel's column while the nav
+   above it hugs its own content. */
+.card {
+  align-self: stretch;
+}
