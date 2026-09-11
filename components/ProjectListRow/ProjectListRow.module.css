@@ -1,0 +1,75 @@
+/* One ink for the whole row. The three lines are different sizes and weights
+   but they change colour together, so they read one custom property and the
+   state changes that property once — rather than three rules that can be
+   updated two at a time. */
+
+.row {
+  --row-ink: var(--color-text-subtle);
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Figma: the row's grid gap. Not on the space scale — it sits
+                between --space-sm (8) and --space-md (16). Left as the literal
+                rather than rounded to a token, because rounding it would
+                silently move the design. */
+  padding: var(--space-md);
+  color: var(--row-ink);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.default {
+  --row-ink: var(--color-text-subtle);
+}
+
+/* The forced state. Same declaration the pointer produces, available as a
+   class so a row can be lit without one. */
+.hover {
+  --row-ink: var(--color-text-primary);
+}
+
+.row:focus-visible {
+  --row-ink: var(--color-text-primary);
+  outline: 2px solid var(--color-text-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+@media (hover: hover) {
+  .row:hover {
+    --row-ink: var(--color-text-primary);
+  }
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+/* Figma text style: heading/h2 — 28/36 Regular, tracking 0. */
+.category {
+  font-size: var(--font-size-xl);
+  line-height: var(--line-height-xl);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--letter-spacing-normal);
+}
+
+/* Figma text style: heading/h1 — 46/52 Medium, tracking tight. */
+.title {
+  font-size: var(--font-size-2xl);
+  line-height: var(--line-height-2xl);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+/* Figma text style: display/numeral — 28/36 Light, tracking tight. Its own
+   description is worth repeating: it is not a heading, it was filed as one in
+   the old system because styles were named for how they looked rather than
+   what they were for. This is the only thing that uses it. */
+.year {
+  font-size: var(--font-size-xl);
+  line-height: var(--line-height-xl);
+  font-weight: var(--font-weight-light);
+  letter-spacing: var(--letter-spacing-tight);
+}

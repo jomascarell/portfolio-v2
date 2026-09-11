@@ -1,0 +1,26 @@
+/* The list reset is here rather than on a `role="list"` — see the note in
+   NavLinks.module.css for why this project writes it this way. */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 50px; /* Figma: the list's item spacing. Not on the space scale and not
+                close to a value on it — --space-2xl is 48 and --space-4xl is
+                96. Left as the literal for the same reason the row's 10px and
+                the social row's 18px are: rounding a measured value to the
+                nearest token moves the design without saying so. */
+  padding-block: var(--space-xl);
+  padding-inline: 0;
+  margin: 0;
+  list-style: none;
+}
+
+/* Each row is a link that fills its list item, so the whole row is the target
+   rather than the text inside it. */
+.list > li {
+  display: flex;
+}
+
+.list > li > * {
+  flex: 1;
+}
