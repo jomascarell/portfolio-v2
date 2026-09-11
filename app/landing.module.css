@@ -1,0 +1,58 @@
+/* Below 768 the landing is the one screen that goes edge to edge. Every other
+   frame at 412 carries the 32px inset — projects and about both do — but
+   landing / 412 has padding 0 and a PageIntro the full 412 wide. The shell
+   puts --container-inset on <main> for every route, so this cancels it rather
+   than the shell learning about routes.
+
+   It is also vertically centred here and only here: landing / 412 is a 696
+   frame holding a 455 panel with 121 above and 120 below. From 768 up the
+   panel sits at the top of its frame, so the centring stops at the same
+   breakpoint the inset returns at. */
+
+.landing {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: var(--space-md);
+  align-content: center;
+  min-block-size: 100%;
+  margin-inline: calc(var(--container-inset) * -1);
+  /* The one number the landing-footer frames give that nothing else does:
+     48px between the end of the content and the top of the footer at 1448.
+     The shell's flex:1 already absorbs the slack on a tall viewport, so this
+     only does work on a short one — where without it the panel would butt
+     straight into the footer when the reveal fires. */
+  padding-block-end: var(--space-2xl);
+}
+
+.panel {
+  grid-column: 1 / -1;
+}
+
+/* ---- md: >= 768 ---------------------------------------------------------
+   Eight columns and the panel takes all of them: landing / 768 draws PageIntro
+   at 704, which is the full 768 less the 32px inset on each side. The inset
+   comes back, so the negative margin goes. */
+
+@media (min-width: 768px) {
+  .landing {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    align-content: start;
+    margin-inline: 0;
+  }
+}
+
+/* ---- lg: >= 1024 --------------------------------------------------------
+   Twelve columns, and the panel is the middle eight — two empty columns each
+   side. Checked at both canvases rather than one: 1448 puts a 875-wide panel
+   at x=287, and 1024 a 592-wide panel at x=216, and both work out to columns
+   3 through 10 of 12. */
+
+@media (min-width: 1024px) {
+  .landing {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .panel {
+    grid-column: 3 / span 8;
+  }
+}

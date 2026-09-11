@@ -1,0 +1,71 @@
+/* The page grid, read from the screen frames rather than from a grid style:
+   every frame on the Design page carries the same COLUMNS grid, and the frames
+   are also GRID auto-layouts whose gaps are the real numbers.
+
+     lg  >= 1024   12 columns   gutter 16   row gap 48
+     md  768-1023   8 columns   gutter 16   row gap 48
+     sm  < 768      4 columns   gutter 16   row gap 48, and the two cells
+                                stack onto two rows instead of sharing one
+
+   Mobile-first, and the column counts are the only thing that changes — the
+   gaps are constant at all three tiers, which is unusual enough in this design
+   to be worth stating so nobody goes looking for the tier that differs.
+
+   No horizontal inset here. The shell puts --container-inset on <main>, which
+   is the same 64 / 32 the Figma frames carry as their grid offset; applying it
+   again would double it. */
+
+.grid {
+  --panel-span: 4;
+  --content-span: 4;
+
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: var(--space-md);
+  row-gap: var(--space-2xl);
+}
+
+/* Both cells span the full width and stack, which is what the 412 frames draw:
+   two rows, panel first. The spans below take over from 768 up. */
+.panel,
+.content {
+  grid-column: 1 / -1;
+}
+
+/* ---- md: >= 768 ---------------------------------------------------------
+   Eight columns, and the two cells share one row. This is the tier where the
+   two screens disagree: projects is 5 + 3, about is 4 + 4, so the split is
+   read from properties the page sets. */
+
+@media (min-width: 768px) {
+  .grid {
+    --panel-span: 4;
+    --content-span: 4;
+
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+
+  .panel {
+    grid-column: span var(--panel-span);
+    /* The panel is centred against the taller content cell in every drawn
+       frame — projects at 1448 puts it at y=133 in an 870 frame, about at
+       y=58 in 488 — rather than sitting at the top of its row. */
+    align-self: center;
+  }
+
+  .content {
+    grid-column: span var(--content-span);
+  }
+}
+
+/* ---- lg: >= 1024 --------------------------------------------------------
+   Twelve columns, and both screens agree again: 6 and 6. */
+
+@media (min-width: 1024px) {
+  .grid {
+    --panel-span: 6;
+    --content-span: 6;
+
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+}

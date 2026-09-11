@@ -1,12 +1,23 @@
 import type { Metadata } from 'next'
+import AboutBio from '@/components/AboutBio/AboutBio'
+import Breadcrumb from '@/components/Breadcrumb/Breadcrumb'
+import PanelLayout from '@/components/PanelLayout/PanelLayout'
 
-/* About. New in v2 — the retired build never had this route, so there was no
-   component or copy to salvage for it. AboutBio and lib/about.ts both arrived
-   in Phase 6, carrying the bio transcribed from the Figma component; PHASE 7
-   composes the screen and PHASE 9 replaces that copy with the final version.
-
-   Contact was cut, so the email and social handles land here and in the
-   footer rather than on a page of their own. */
+/* About. Figma: about / 1448 (492:2009) and its three siblings.
+ *
+ * The same panel-plus-content grid as /projects, and it takes PanelLayout's
+ * defaults at every tier — 6 + 6 of twelve, 4 + 4 of eight, stacked below 768
+ * — so there is no stylesheet for this screen at all. That is the shape to
+ * keep: a page that needs no CSS of its own is a page whose layout is entirely
+ * in the layout component, which is where the next screen will look for it.
+ *
+ * The panel reduces to the wordmark here (type="about"). The tagline and the
+ * status lines are not hidden, they are not rendered — the bio beside it says
+ * all of that in prose, and repeating it would be the panel arguing with the
+ * page. IntroCard owns that decision; this only names the type.
+ *
+ * PHASE 9 replaces the bio copy. It is real prose rather than lorem because
+ * Figma's AboutBio already had real prose — see lib/about.ts. */
 
 export const metadata: Metadata = {
   title: 'About — Joan Mascarell',
@@ -14,8 +25,8 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <>
-      <h1>About</h1>
-    </>
+    <PanelLayout nav={<Breadcrumb label="About" />} type="about">
+      <AboutBio />
+    </PanelLayout>
   )
 }

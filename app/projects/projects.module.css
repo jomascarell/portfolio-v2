@@ -1,0 +1,34 @@
+/* The one place this screen differs from /about: at md it is 5 columns of
+   panel and 3 of list, not 4 and 4. Read from projects / 768 (500:1280),
+   where PageIntro spans 5 of the 8 columns and ProjectList spans 3.
+
+   It is the narrower cell that carries the list, which looks backwards until
+   you see it: the list rows are three short lines each, and the intro panel
+   holds a fixed-width wordmark that stops shrinking. */
+
+@media (min-width: 768px) {
+  .screen {
+    --panel-span: 5;
+    --content-span: 3;
+  }
+}
+
+@media (min-width: 1024px) {
+  .screen {
+    --panel-span: 6;
+    --content-span: 6;
+  }
+}
+
+/* MEASURED AT GATE 07, AND A QUESTION FOR YOU RATHER THAN A BUG.
+   At md this screen gives the list 3 of 8 columns — 248px, or 216px inside the
+   row's padding — while ProjectListRow sets the project name in heading/h1 at
+   46px. "Embassaments" is one unbreakable 12-character word about 300px wide
+   at that size, so it cannot fit, and the row now breaks it across two lines
+   rather than pushing 55px of horizontal scroll onto the document.
+
+   Breaking a word mid-way is the safe outcome, not a good one. Three ways out,
+   all design decisions: give the list more columns at md, step the title down
+   a tier at md (the ramp has no size between 46 and 28), or accept the break.
+   Figma cannot answer it — the drawn rows use the placeholder names, and
+   "Data Water" is two short words. */

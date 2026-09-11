@@ -1,19 +1,31 @@
-/* Landing. PageIntro, NavLinks and the wordmark all exist as components since
-   Phase 6, and PHASE 7 composes them into this screen — until then the route
-   is deliberately a bare heading, which is what you see if you run the dev
-   server and wonder where the design went. The components are reviewable now
-   at /gallery.
+import NavLinks from '@/components/NavLinks/NavLinks'
+import PageIntro from '@/components/PageIntro/PageIntro'
+import styles from './landing.module.css'
 
-   It is the only screen that carries the pills — everywhere else uses the
-   breadcrumb (nav rule, confirmed in the Figma audit).
-
-   The wordmark is a lowercase "joan" of four curved letterforms, not the
-   retired build's uppercase modular JOAN. See components/Wordmark. */
+/* Landing. Figma: landing / 1448 (482:1754) and its three siblings, plus the
+ * landing-footer state of each.
+ *
+ * The only screen with pills instead of a breadcrumb, and the only one in the
+ * panel family with no content beside the panel — so it does not use
+ * PanelLayout. It is the panel placed on the page grid, which at this width is
+ * genuinely all there is to say.
+ *
+ * LANDING-FOOTER IS NOT A SECOND SCREEN. Figma draws it as one, and it is the
+ * only state drawing in the file, but the footer is shell-level: the root
+ * layout renders it on every route and FooterReveal decides when it arrives.
+ * Both frames therefore resolve to this file. What the landing-footer frames
+ * are good for is the one thing nothing else shows — the spacing between the
+ * end of the content and the top of the footer, which is 48px at 1448.
+ *
+ * The panel is 8 of the 12 columns at lg, centred on the grid with two empty
+ * columns either side; all 8 at md; and at 412 it goes edge to edge, which is
+ * the one place a screen cancels the shell's inset rather than sitting inside
+ * it. See the stylesheet. */
 
 export default function LandingPage() {
   return (
-    <>
-      <h1>Joan Mascarell</h1>
-    </>
+    <div className={styles.landing}>
+      <PageIntro className={styles.panel} nav={<NavLinks layout="row" />} />
+    </div>
   )
 }
