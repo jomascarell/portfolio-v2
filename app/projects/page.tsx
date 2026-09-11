@@ -1,8 +1,10 @@
 import type { Metadata } from 'next'
 import { projects } from '@/lib/projects'
 
-/* The project list — "the deck". Phase 7 turns this into the stacked, wheel-
-   stepped card set; it is the highest-risk component in the build and the only
+/* The project list — "the deck". ProjectList and ProjectListRow exist as
+   components since Phase 6 and render as a static stack; Phase 7 places them
+   on this screen, and PHASE 8 is what turns the list into the wheel-stepped
+   card set. That last step is the highest-risk work in the build and the only
    place with real input handling (wheel, touch, keyboard, looping).
 
    Deck position deliberately stays out of the URL. Reading searchParams would

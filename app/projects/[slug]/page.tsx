@@ -2,7 +2,10 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getProject, projects } from '@/lib/projects'
 
-/* Project detail. Phase 6 builds the template, Phase 8 fills it.
+/* Project detail. PHASE 7 builds the template, PHASE 9 fills it with the real
+   case studies. Like /photos it carries no PageIntro — it is content plus its
+   own scroll-spy rail plus a standalone Breadcrumb, which is the second of the
+   two screen families.
 
    dynamicParams = false: generateStaticParams enumerates every project, so a
    slug outside that list is a 404 rather than an on-demand render. It keeps the
