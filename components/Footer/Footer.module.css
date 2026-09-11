@@ -12,12 +12,16 @@
 
    The column spans are the only description of this layout anywhere in the
    codebase, which is why each tier is written out in full rather than patched
-   from the previous one. */
+   from the previous one.
+
+   The column gap is space/sm at all three tiers. The ROW gap is not: Figma
+   sets it per variant — 32 at sm, 16 at md, 64 at lg — so it is declared once
+   per tier below rather than once here. Phase 5 shipped a single 32 for all
+   three, which was right at sm, too loose at md and half what lg wants. */
 
 .footer {
   display: grid;
   column-gap: var(--space-sm);
-  row-gap: var(--space-xl);
 
   background: var(--color-surface-inverse);
   color: var(--color-text-inverse);
@@ -40,6 +44,7 @@
 .footer {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   grid-template-rows: repeat(5, min-content);
+  row-gap: var(--space-xl);
   padding-block: var(--space-xl);
   padding-inline: 0;
 }
@@ -94,6 +99,7 @@
   .footer {
     grid-template-columns: repeat(8, minmax(0, 1fr));
     grid-template-rows: repeat(3, min-content);
+    row-gap: var(--space-md);
     padding-block: var(--space-lg);
     padding-inline: var(--container-inset);
   }
@@ -144,6 +150,7 @@
   .footer {
     grid-template-columns: repeat(12, minmax(0, 1fr));
     grid-template-rows: minmax(0, 2fr) minmax(0, 1fr);
+    row-gap: var(--space-3xl);
   }
 
   .intro {
