@@ -1,0 +1,30 @@
+/* Size is expressed as a HEIGHT and the width follows from the viewBox, rather
+   than both being set. Figma draws lg at 252.68 x 140 and sm at 162 x 90 —
+   aspect 1.8049 and 1.8000, so the two variants are not quite the same shape.
+   Letting the height drive means the letterforms keep their true proportions
+   at both sizes and sm comes out 162.44 wide instead of 162. Four tenths of a
+   pixel, against distorting the mark: the mark wins.
+
+   --wordmark-height is a custom property rather than a height on each class so
+   a consumer can override it in one declaration. IntroCard does exactly that:
+   it has to switch lg -> sm at the md breakpoint, which is a property of the
+   card's layout, not of the wordmark. */
+
+.wordmark {
+  display: block;
+  block-size: var(--wordmark-height);
+  inline-size: auto;
+  /* Bound to color/text/primary in Figma, not inherited. Deliberately not
+     --color-wordmark-ink (#181614): that is the RETIRED wordmark's loose ink,
+     held outside the token system for v1, and the v2 component is bound to the
+     semantic role instead. That token now has no consumer. */
+  fill: var(--color-text-primary);
+}
+
+.lg {
+  --wordmark-height: 140px;
+}
+
+.sm {
+  --wordmark-height: 90px;
+}

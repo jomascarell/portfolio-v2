@@ -1,0 +1,43 @@
+/* The padding is asymmetric in the design and that is not a mistake to tidy:
+   8px on the left, 32px on the right. Every drawn instance confirms it —
+   "Projects" is a 53px label in a 93px pill, "About" 40 in 80, "Photos" 45 in
+   85, and 53 + 8 + 32 = 93 each time. Centring the label would change all
+   three widths and the gaps between them. */
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-sm) var(--space-xl) var(--space-sm) var(--space-sm);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-subtle);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  /* No transition is specified for this component in Figma. It borrows
+     MailLink's, which is the only designed hover transition in the file, so
+     the two hovers at least feel like the same product. */
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+/* Figma text style: ui/label — 14/20 Medium, tracking 0. */
+.label {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-normal);
+}
+
+/* Deliberately outside the hover query: a touchscreen laptop resolves
+   (hover: none) and would otherwise strand the keyboard with no visible
+   focus at all. */
+.pill:focus-visible {
+  outline: 2px solid var(--color-text-accent);
+  outline-offset: 2px;
+}
+
+/* Inside it, because on a touch device :hover sticks after a tap and the pill
+   would stay lit until something else was touched. */
+@media (hover: hover) {
+  .pill:hover {
+    background-color: var(--color-surface-subtle-hover);
+  }
+}
