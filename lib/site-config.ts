@@ -30,6 +30,35 @@ export const siteConfig = {
   footerIntro:
     'Feel free to contact me, and send an e-mail to the following address.',
 
+  /* The intro panel's copy (Phase 6). Verified byte-identical across the four
+     screens that carry a panel, which is the whole reason it sits here: the
+     landing, its footer state, projects and about differ by composition only.
+     On about the panel reduces to the wordmark and none of this renders — but
+     it is the same component deciding that, not different copy. */
+  tagline: 'Translating design into interfaces that hold up.',
+
+  /* The second status line is one sentence with two colours: the handle takes
+     color/text/accent and the rest is secondary. Split here rather than in the
+     component so the component does not have to know which word is the
+     employer, and so changing it is a content edit.
+     It is not a link in the design — accent alone, no href — which is why
+     there is no URL on it. */
+  status: {
+    current: 'Currently working in solo projects',
+    previous: 'Previously interned ',
+    previousHandle: '@Okisam',
+  },
+
+  /* The three top-level destinations, in the drawn order. They render as
+     NavLinks on the landing and its footer state and NOWHERE else: every
+     interior screen carries the Breadcrumb instead. That is the nav model,
+     not an omission — see components/NavLinks. */
+  nav: [
+    { href: '/projects', label: 'Projects' },
+    { href: '/about', label: 'About' },
+    { href: '/photos', label: 'Photos' },
+  ],
+
   social: {
     github: {
       href: 'https://github.com/jomascarell',
