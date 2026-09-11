@@ -1,79 +1,68 @@
-/* Placeholder content module — Phase 9 replaces it with the real case studies.
-   It exists this early only because app/projects/[slug]/page.tsx needs the
-   slugs at build time for generateStaticParams.
-
-   Slugs are carried over from the retired build, where they were explicitly
-   marked as working names rather than final copy. Renaming one changes a
-   public URL, so that decision belongs to Phase 9, not here.
-
-   Phase 6 added `category`, `year` and `summary`, because ProjectListRow draws
-   all three and a row cannot be built against a title alone. The values come
-   from the four rows Figma draws in ProjectList, which are real names rather
-   than the lorem the retired build carried.
-
-   TWO THINGS TO SETTLE IN PHASE 9, both content and neither blocking:
-
-   1. FIGMA AND THIS FILE DISAGREE ABOUT WHICH FOUR PROJECTS THESE ARE. Figma
-      draws Personal Library, Hedonic Design, Laia, Data Water — and no Okisam.
-      This file has tfm, joies-laia, biblioteca, okisam. Three map cleanly
-      (tfm is the master thesis, so Hedonic Design; joies-laia is Laia;
-      biblioteca is Personal Library). Okisam is the fourth here and is not
-      drawn at all, which is why it is also the only one with no category in
-      the design — there was no row to write one on.
-
-   2. THE FOURTH SUMMARY IS UNASSIGNED. "Turning drought data into a public
-      dashboard" describes Figma's Data Water row (the Three.js one), not a
-      personal library, so it is not attached to `biblioteca` on a guess. If
-      the four projects are in fact Data Water rather than Personal Library,
-      this slug is the one that changes — and it changes a URL, which is
-      exactly the kind of decision Phase 9 owns. */
+/* The four projects.
+ *
+ * Content given directly on 2026-09-11, and it settles what Figma could not:
+ * the file's ProjectList draws a fourth row called "Personal Library" that
+ * was invented copy to fill the drawing, and there is no project behind it.
+ * So the four here are the four, and `biblioteca` is gone.
+ *
+ * A row is `category | name | year`, in that order down the row, and the
+ * category is the descriptive line rather than a discipline tag — "Testing
+ * emotional design" above "Emotional UX in e-commerce". Figma's drawn
+ * placeholders used short tags ("API project", "Three.js") and these do the
+ * job differently, which is worth knowing before anyone shortens them back.
+ *
+ * The year renders as a two-digit stamp, so 2024 draws as ".24" — the first
+ * project on this list that is not 2026, and the first real test that the
+ * stamp is derived rather than typed.
+ *
+ * TWO THINGS STILL FOR PHASE 9, neither blocking:
+ *
+ * 1. SLUGS ARE PUBLIC URLS AND TWO NO LONGER MATCH THEIR NAMES. `tfm` was a
+ *    working name from the retired build and the project is now "Emotional UX
+ *    in e-commerce"; `joies-laia` is close but not exact. Nothing is deployed,
+ *    so changing them costs nothing today and costs a redirect later.
+ *
+ * 2. No `summary` field. The detail page will want one, but there is no copy
+ *    for it yet and an empty field on four records is not a content module,
+ *    it is a promise. It lands when the case studies do. */
 
 export type Project = {
   slug: string
-  /* The small line above the name: what kind of project it was. */
+  /* The descriptive line above the name. */
   category: string
   title: string
-  /* Rendered as a two-digit stamp — 2026 draws as ".26". */
+  /* Rendered as a two-digit stamp — 2026 draws as ".26", 2024 as ".24". */
   year: number
-  /* One line, for the project list and the top of the detail page. */
-  summary: string
 }
 
 export const projects: Project[] = [
   {
     slug: 'tfm',
-    category: 'Master Thesis',
-    title: 'Hedonic Design',
+    category: 'Testing emotional design',
+    title: 'Emotional UX in e-commerce',
     year: 2026,
-    summary: 'Testing emotional design in online shopping.',
   },
   {
     slug: 'joies-laia',
-    category: 'Branding and Development',
-    title: 'Laia',
+    category: 'A brand and store, built pro bono',
+    title: 'Joies Laia',
     year: 2026,
-    summary: 'A brand and store, built pro bono.',
   },
   {
-    slug: 'biblioteca',
-    category: 'API project',
-    title: 'Personal Library',
-    year: 2026,
-    /* TODO(Phase 9): see note 2 above. */
-    summary: '',
-  },
-  {
-    /* "Design System" is proposed, not drawn — Okisam has no row in Figma and
-       therefore no category. It names the deliverable the way "Three.js" names
-       the tech and "Branding and Development" names the disciplines, and it is
-       the one true thing about the work that does not identify the client:
-       the bio on /about already says a component-based CSS design system was
-       built there from scratch. */
     slug: 'okisam',
-    category: 'Design System',
+    category: 'Confidential client work, real growth',
     title: 'Okisam',
     year: 2026,
-    summary: 'Confidential client work, real growth.',
+  },
+  {
+    /* Spelled "Embssaments" when given, which has no vowel between the b and
+       the s — read as the Catalan embassaments, reservoirs, which is what a
+       drought-data dashboard would be about. Corrected here; say if the
+       project's real name is spelled another way. */
+    slug: 'embassaments',
+    category: 'Turning drought data into a public dashboard',
+    title: 'Embassaments',
+    year: 2024,
   },
 ]
 
