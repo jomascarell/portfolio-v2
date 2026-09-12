@@ -1,4 +1,5 @@
 import { Fragment } from 'react'
+import ContactBio from '@/components/ContactBio/ContactBio'
 import { bio, type BioSegment } from '@/lib/about'
 import styles from './AboutBio.module.css'
 
@@ -59,6 +60,13 @@ export default function AboutBio({ className }: AboutBioProps) {
           ))}
         </p>
       ))}
+      {/* Figma's component here is AboutBio+Contact (791:1876) - the prose and
+          the contact block as one object, which replaced the prose-only
+          AboutBio (492:2172) on every screen that carries a bio. This file is
+          that component; ContactBio is its second half, kept in its own folder
+          so the gallery can show it and so the social row and the mail link
+          have somewhere to be composed that is not a page. */}
+      <ContactBio />
     </div>
   )
 }

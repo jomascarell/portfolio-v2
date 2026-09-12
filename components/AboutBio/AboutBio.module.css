@@ -6,6 +6,13 @@
    other side of the about screen. That is what lines the two columns up. */
 
 .bio {
+  display: flex;
+  flex-direction: column;
+  /* Figma's AboutBio+Contact puts 48px between the prose and the contact
+     block. A gap on the wrapper rather than a margin on either half, because
+     both are independently replaceable and neither should carry the other's
+     spacing. */
+  gap: var(--space-2xl);
   padding-block: var(--space-3xl);
   max-inline-size: 652px;
   color: var(--color-text-primary);

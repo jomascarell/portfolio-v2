@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import AboutBio from '@/components/AboutBio/AboutBio'
+import ContactBio from '@/components/ContactBio/ContactBio'
 import IntroCard from '@/components/IntroCard/IntroCard'
 import MailLink from '@/components/MailLink/MailLink'
 import NavLink from '@/components/NavLink/NavLink'
@@ -170,7 +171,17 @@ export default function GalleryPage() {
         </Specimen>
       </Section>
 
-      <Section title="AboutBio" node="492:2172" note="No variant axis.">
+      <Section
+        title="ContactBio"
+        node="791:1813"
+        note="The footer's old contact surface, moved under the bio. The address is MailLink rather than the drawing's plain text, so it is actually clickable. Narrow the window: the social row wraps to its own line without a breakpoint."
+      >
+        <Specimen label="Default">
+          <ContactBio />
+        </Specimen>
+      </Section>
+
+      <Section title="AboutBio" node="791:1876" note="Figma's AboutBio+Contact — the prose and ContactBio as one object.">
         <Specimen label="Default">
           <AboutBio />
         </Specimen>

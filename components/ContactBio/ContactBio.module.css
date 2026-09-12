@@ -1,0 +1,60 @@
+/* Figma: contact-bio, 620 x 275 inside a 652 column, padding [16, 0, 16, 0],
+   with a 0.5px rule along its top edge in color/neutral/400.
+
+   THE RULE IS THE ONLY THING THAT SEPARATES THIS FROM THE BIO, and it is a
+   half-pixel stroke drawn INSIDE the frame rather than a spacing change. Kept
+   at 0.5px rather than rounded to 1: on the 1x displays where it cannot resolve
+   the browser draws the nearest it can, and on 2x it is exactly what the design
+   asks for. Rounding up would make the only line on the screen twice as heavy
+   as drawn.
+
+   FLEX-WRAP RATHER THAN A BREAKPOINT, and that is a deliberate choice about
+   which mechanism fits. The drawing is two rows — intro left with the social
+   row pushed right, then the address beneath — and whether they fit side by
+   side depends on the COLUMN's width, not the viewport's. About's content cell
+   runs 652 at 1448, 568 at 1280, 440 at 1024 and 344 at 768, so a viewport
+   breakpoint would be guessing at a container problem.
+
+   Wrapping solves it without either a new breakpoint or a container query: the
+   intro takes its drawn 305 and the social row its natural width, and when the
+   cell cannot hold both the social row drops to its own line on its own. The
+   address is always its own row. This is the one place in the project where
+   the layout genuinely is fluid rather than three drawings, so it is the one
+   place that gets to be written that way. */
+
+.contact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-md);
+  padding-block: var(--space-md);
+  border-block-start: 0.5px solid var(--color-neutral-400);
+}
+
+/* 305 is the drawn width. `flex: 1 1 305px` lets it shrink in a narrow cell
+   rather than forcing the wrap earlier than it has to. */
+.intro {
+  flex: 1 1 305px;
+  max-inline-size: 305px;
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--color-text-primary);
+}
+
+/* Pushed to the far edge of the row, which is what Figma's MAX primary-axis
+   alignment does inside a FILL frame: the icons sit right even though the
+   group is only 150 wide. `margin-inline-start: auto` rather than
+   space-between on the parent, so the address below is unaffected when the
+   social row wraps onto its own line. */
+.social {
+  flex: 0 0 auto;
+  margin-inline-start: auto;
+}
+
+/* Its own row at every width — the drawing puts it below both. */
+.mail {
+  flex: 1 0 100%;
+  color: var(--color-text-primary);
+}

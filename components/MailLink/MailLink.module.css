@@ -1,6 +1,6 @@
 .root {
   font-size: var(--mail-size);
-  line-height: var(--line-height-sm);
+  line-height: var(--mail-line);
   letter-spacing: var(--letter-spacing-normal);
   color: inherit;
 }
@@ -10,10 +10,16 @@
    inconsistency in the file and not something to silently "fix" here. */
 .md {
   --mail-size: var(--font-size-md);
+  /* 16/26.2 - body/base, which is what contact-bio draws the address at. It
+     was pinned to --line-height-sm (20) while the footer was the only
+     consumer; the footer no longer has a mail link, and the drawing that does
+     asks for 26.2. */
+  --mail-line: var(--line-height-md);
 }
 
 .sm {
   --mail-size: var(--font-size-sm);
+  --mail-line: var(--line-height-sm);
 }
 
 .label {
