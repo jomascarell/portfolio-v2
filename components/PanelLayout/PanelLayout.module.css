@@ -240,8 +240,26 @@
   /* The landing's panel takes all eight: landing / 768 draws PageIntro at 704,
      which is the full 768 less the 32px inset each side. The inset comes back
      at this tier, so the negative margin goes with it. */
+  /* THE INSET COMES BACK AT THIS TIER, so the negative margin goes. The panel
+     takes all eight columns: landing / 768 draws PageIntro at 704, which is the
+     full 768 less the 32px inset each side.
+
+     `align-content: start` USED TO BE HERE AND IT WAS A MISREADING — removed
+     2026-09-12 after the landing measured 102px above centre at a 900 viewport
+     and 202px at 1100, because the panel was pinned to the top and every extra
+     pixel of screen went underneath it.
+
+     It came from "the panel sits at the top of its frame from 768 up", which is
+     true of the drawings and means nothing: every landing frame from 640 up is
+     EXACTLY as tall as its PageIntro — 600 and 600 — so there is no slack in
+     them to distribute, and reading an anchor out of a frame with zero spare
+     space is reading intent into an absence.
+
+     The one landing frame that does have slack says the opposite.
+     landing / 412 is 776 tall around a 688 PageIntro at y=44, so 44 above and
+     44 below — centred. That is the only evidence the file offers about where
+     the landing's spare space goes, and it goes to both ends. */
   .landing {
-    align-content: start;
     margin-inline: 0;
   }
 }
