@@ -50,16 +50,23 @@ type AboutBioProps = {
 export default function AboutBio({ className }: AboutBioProps) {
   return (
     <div className={[styles.bio, className].filter(Boolean).join(' ')}>
-      {bio.map((paragraph, paragraphIndex) => (
-        <p key={paragraphIndex}>
-          {paragraph.map((line, lineIndex) => (
-            <Fragment key={lineIndex}>
-              {lineIndex > 0 && <br />}
-              {line.map(renderSegment)}
-            </Fragment>
-          ))}
-        </p>
-      ))}
+      {/* The prose is wrapped so that .bio's 48px gap separates the two HALVES
+          of Figma's AboutBio+Contact — the text and the contact block — rather
+          than every paragraph inside the text. Without this wrapper .bio is a
+          flex column whose items are the individual paragraphs, so the gap
+          meant for one boundary lands on all of them. */}
+      <div className={styles.prose}>
+        {bio.map((paragraph, paragraphIndex) => (
+          <p key={paragraphIndex}>
+            {paragraph.map((line, lineIndex) => (
+              <Fragment key={lineIndex}>
+                {lineIndex > 0 && <br />}
+                {line.map(renderSegment)}
+              </Fragment>
+            ))}
+          </p>
+        ))}
+      </div>
       {/* Figma's component here is AboutBio+Contact (791:1876) - the prose and
           the contact block as one object, which replaced the prose-only
           AboutBio (492:2172) on every screen that carries a bio. This file is

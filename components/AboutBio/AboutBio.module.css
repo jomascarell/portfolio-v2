@@ -21,8 +21,15 @@
 /* Paragraphs are separated by exactly one empty line in the drawing, so the
    gap is one line-height rather than a spacing token. Using --space-xl (32)
    would be close enough to look right and wrong enough to break the rhythm
-   against the 30px baseline. */
-.bio p + p {
+   against the 30px baseline.
+
+   THIS RULE WAS COMMENTED OUT IN THE WORKING TREE 2026-09-12, and that was a
+   correct reading of a real bug rather than a preference. Making .bio a flex
+   column for the 48px prose-to-contact gap turned every paragraph into a flex
+   item, so the gap applied between all of them — measured at 48 where the
+   drawing is 30, and 78 with this rule still live. The wrapper in AboutBio.tsx
+   fixes the cause, so the rule is restored and scoped to the prose. */
+.prose p + p {
   margin-block-start: var(--line-height-lg);
 }
 
