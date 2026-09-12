@@ -21,13 +21,31 @@ export const siteConfig = {
      every rebuild into a diff. Bump it when something ships. */
   changelog: '2026-09-08',
 
-  /* The language control is a switcher (EN / CAT / CAST) in the design and has
-     no states defined yet, so it renders as a static label for now. */
-  language: 'EN',
+  /* The footer's language control. It had no states in the design and shipped
+     as the static string 'EN'; Figma gained a three-variant `language` set
+     (786:409) on the phase 7 page, so it is a real control now.
+
+     Labels are the drawing's — EN / CAT / ES. The Footer's own description in
+     Figma still says CAST for the third one; the drawing wins because it is
+     what a visitor reads, and the disagreement is on the list to settle there.
+
+     Codes are BCP 47 so that the eventual `lang` attribute is valid without a
+     second mapping table. Nothing reads them yet: the switcher selects and
+     paints, and translation waits for translated copy. */
+  languages: [
+    { code: 'en', label: 'EN' },
+    { code: 'ca', label: 'CAT' },
+    { code: 'es', label: 'ES' },
+  ],
+  defaultLanguage: 'en',
 
   credits: 'Built with NextJS, Claude, Figma.',
 
-  footerIntro:
+  /* RENAMED FROM footerIntro 2026-09-12. The words did not change; the place
+     they belong did. Phase 7 takes the mail link and the social row out of the
+     footer and puts them in About, and this line introduces them — so a name
+     saying "footer" would now point at the one screen it never appears on. */
+  contactIntro:
     'Feel free to contact me, and send an e-mail to the following address.',
 
   /* The intro panel's copy (Phase 6). Verified byte-identical across the four

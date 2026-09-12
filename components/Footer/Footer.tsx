@@ -1,42 +1,44 @@
-import MailLink from '@/components/MailLink/MailLink'
-import SocialIcons from '@/components/SocialIcons/SocialIcons'
+import LanguageSwitcher from '@/components/LanguageSwitcher/LanguageSwitcher'
 import { siteConfig } from '@/lib/site-config'
 import styles from './Footer.module.css'
 
-/* Site footer. Figma: Footer, one variant per breakpoint (lg | md | sm); xl
-   reuses lg.
+/* The footer. Figma: Footer, Breakpoint = lg | md | sm (236:2725), redrawn on
+ * the phase 7 page.
  *
- * Twelve-column grid, two rows. Row 1 is the contact band — intro copy, the
- * address, the social row. Row 2 is the meta row — changelog, language,
- * credits. The column spans come straight from the Figma component and are the
- * only place this layout is described.
+ * REBUILT 2026-09-12, and it is a different component rather than a tidier
+ * one. It used to hold six things — an intro line, the mail link, the social
+ * row, the changelog, the language control and the credits — across three
+ * grids of 12 x 2, 8 x 3 and 4 x 5. It now holds three, and the user's reason
+ * is the honest one: the old version "becomes messy across different screen
+ * sizes and would require a large number of media queries to make it fully
+ * responsive". Six items that each need their own cell at three tiers is
+ * eighteen placements; three items is nine, and two of those are the same.
  *
- * This component knows nothing about the reveal, and should stay that way. It
- * renders the footer; components/FooterReveal wraps it in the root layout and
- * owns when it arrives. Keeping the two apart is what lets this stay a Server
- * Component — see the note at the wrapper in app/layout.tsx.
+ * THE MAIL LINK AND THE SOCIAL ROW DID NOT DIE, THEY MOVED. Both are part of
+ * AboutBio+Contact (791:1876) now, under the bio, which is where someone
+ * looking for a way to contact you would go first anyway. That move is what
+ * makes 10vh survivable — it is not a smaller footer, it is a footer that
+ * stopped carrying the contact surface.
  *
- * The height is the one number NOT taken from the reference. calebwu.ca's bar
- * is 10vh, but that is an observation of a site whose footer holds a line of
- * copy and a reset control; ours is drawn at its own content height (172px at
- * xl) and holds real links. Let it size to its content. */
+ * WHAT IS LEFT IS METADATA, in the literal sense: when this was last touched,
+ * what it was built with, and which language you are reading. None of it is a
+ * destination, which is why the bar can be an edge rather than a panel.
+ *
+ * The language control is the only interactive thing in here and the only
+ * client component. Everything else is static text, so the footer stays a
+ * Server Component and react-icons — which left with SocialIcons — is no
+ * longer in its tree at all. */
 
 export default function Footer() {
   return (
     <footer className={styles.footer}>
-      <p className={styles.intro}>{siteConfig.footerIntro}</p>
-
-      <MailLink className={styles.mail} size="md" />
-
-      <SocialIcons className={styles.social} size="md" />
-
+      {/* DOM order is changelog, language, credits, and the visual order
+          differs from it at two of the three tiers — see the stylesheet. The
+          one interactive element sits second in both orders, so the tab
+          sequence never disagrees with what the eye follows. That is the
+          constraint worth holding if these are ever reordered again. */}
       <p className={styles.changelog}>Changelog: {siteConfig.changelog}</p>
-
-      {/* A switcher in the design (EN / CAT / CAST) with no states defined, so
-          it is a label until those states exist. Marked here rather than in a
-          tracker because this is where someone will look. */}
-      <p className={styles.language}>{siteConfig.language}</p>
-
+      <LanguageSwitcher className={styles.language} />
       <p className={styles.credits}>{siteConfig.credits}</p>
     </footer>
   )
