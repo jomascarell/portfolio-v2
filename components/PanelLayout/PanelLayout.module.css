@@ -125,6 +125,35 @@
   --intro-card-display: none;
 }
 
+/* ---- The about state ----------------------------------------------------
+
+   ABOUT IS ONE SCREEN, AND ITS CONTENT SITS IN THE MIDDLE OF IT. Requested
+   2026-09-12 with a screenshot; measured before and after rather than eyeballed.
+   At a 1900 x 940 viewport the grid was 687 tall pinned to the top, leaving 253px
+   of dead space below it and none above. The screenshot has the composition
+   centred, with whitespace on both sides of it.
+
+   svh, NOT vh, and that is the one place this departs from the words used. They
+   are the same number on a desktop; they differ on a phone, where the dynamic
+   toolbar makes vh taller than what is actually visible, so a 100vh block leaves
+   a sliver of scroll under a fold that is supposed to be exactly one screen.
+   Phase 5 hit that on the shell and settled on svh there for the same reason, so
+   this follows the precedent rather than introducing a second convention.
+
+   A MINIMUM, NOT A HEIGHT. About's column grows with the prose, and at 768 the
+   bio plus the contact block is already 931 tall against a viewport that may be
+   shorter. min-block-size centres the content while there is room and gets out of
+   the way when there is not, which is the same call the landing's budget makes.
+
+   `align-content` centres the grid's rows inside that box; `align-items` (set at
+   768 below) centres the panel against the content inside the row. Both are
+   needed and they do different jobs — dropping either one leaves the composition
+   anchored to an edge. */
+.about {
+  min-block-size: 100svh;
+  align-content: center;
+}
+
 /* ---- sm: >= 640 ---------------------------------------------------------
 
    Still four columns and still stacked — what changes is that the content cell
