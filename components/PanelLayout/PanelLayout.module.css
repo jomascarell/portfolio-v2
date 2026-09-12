@@ -176,10 +176,31 @@
     margin-inline: 0;
   }
 
+  /* THE PANEL AND THE CONTENT ARE CENTRED ON EACH OTHER, and the phase 7 page
+     is exact about it: at every canvas from 768 up, on both screens, the
+     panel's midpoint and the frame's midpoint are the same number to two
+     decimal places. projects / 1448 puts a 604-tall panel at y=159 in a 922
+     frame (461 and 461); about / 1448 a 372-tall panel at y=219.67 in 811.33
+     (405.67 and 405.67). Six more frames agree.
+
+     `align-items` on the container rather than `align-self` on the panel,
+     which is what this was until 2026-09-12. Centring only the panel is
+     correct exactly while the content is the taller cell — true today on both
+     screens, and true by a wide margin once About gets its contact block — but
+     it encodes an assumption about which one wins rather than the relationship
+     the design states. If the content were ever the shorter of the two the
+     panel's rule would become a no-op and the content would stretch and sit at
+     the top, which is the one arrangement the drawings never show. Centring
+     both makes whichever is shorter centre against the other, which is what
+     "vertically aligned" actually means here. */
+  .projects,
+  .about {
+    align-items: center;
+  }
+
   .projects .panel,
   .about .panel {
     grid-column: span 4;
-    align-self: center;
   }
 
   .projects .content,
