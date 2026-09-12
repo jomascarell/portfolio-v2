@@ -11,6 +11,13 @@ import styles from './IntroCard.module.css'
  * widths, so it is media queries, and the only component in this phase that
  * needs them.
  *
+ * WHERE those media queries break is a third thing, and it IS a screen's to
+ * say — corrected 2026-09-12, audit item L. The file draws three different
+ * ladders through the same three drawings, and the landing reaches md at 640
+ * where the panel screens are still on sm. `ladder` picks between the two; the
+ * stylesheet carries the measurements and the reason a container query cannot
+ * do this job.
+ *
  * Type=about is the wordmark alone. Figma expresses that two ways in the same
  * component set — md and sm delete the tagline and the status block, lg keeps
  * them and switches them off — and the result is identical, so this renders
@@ -37,16 +44,27 @@ const TYPES = {
 
 type IntroCardProps = {
   type?: keyof typeof TYPES
+  /* Which breakpoint ladder the card climbs. `panel` is every screen that
+     seats it in a cell beside content — /projects, /about, the gallery — and
+     `full` is the landing, whose card is the whole screen from 640 up and
+     takes the md drawing there. */
+  ladder?: 'panel' | 'full'
   className?: string
 }
 
 export default function IntroCard({
   type = 'intro',
+  ladder = 'panel',
   className,
 }: IntroCardProps) {
   return (
     <div
-      className={[styles.card, TYPES[type], className]
+      className={[
+        styles.card,
+        TYPES[type],
+        ladder === 'full' && styles.full,
+        className,
+      ]
         .filter(Boolean)
         .join(' ')}
     >
@@ -65,9 +83,17 @@ export default function IntroCard({
           <p className={styles.current}>{siteConfig.status.current}</p>
           <p className={styles.previous}>
             {siteConfig.status.previous}
-            <span className={styles.handle}>
-              {siteConfig.status.previousHandle}
-            </span>
+            {/* rel="noopener noreferrer" written out rather than relying on the
+                default target="_blank" implies — the same call AboutBio makes,
+                for the same reason. */}
+            <a
+              className={styles.handle}
+              href={siteConfig.status.previousHandle.href}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {siteConfig.status.previousHandle.handle}
+            </a>
           </p>
         </div>
       )}

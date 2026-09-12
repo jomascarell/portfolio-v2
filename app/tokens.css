@@ -303,19 +303,40 @@
 
   /* ---- System / Layout ----------------------------------------------------
 
-     CAUTION: the four breakpoints are documentation, not machinery. CSS cannot
+     CAUTION: the five breakpoints are documentation, not machinery. CSS cannot
      read a custom property inside a media query — `@media (min-width:
      var(--breakpoint-lg))` does not work and fails silently. Write the literal
-     in the query and keep these as the record of what the literal means. */
+     in the query and keep these as the record of what the literal means.
 
-  --breakpoint-sm: 0px; /* Base. Everything below md. Canvases 412 and 640 both land here. */
+     THE FIFTH BREAKPOINT WAS ADDED 2026-09-11, and why matters more than the
+     number. This block used to read `--breakpoint-sm: 0px`, commented "Canvases
+     412 and 640 both land here". That sentence was an assumption written as a
+     fact, and it was wrong. The Design page draws projects / 640 and about /
+     640 as TWO COLUMNS — panel 280 at x=32, content 280 at x=328, a four-column
+     grid with a 16 gutter — and only the 412 canvases stack. A second and
+     independent signal agrees: landing-footer / 640 carries the 182px Footer
+     variant that 768 uses, not the 286px one 412 uses. By both measures 640
+     behaves like md, and only 412 is the base tier.
+
+     640 is the literal because the file's own pattern sets it: a tier's
+     breakpoint is its smallest drawn canvas, which is how 768 and 1024 were
+     chosen. That it matches a common framework default is a coincidence, not
+     the reason.
+
+     STILL TO DO IN FIGMA: the four-breakpoint decision is recorded there too.
+     This file and that one now disagree until the fifth is added on the Tokens
+     page. */
+
+  --breakpoint-base: 0px; /* Phones. The 412 canvas, and the only tier that stacks. */
+  --breakpoint-sm: 640px; /* The 640 canvas: two columns on a four-column grid. */
   --breakpoint-md: 768px; /* Tablet. */
   --breakpoint-lg: 1024px; /* Desktop — where layout structure actually changes. */
   --breakpoint-xl: 1440px; /* Wide desktop. Replaces the old 1280/1362/1448 spread. */
 
-  /* Horizontal page inset at sm AND md. The 8-column md grid uses a 32px
-     offset, so the inset does NOT step up until lg. Confirmed 2026-09-08:
-     tablet is always 32px. */
+  /* Horizontal page inset at base, sm AND md — it is 32px everywhere below lg.
+     The 8-column md grid uses a 32px offset, so the inset does NOT step up
+     until lg. Confirmed 2026-09-08: tablet is always 32px. The name predates
+     the fifth breakpoint and means "the small inset", not "the inset at sm". */
   --container-inset-sm: var(--space-xl);
 
   /* Horizontal page inset at lg and xl, matching the 12-column grid's offset.

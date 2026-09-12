@@ -2,14 +2,24 @@
    every frame on the Design page carries the same COLUMNS grid, and the frames
    are also GRID auto-layouts whose gaps are the real numbers.
 
-     lg  >= 1024   12 columns   gutter 16   row gap 48
-     md  768-1023   8 columns   gutter 16   row gap 48
-     sm  < 768      4 columns   gutter 16   row gap 48, and the two cells
-                                stack onto two rows instead of sharing one
+     lg    >= 1024   12 columns   gutter 16   row gap 48
+     md    768-1023   8 columns   gutter 16   row gap 48
+     sm    640-767    4 columns   gutter 16   row gap 48, two columns of it
+     base  < 640      4 columns   gutter 16   row gap 48, and the two cells
+                                  stack onto two rows instead of sharing one
 
    Mobile-first, and the column counts are the only thing that changes — the
-   gaps are constant at all three tiers, which is unusual enough in this design
+   gaps are constant at all four tiers, which is unusual enough in this design
    to be worth stating so nobody goes looking for the tier that differs.
+
+   THE sm TIER WAS MISSING UNTIL 2026-09-11. Everything below 768 stacked,
+   because the Design page groups 412 and 640 into one section named "sm ·
+   below 768" and I read the section grouping as the breakpoint model. The two
+   frames inside it do not agree: 640 is drawn as two columns and only 412
+   stacks. See the System / Layout note in tokens.css for the full account and
+   for why the literal is 640. The lesson generalises — the sections are a
+   canvas arrangement, not the responsive model, so frames inside one still have
+   to be diffed against each other.
 
    No horizontal inset here. The shell puts --container-inset on <main>, which
    is the same 64 / 32 the Figma frames carry as their grid offset; applying it
@@ -26,16 +36,48 @@
 }
 
 /* Both cells span the full width and stack, which is what the 412 frames draw:
-   two rows, panel first. The spans below take over from 768 up. */
+   two rows, panel first. The spans below take over from 640 up. */
 .panel,
 .content {
   grid-column: 1 / -1;
 }
 
+/* ---- sm: >= 640 ---------------------------------------------------------
+   Still four columns, but the two cells stop stacking and take two each. Read
+   off projects / 640 and about / 640, which are identical here: panel 280 at
+   x=32, content 280 at x=328, inside a 640 frame with a 32 inset. 280 is
+   exactly two of the four columns — (640 - 64 - 48) / 4 = 132, and
+   132 * 2 + 16 = 280.
+
+   This is also where the panel starts being centred against the taller cell,
+   and the drawings say so at this width too: projects / 640 puts a 604-tall
+   panel at y=256 in a 1116 frame, and about / 640 a 258-tall panel at y=145 in
+   548. Both are 256 and 145 on each side. */
+
+@media (min-width: 640px) {
+  .grid {
+    --panel-span: 2;
+    --content-span: 2;
+  }
+
+  .panel {
+    grid-column: span var(--panel-span);
+    align-self: center;
+  }
+
+  .content {
+    grid-column: span var(--content-span);
+  }
+}
+
 /* ---- md: >= 768 ---------------------------------------------------------
-   Eight columns, and the two cells share one row. This is the tier where the
-   two screens disagree: projects is 5 + 3, about is 4 + 4, so the split is
-   read from properties the page sets. */
+   Eight columns, and the tier where the two screens stop agreeing: projects is
+   5 + 3, about is 4 + 4, so the split is read from properties the page sets.
+   The cells already share a row and the panel is already centred — both come
+   from sm above, so this block only changes the counts.
+
+   The centring was verified again here at the wider canvases: projects at 1448
+   puts the panel at y=133 in an 870 frame, about at y=58 in 488. */
 
 @media (min-width: 768px) {
   .grid {
@@ -43,18 +85,6 @@
     --content-span: 4;
 
     grid-template-columns: repeat(8, minmax(0, 1fr));
-  }
-
-  .panel {
-    grid-column: span var(--panel-span);
-    /* The panel is centred against the taller content cell in every drawn
-       frame — projects at 1448 puts it at y=133 in an 870 frame, about at
-       y=58 in 488 — rather than sitting at the top of its row. */
-    align-self: center;
-  }
-
-  .content {
-    grid-column: span var(--content-span);
   }
 }
 

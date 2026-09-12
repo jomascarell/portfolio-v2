@@ -6,6 +6,26 @@
    you see it: the list rows are three short lines each, and the intro panel
    holds a fixed-width wordmark that stops shrinking. */
 
+/* AND THE ONE PLACE THIS SCREEN DROPS A COMPONENT RATHER THAN RESIZING IT.
+   Audit item F, read from projects / 412 (507:2113): there is no IntroCard
+   instance on that frame at all. The PageIntro is 136 tall — the breadcrumb
+   band and nothing else — and the list begins at y=184, which is the 48px row
+   gap this screen already has. /about keeps its card at 412, so this is
+   specific to projects rather than a rule about the narrow tier.
+
+   Declared here and not in the component for the same reason the spans are:
+   the file you open to ask what this screen does at 412 is the file that
+   answers. IntroCard reads the property and nothing else does. */
+.screen {
+  --intro-card-display: none;
+}
+
+@media (min-width: 640px) {
+  .screen {
+    --intro-card-display: flex;
+  }
+}
+
 @media (min-width: 768px) {
   .screen {
     --panel-span: 5;

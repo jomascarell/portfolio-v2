@@ -26,8 +26,8 @@
   background: var(--color-surface-inverse);
   color: var(--color-text-inverse);
 
-  font-size: var(--font-size-sm);
-  line-height: var(--line-height-sm);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
   letter-spacing: var(--letter-spacing-normal);
 }
 
@@ -76,30 +76,43 @@
 
 .changelog {
   grid-column: 2 / span 2;
-  grid-row: 4;
+  grid-row: 5;
   text-align: center;
   /* The only text in the footer that is not full white. Figma has it at 80%,
      which has no token — the neutral ramp carries no alpha steps. Left as a
      literal so it reads as deliberately outside the system. */
-  color: rgb(255 255 255 / 0.8);
+  color: var(--color-neutral-400);
+  font-weight: var(--font-weight-light);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
+  letter-spacing: var(--letter-spacing-wide);
 }
 
 .credits {
   grid-column: 1 / span 4;
-  grid-row: 5;
+  grid-row: 4;
   text-align: center;
 }
 
 /* ---- md: 768-1023 -------------------------------------------------------
    Eight columns, three rows. The intro returns and spans both of the first
    two rows, which is what pushes the meta row down to row 3. --container-inset
-   is already 32px below 1024, so the inset needs no literal here. */
+   is already 32px below 1024, so the inset needs no literal here.
 
-@media (min-width: 768px) {
+   THIS TIER STARTS AT 640, NOT 768 — corrected 2026-09-11 (audit item L-1).
+   Phase 7 found the fifth breakpoint and rolled it into IntroCard, NavLinks and
+   PanelLayout but not into this file, so 640-767 was still rendering the sm
+   footer. Figma is unambiguous: landing-footer / 640 contains Footer
+   Breakpoint=md (187 tall), where landing-footer / 412 contains Breakpoint=sm
+   (350). It matters for more than fidelity — the sm variant is 316px in the
+   build against md's 227, and on the 640 tier that difference is most of the
+   room the footer reveal needs. */
+
+@media (min-width: 640px) {
   .footer {
     grid-template-columns: repeat(8, minmax(0, 1fr));
     grid-template-rows: repeat(3, min-content);
-    row-gap: var(--space-md);
+    row-gap: var(--space-2xl);
     padding-block: var(--space-lg);
     padding-inline: var(--container-inset);
   }
@@ -150,16 +163,17 @@
   .footer {
     grid-template-columns: repeat(12, minmax(0, 1fr));
     grid-template-rows: minmax(0, 2fr) minmax(0, 1fr);
-    row-gap: var(--space-3xl);
+    row-gap: var(--space-2xl);
+    column-gap: var(--space-md);
   }
 
   .intro {
-    grid-column: 1 / span 3;
+    grid-column: 1 / span 4;
     grid-row: 1;
   }
 
   .mail {
-    grid-column: 6 / span 3;
+    grid-column: 6 / span 4;
     grid-row: 1;
   }
 
@@ -169,12 +183,12 @@
   }
 
   .changelog {
-    grid-column: 1 / span 2;
+    grid-column: 1 / span 3;
     grid-row: 2;
   }
 
   .language {
-    grid-column: 3 / span 2;
+    grid-column: 4 / span 1;
     grid-row: 2;
   }
 

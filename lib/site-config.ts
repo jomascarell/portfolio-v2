@@ -41,12 +41,20 @@ export const siteConfig = {
      color/text/accent and the rest is secondary. Split here rather than in the
      component so the component does not have to know which word is the
      employer, and so changing it is a content edit.
-     It is not a link in the design — accent alone, no href — which is why
-     there is no URL on it. */
+
+     The handle carries its href for the same reason the social entries do: the
+     label and the URL it describes have to travel together. The design draws it
+     accent-coloured with no underline and says nothing about a destination —
+     this one comes from the retired build, and it is the URL AboutBio links the
+     same word to, so the two screens agree rather than one of them being inert.
+     IntroCard renders it looking exactly as drawn. */
   status: {
     current: 'Currently working in solo projects',
     previous: 'Previously interned ',
-    previousHandle: '@Okisam',
+    previousHandle: {
+      href: 'https://okisam.com/',
+      handle: '@Okisam',
+    },
   },
 
   /* The three top-level destinations, in the drawn order. They render as

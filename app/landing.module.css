@@ -9,23 +9,88 @@
    panel sits at the top of its frame, so the centring stops at the same
    breakpoint the inset returns at. */
 
+/* The clearance between the revealed bar and the last of the landing's content.
+   16px — the top of the 8-16 range, and the closest step on the scale to the
+   40-48px the landing-footer frames draw between the two. Kept here rather than
+   in tokens.css because it describes the relationship between two elements on
+   one screen, not a value the system reuses. */
 .landing {
+  --reveal-gap: var(--space-md);
+
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   column-gap: var(--space-md);
   align-content: center;
-  min-block-size: 100%;
+
+  /* THE BUDGET. The landing claims the viewport minus the bar minus the gap,
+     so a revealed footer lands on empty space rather than on content.
+     --footer-band is the bar's measured height, published by FooterReveal only
+     while the bar is a fixed overlay; unset it falls back to 0 and this is a
+     plain 100svh, which is the `static` state, the no-JS state, and every route
+     that is not this one.
+
+     min-block-size and not block-size: a minimum cannot clip. If something ever
+     grows taller than the budget the page scrolls and the guard hands back the
+     wheel, which is the degradation that is already built rather than content
+     disappearing under a fixed bar.
+
+     THIS REPLACES `min-block-size: 100%`, WHICH NEVER DID ANYTHING. Measured at
+     711px on a 760, an 800 and a 900 viewport alike: a percentage height does
+     not resolve against a parent sized by min-height plus flex:1, so the landing
+     was content-sized all along — which is also why align-content had nothing
+     to distribute. svh resolves unconditionally. */
+  min-block-size: calc(100svh - var(--footer-band, 0px) - var(--reveal-gap));
+
   margin-inline: calc(var(--container-inset) * -1);
-  /* The one number the landing-footer frames give that nothing else does:
-     48px between the end of the content and the top of the footer at 1448.
-     The shell's flex:1 already absorbs the slack on a tall viewport, so this
-     only does work on a short one — where without it the panel would butt
-     straight into the footer when the reveal fires. */
-  padding-block-end: var(--space-2xl);
+  /* The one number the landing-footer frames give that nothing else does: the
+     gap between the end of the content and the top of the footer — 40px at
+     1448/1280/1024, 48px at 640/768.
+
+     WHAT THIS PADDING NOW DOES IS NOT WHAT THE OLD COMMENT SAID. It used to
+     read as reserving space against an in-flow footer; since 2026-09-11 the
+     footer is a fixed overlay (see components/FooterReveal), so it reserves
+     nothing and the bar will cross this padding whenever the viewport is short
+     enough. It is still the right number, because it is what puts the panel's
+     bottom edge exactly on the bar's top edge at the height Figma draws: at a
+     804px viewport, 48 + nav 132 + card 468 = 648, and the bar's top is
+     804 - 156 = 648.
+
+     A RESERVED-SPACE VERSION OF THIS WAS TRIED AND REMOVED 2026-09-11. It
+     published the bar's height as a custom property and spent it as bottom
+     padding here. It worked arithmetically and read badly: the landing's
+     content lifts off the bottom of the screen by the height of a bar that is
+     not there yet, so the page looks mis-centred whenever the footer is closed
+     — which is nearly always. Reserving space for an absent element pays its
+     cost all the time and its benefit only on reveal.
+
+     The overlap is handled by constraining heights instead. See the note at the
+     top of this file. */
+  padding-block: var(--space-2xl);
+
+  /* border: 4px solid rgb(0, 255, 115); */
 }
 
 .panel {
   grid-column: 1 / -1;
+
+  /* THE CARD IS THE THING THAT YIELDS, and only on this screen.
+     IntroCard's drawn height is 468 from 640 up and stays 468 everywhere else;
+     here it is capped at whatever the budget leaves after the landing's own
+     chrome. 228px is that chrome — 96 of padding-block plus the 132 the nav
+     block occupies — and it is the one literal in the expression because it is
+     the only part that does not vary.
+
+     Worked at 1440: budget is 100svh - 175 - 16, chrome is 228, so the card
+     gets 100svh - 419. At a 900 viewport that is 481, so min() keeps the drawn
+     468 and nothing changes. At 760 it is 341, and 341 + 228 + 175 + 16 = 760
+     exactly — the bar sits on the gap with the content whole above it.
+
+     Set on the panel rather than inside IntroCard so /projects and /gallery,
+     which have no footer revealing over them, keep the full 468. */
+  --intro-min-block: min(
+    468px,
+    calc(100svh - var(--footer-band, 0px) - var(--reveal-gap) - 228px)
+  );
 }
 
 /* ---- md: >= 768 ---------------------------------------------------------

@@ -63,11 +63,20 @@
   overflow-wrap: break-word;
 }
 
-/* Figma text style: heading/h2 — 28/36 Regular, tracking 0. */
+/* Figma text style: heading/h3 — 18/30 Medium, tracking 0.
+
+   CORRECTED 2026-09-12, audit item C. This read heading/h2 — 28/36 Regular —
+   which is a whole tier too big, and the row's own geometry is what catches it:
+   Figma draws the row at 164, which is 16 + 30 + 4 + 52 + 10 + 36 + 16, and a
+   30px line box is 18/30 rather than 28/36. At the old size the row computed to
+   170 and "Testing emotional design" ran 312px against the 202 drawn.
+
+   Read off the instances rather than inferred: all four category nodes on
+   projects / 1448 carry heading/h3, Medium. The weight was wrong too. */
 .category {
-  font-size: var(--font-size-xl);
-  line-height: var(--line-height-xl);
-  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-lg);
+  font-weight: var(--font-weight-medium);
   letter-spacing: var(--letter-spacing-normal);
 }
 

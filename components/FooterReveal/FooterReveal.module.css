@@ -1,66 +1,113 @@
-/* Motion for the footer reveal. The mechanic and the deviation from Figma's
-   "position: fixed" are argued in FooterReveal.tsx; this file is only the
-   values, and every one of them is a token.
+/* Motion and positioning for the footer reveal. The mechanic is argued in
+   FooterReveal.tsx; this file is the values, and every one of them is a token.
 
-   Nothing here applies until FooterReveal sets data-state to hidden or
-   revealed after mount. In the default `static` state these rules do not match,
-   so the footer is an ordinary block at the end of the document — which is also
+   Nothing here applies until FooterReveal sets data-state to hidden or revealed
+   after mount. In the default `static` state these rules do not match, so the
+   footer is an ordinary block at the end of the landing — which is also exactly
    what a visitor without JavaScript gets. */
 
+/* The footer is full-bleed and carries its own inset internally. Phase 5 got
+   that by mounting it outside <main>; now that the landing owns it, it renders
+   inside <main> and has to cancel --container-inset the same way .landing
+   already does. This keeps the no-JS `static` footer edge to edge, which is how
+   every landing-footer frame draws it — and it has to be undone again in the
+   fixed states, which is not the harmless no-op it looks like. See below. */
 .reveal {
-  /* The anchor for .sentinel. */
-  position: relative;
-
-  /* Contains the slide. Without this, a footer translated down by its own
-     height hangs below the end of the document and adds exactly that much
-     scroll — a page that grows a dead band at the bottom the moment the footer
-     hides.
-
-     `clip` rather than `hidden` deliberately: both clip, but `hidden` makes this
-     a scroll container, and a scrollable box here can be scrolled by an errant
-     focus or an anchor jump and leave the footer visibly offset inside its own
-     frame. `clip` cannot. (Note this is the opposite of the choice recorded for
-     the carousel, where being scrollable from code is the whole point.) */
-  overflow: clip;
+  margin-inline: calc(var(--container-inset) * -1);
 }
 
-.sentinel {
-  position: absolute;
-  inset-block-start: 0;
+/* THE BAR LEAVES THE FLOW ONLY ONCE THE ISLAND HAS TAKEN OVER — changed
+   2026-09-11, and this is the change Phase 5 got wrong rather than a reversal
+   of its reasoning.
+
+   Phase 5 argued against `fixed` and argued it correctly: on a page that
+   scrolls, a footer in normal flow reserves its own space, and fixing it would
+   only buy a choice between covering the last of the content and maintaining a
+   spacer forever. That holds. It just does not describe this route. The landing
+   is one screen and does not scroll, and on a page that does not scroll an
+   in-flow footer at the end of the document has exactly two possible fates: it
+   fits, and is permanently visible — which is what shipped, and what the
+   complaint was — or it does not fit, and is permanently unreachable. Overlaying
+   is the only way a static page can have a footer that ARRIVES.
+
+   So both things are true, scoped to the page each was reasoned about. The
+   footer no longer renders anywhere that scrolls. */
+.reveal[data-state='hidden'],
+.reveal[data-state='revealed'] {
+  position: fixed;
   inset-inline: 0;
-  height: 1px;
-  pointer-events: none;
+  inset-block-end: 0;
+
+  /* The inset cancel above is for `static` only. On a fixed box it does real
+     damage rather than nothing: inset-inline:0 sets both edges to the viewport,
+     and a negative margin then pushes them OUTWARD — measured at 1440, the bar
+     came out 1568 wide starting at x=-64, overhanging both sides by exactly the
+     inset. */
+  margin-inline: 0;
+
+  /* Above the page, below the skip link at 100 - which has to stay reachable
+     over everything, including this. The reference uses 20 for the same layer
+     and 50 for the nav above it; we have no nav, so the gap is ours to spend
+     later. No token: tokens.css carries no z-index scale, and inventing one for
+     a second consumer would be a system built from two data points. */
+  z-index: 20;
 }
 
-/* The only moving part. Both properties are on the compositor, so the reveal
-   does not touch layout while it runs. */
-.slide {
+/* THE TRANSITION IS NOT ON THE STATES, IT IS BEHIND data-armed — see
+   FooterReveal.tsx for what goes wrong when it is not.
+
+   Short version: mount moves the bar from `static` to `hidden`, and that change
+   must not animate. If it does, the footer is painted in place on every page
+   load and then slides away; and the transition it starts was measured stuck at
+   currentTime 0, which pins the computed value to the transition's START —
+   opacity 1 and an identity transform — so the bar simply never hides. The
+   component sets data-armed two frames after that first change, which is late
+   enough that the jump cannot be folded into it, and every open and close from
+   then on is motion.
+
+   Both properties are on the compositor, so the reveal does not touch layout
+   while it runs. 500ms on ease/entrance - cubic-bezier(0.62, 0.61, 0.02, 1) -
+   byte-identical to the reference's own --ease-fast, so this is the same motion
+   and not an approximation of it. */
+.reveal[data-armed='true'] {
   transition:
     transform var(--duration-reveal) var(--ease-entrance),
     opacity var(--duration-reveal) var(--ease-entrance);
 }
 
-/* Pushed down by exactly its own height, so nothing peeks — the reference's
-   value, and the reason the wrapper clips. */
-.reveal[data-state='hidden'] .slide {
+/* Pushed down by exactly its own height, so nothing peeks - the reference's
+   value. No clipping wrapper is needed for it: a fixed element translated below
+   the viewport is clipped by the viewport itself and adds no scrollable area,
+   which is the job Phase 5's `overflow: clip` was doing when the bar was in
+   flow. */
+.reveal[data-state='hidden'] {
   transform: translateY(100%);
   opacity: 0;
 }
 
-.reveal[data-state='revealed'] .slide {
+.reveal[data-state='revealed'] {
   transform: translateY(0);
   opacity: 1;
 }
 
-/* "Under prefers-reduced-motion the bar appears in place, opacity only, no
-   transform." Dropping the transform is this rule's job; the fade is not, and
-   is not ours to keep — globals.css blankets transition-duration to 0.01ms
-   under the same query, so the footer simply appears. That is the intent
-   ("appears in place"), but it is worth stating, because the retired build
-   carried a comment claiming a fade survives this and it does not — the same
-   correction already made on the social-icon handle in Phase 5. */
-@media (prefers-reduced-motion: reduce) {
-  .reveal[data-state='hidden'] .slide {
-    transform: none;
-  }
-}
+/* THERE IS NO REDUCED-MOTION OVERRIDE HERE ANY MORE, AND REMOVING IT IS THE
+   FIX RATHER THAN A REGRESSION — 2026-09-11.
+
+   Figma's line is "the bar appears in place, opacity only, no transform", and
+   Phase 5 implemented the last clause literally: `transform: none` on the
+   hidden state under the reduced-motion query. That was harmless then, because
+   the bar was in normal flow inside a clipping wrapper — cancelling the
+   translate just left it sitting at the end of the document where it already
+   was.
+
+   It is not harmless now. Since the bar became `position: fixed`, the translate
+   is not decoration, it is the only thing parking it off-screen; cancelling it
+   leaves the footer fully visible across the bottom of the viewport in the
+   state whose entire job is to be hidden. That was the bug in the first build
+   of this change, and it reads exactly like the reveal never working.
+
+   The clause is still honoured, because it was never this rule that honoured
+   it: globals.css blankets `transition-duration: 0.01ms !important` under the
+   same query, so the bar arrives and leaves with no perceptible motion. "No
+   transform" meant "do not animate a transform", and the transition is what
+   animates. The transform that remains is a position, not a movement. */

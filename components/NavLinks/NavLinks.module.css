@@ -26,11 +26,34 @@
   list-style: none;
 }
 
+/* `row` IS RESPONSIVE, and the design is why. NavLinks renders on two frames
+   in the whole file — landing and landing-footer — and below 640 both of them
+   draw it stacked: landing / 412 is the only NavLinks in the design with
+   Layout=stack, and there is no frame anywhere that keeps the pills in a row
+   at 412. So "row" names the layout from sm up, and the narrow tier has only
+   one answer rather than a choice.
+
+   Figma, landing / 412: the nav block is 97 x 220 at x=157.5 in a 412 frame —
+   (412 - 97) / 2, so the block centres while the pills inside it stay left
+   aligned. 97 is the widest pill (93) plus this list's 2px inline padding on
+   each side. The 8px gap and the 64/32 band are identical in both directions,
+   which is why only two properties move. */
+
 .row {
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
+@media (min-width: 640px) {
+  .row {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+/* Unconditional. The prop still exists so /gallery can show the variant at any
+   width, and so a future screen can opt into stacking above 640 — the design
+   does not ask for that today. */
 .stack {
   flex-direction: column;
   align-items: flex-start;
