@@ -121,12 +121,29 @@ a {
   animation-timing-function: var(--ease-entrance);
 }
 
-/* The panel's two snapshots are the same object at two sizes, so crossfading
-   them just blurs the wordmark against itself. Holding both at full opacity
-   lets the group's position-and-size animation do all the work, which is what
-   makes it read as one thing moving rather than two things swapping. */
-::view-transition-old(.morph),
-::view-transition-new(.morph) {
-  animation: none;
-  mix-blend-mode: normal;
-}
+/* THE CROSSFADE IS LEFT ALONE ON PURPOSE, and the rule that used to be here
+   was the cause of the flicker reported 2026-09-12.
+
+   It killed the old and new snapshots' animations —
+
+     ::view-transition-old(.morph), ::view-transition-new(.morph)
+       { animation: none; mix-blend-mode: normal }
+
+   — on the stated premise that "the panel's two snapshots are the same object
+   at two sizes, so crossfading them just blurs the wordmark against itself".
+   That premise is false, and the states say so plainly: the nav goes from three
+   pills to a breadcrumb pill, and on about the tagline and both status lines
+   are not rendered at all. The two snapshots hold DIFFERENT content.
+
+   Removing their animations does not remove the fade, it freezes both at
+   opacity 1. The pair stacks old under new inside
+   ::view-transition-image-pair, so for the whole 320ms two different images are
+   painted fully opaque on top of each other, with the old one stretched from
+   its own size to the new one by the group animation. Superimposed text that
+   snaps clear at the end is exactly what "flickering on the intro page" looks
+   like.
+
+   The default UA animations — old fades out, new fades in, over the group's
+   duration — are what make a morph read as one thing moving. They only need
+   overriding when a pair is genuinely the same pixels, which is the case the
+   Next guide's blur example is written for and is not this one. */
