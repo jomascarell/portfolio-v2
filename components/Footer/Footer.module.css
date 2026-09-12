@@ -153,7 +153,7 @@
   }
 
   .changelog {
-    grid-column: 3 / span 2;
+    grid-column: 3 / span 3;
     grid-row: 1;
   }
 
@@ -163,8 +163,8 @@
   }
 
   .credits {
-    grid-column: 7 / span 4;
+    grid-column: 8 / span 3;
     grid-row: 1;
-    text-align: left;
+    text-align: right;
   }
 }
