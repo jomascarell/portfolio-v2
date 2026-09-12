@@ -1,6 +1,5 @@
 import { ViewTransition, type ReactNode } from 'react'
-import Breadcrumb from '@/components/Breadcrumb/Breadcrumb'
-import NavLinks from '@/components/NavLinks/NavLinks'
+import Nav from '@/components/Nav/Nav'
 import PageIntro from '@/components/PageIntro/PageIntro'
 import styles from './PanelLayout.module.css'
 
@@ -38,11 +37,12 @@ import styles from './PanelLayout.module.css'
  * RESULT, which the user confirmed, and a named ViewTransition gives it without
  * the measurement rig or the staging timers.
  *
- * NavLinks on the landing, Breadcrumb inside, decided here rather than passed
- * in. It is the design's own rule and it is not a per-page choice, so a page
- * should not be able to get it wrong. Phase 8 step 3 merges those two
- * components into the single `Nav` set that already exists in Figma; when it
- * does, this is the one place that changes. */
+ * The nav is now ONE component in five states rather than two components
+ * swapped by route — NavLinks and Breadcrumb were merged into `Nav` to match
+ * the Figma set, so this file hands it a state and stops there. It used to
+ * choose between two imports on the page's behalf; there is nothing left to
+ * choose. PanelLayout's own state names are Nav's state names on purpose, so
+ * the mapping is an identity rather than a lookup that can drift. */
 
 type PanelState = 'landing' | 'projects' | 'about'
 
@@ -50,13 +50,6 @@ const STATES: Record<PanelState, string> = {
   landing: styles.landing,
   projects: styles.projects,
   about: styles.about,
-}
-
-/* The breadcrumb's current-section label. The landing has no breadcrumb, so it
-   has no entry — that asymmetry is the nav rule, written as a type. */
-const SECTION_LABEL: Record<Exclude<PanelState, 'landing'>, string> = {
-  projects: 'Projects',
-  about: 'About',
 }
 
 type PanelLayoutProps = {
@@ -81,11 +74,7 @@ export default function PanelLayout({
      altogether, which is a quiet enough failure to be worth naming here. */
   const nav = (
     <ViewTransition name="site-nav" share="morph" default="none">
-      {isLanding ? (
-        <NavLinks layout="row" />
-      ) : (
-        <Breadcrumb label={SECTION_LABEL[state]} />
-      )}
+      <Nav state={state} />
     </ViewTransition>
   )
 

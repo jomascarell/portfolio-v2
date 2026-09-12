@@ -2,7 +2,7 @@
    default, so this block only has to state the things that differ from it.
 
    The 64px band above and below is the component's own padding in Figma, and
-   it matches the band NavLinks and Breadcrumb reserve above the card on the
+   it matches the band Nav reserves above the card on the
    other side of the about screen. That is what lines the two columns up. */
 
 .bio {

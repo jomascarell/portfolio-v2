@@ -5,7 +5,7 @@ import type { Metadata } from 'next'
    uses CSS Modules rather than utilities. Nothing in Phase 6 touched this
    screen: along with project-detail it is one of the two that carry no
    PageIntro at all, so none of the twelve components lands here except the
-   Breadcrumb.
+   Nav in its photos state.
 
    Photos are grouped by year, and the year doubles as the anchor id and the
    sidebar label. lib/photos.ts arrives in PHASE 9 with the real images. */

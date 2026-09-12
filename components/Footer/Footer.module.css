@@ -100,7 +100,7 @@
    is already 32px below 1024, so the inset needs no literal here.
 
    THIS TIER STARTS AT 640, NOT 768 — corrected 2026-09-11 (audit item L-1).
-   Phase 7 found the fifth breakpoint and rolled it into IntroCard, NavLinks and
+   Phase 7 found the fifth breakpoint and rolled it into IntroCard, Nav and
    PanelLayout but not into this file, so 640-767 was still rendering the sm
    footer. Figma is unambiguous: landing-footer / 640 contains Footer
    Breakpoint=md (187 tall), where landing-footer / 412 contains Breakpoint=sm

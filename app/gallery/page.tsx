@@ -1,10 +1,9 @@
 import type { Metadata } from 'next'
 import AboutBio from '@/components/AboutBio/AboutBio'
-import Breadcrumb from '@/components/Breadcrumb/Breadcrumb'
 import IntroCard from '@/components/IntroCard/IntroCard'
 import MailLink from '@/components/MailLink/MailLink'
 import NavLink from '@/components/NavLink/NavLink'
-import NavLinks from '@/components/NavLinks/NavLinks'
+import Nav from '@/components/Nav/Nav'
 import PageIntro from '@/components/PageIntro/PageIntro'
 import ProjectList from '@/components/ProjectList/ProjectList'
 import ProjectListRow from '@/components/ProjectListRow/ProjectListRow'
@@ -27,7 +26,7 @@ import styles from './gallery.module.css'
  *
  * TWO THINGS THIS PAGE CANNOT SHOW BY ITSELF, both by design:
  *
- * 1. Hover states. NavLink, Breadcrumb's home link and MailLink change on
+ * 1. Hover states. NavLink, Nav's breadcrumb home link and MailLink change on
  *    :hover, and none of them takes a prop to force it — hover the element and
  *    the real rule fires, which is better evidence than a duplicate class that
  *    could drift from it. ProjectListRow is the exception: it has a `state`
@@ -117,34 +116,27 @@ export default function GalleryPage() {
       </Section>
 
       <Section
-        title="NavLinks"
-        node="542:974"
-        note="Layout is a prop, not a breakpoint — row is used at every canvas including 412."
+        title="Nav"
+        node="829:233"
+        note="One component, five states x two layouts. NavLinks and Breadcrumb were merged into this set; the four interior x stack variants are intentional duplicates, so layout is inert on them. Watch the ground hand off: on landing the pills paint and the container does not, and inside it is the other way round."
       >
-        <Specimen label="Layout = row">
-          <NavLinks layout="row" />
+        <Specimen label="State = landing, Layout = row">
+          <Nav state="landing" layout="row" />
         </Specimen>
-        <Specimen label="Layout = stack">
-          <NavLinks layout="stack" />
+        <Specimen label="State = landing, Layout = stack">
+          <Nav state="landing" layout="stack" />
         </Specimen>
-      </Section>
-
-      <Section
-        title="Breadcrumb"
-        node="542:975"
-        note="Four Figma variants, one string apart. The caret is a sibling of the link here, not a child of it."
-      >
-        <Specimen label="Section = projects">
-          <Breadcrumb label="Projects" />
+        <Specimen label="State = projects">
+          <Nav state="projects" />
         </Specimen>
-        <Specimen label="Section = about">
-          <Breadcrumb label="About" />
+        <Specimen label="State = about">
+          <Nav state="about" />
         </Specimen>
-        <Specimen label="Section = photos">
-          <Breadcrumb label="Photos" />
+        <Specimen label="State = photos">
+          <Nav state="photos" />
         </Specimen>
-        <Specimen label="Section = project-detail">
-          <Breadcrumb label="Hedonic Design" />
+        <Specimen label="State = project-detail">
+          <Nav state="project-detail" label="Emotional UX in e-commerce" />
         </Specimen>
       </Section>
 
@@ -167,16 +159,16 @@ export default function GalleryPage() {
       <Section
         title="PageIntro"
         node="556:3103"
-        note="A nav slot above the card. Figma composes it with NavLinks; the interior screens put a Breadcrumb in the same slot."
+        note="A nav slot above the card. The slot takes any Nav state, which is what lets the landing and the interior screens share one panel."
       >
         <Specimen label="Layout = row">
-          <PageIntro nav={<NavLinks layout="row" />} />
+          <PageIntro nav={<Nav state="landing" layout="row" />} />
         </Specimen>
         <Specimen label="Layout = stack">
-          <PageIntro nav={<NavLinks layout="stack" />} />
+          <PageIntro nav={<Nav state="landing" layout="stack" />} />
         </Specimen>
-        <Specimen label="Breadcrumb in the slot, Type = about">
-          <PageIntro nav={<Breadcrumb label="About" />} type="about" />
+        <Specimen label="Nav state = about in the slot, Type = about">
+          <PageIntro nav={<Nav state="about" />} type="about" />
         </Specimen>
       </Section>
 
