@@ -1,48 +1,106 @@
-import type { ReactNode } from 'react'
+import { ViewTransition, type ReactNode } from 'react'
+import Breadcrumb from '@/components/Breadcrumb/Breadcrumb'
+import NavLinks from '@/components/NavLinks/NavLinks'
 import PageIntro from '@/components/PageIntro/PageIntro'
 import styles from './PanelLayout.module.css'
 
-/* The panel-plus-content screens: /projects and /about.
+/* The panel family — landing, projects and about — as ONE component with three
+ * states, rather than three screens that happen to look related.
  *
- * There are two screen families in this design and this is the first of them.
- * Landing, landing-footer, projects and about carry an intro panel beside
- * their content; project-detail and photos carry no PageIntro at all and are
- * built separately. Landing is in the family but not in this component — it
- * has no content cell, so it is a panel placed on the page grid and nothing
- * else, which is less code than configuring this one to render half of itself.
+ * REWRITTEN 2026-09-12, and the reason is a correction from the user rather
+ * than a refactor. Projects and About are not separate pages: they are the
+ * landing with a second column open. The phase 7 page shows it in the geometry
+ * — at 1448 the landing's panel is 874.7 wide and centred, on projects the
+ * SAME panel is 763.3 pinned to x=64 with the list beside it, and on about it
+ * shrinks again to 540.7 with the bio beside it. One object in three positions.
  *
- * THE PAGE GRID LIVES HERE, and it is the same grid every screen in the design
- * is drawn on: 12 columns from 1024, 8 from 768, 4 below it, with a 16px
- * gutter and a 48px row gap. The horizontal inset is NOT here — the shell
- * already applies --container-inset to the one <main>, which is the same 64/32
- * the Figma frames carry as their grid offset.
+ * The previous build had this as two things: app/landing.module.css owned a
+ * grid for the landing, and this component owned a different grid for the two
+ * "panel screens". That split is what made them read as separate pages, and
+ * merging the grids is most of what this change is.
  *
- * The span split is per screen and is set in each page's own stylesheet
- * through two custom properties, because the two screens genuinely differ and
- * only at one tier: both are 6 + 6 of 12 at lg, but projects is 5 + 3 of 8 at
- * md while about is 4 + 4. Putting the numbers in the page rather than behind a
- * prop name means the file you open to ask "how wide is the list on tablet"
- * is the file that answers. */
+ * THEY ARE STILL REAL ROUTES WITH REAL URLS. The user was explicit: keep the
+ * addresses, share the layout, animate between them. So /projects and /about
+ * stay addressable, deep-linkable and back-button-correct, and what changes is
+ * that they render the same composition rather than a different one.
+ *
+ * HOW THE PANEL MOVES. Each route renders its own panel, and both the panel and
+ * the nav are wrapped in <ViewTransition> under stable names. The browser
+ * snapshots the old and new positions across the navigation and animates
+ * between them, so the panel slides from centre to left without any of the
+ * three routes owning a "from" and a "to". This is the documented shared-element
+ * morph, and it is why the panel does NOT have to be hoisted into a layout and
+ * kept mounted: a named pair morphs across separate route trees.
+ *
+ * That also settles the nav morph the cheap way. The Figma spec describes
+ * Caleb's technique — measure both labels' scrollWidth, animate width with a
+ * per-item delay — because he has no view transitions to lean on. We want his
+ * RESULT, which the user confirmed, and a named ViewTransition gives it without
+ * the measurement rig or the staging timers.
+ *
+ * NavLinks on the landing, Breadcrumb inside, decided here rather than passed
+ * in. It is the design's own rule and it is not a per-page choice, so a page
+ * should not be able to get it wrong. Phase 8 step 3 merges those two
+ * components into the single `Nav` set that already exists in Figma; when it
+ * does, this is the one place that changes. */
+
+type PanelState = 'landing' | 'projects' | 'about'
+
+const STATES: Record<PanelState, string> = {
+  landing: styles.landing,
+  projects: styles.projects,
+  about: styles.about,
+}
+
+/* The breadcrumb's current-section label. The landing has no breadcrumb, so it
+   has no entry — that asymmetry is the nav rule, written as a type. */
+const SECTION_LABEL: Record<Exclude<PanelState, 'landing'>, string> = {
+  projects: 'Projects',
+  about: 'About',
+}
 
 type PanelLayoutProps = {
-  /* NavLinks on the landing, Breadcrumb everywhere else — passed through to
-     PageIntro, which owns the slot. */
-  nav: ReactNode
-  type?: 'intro' | 'about'
-  children: ReactNode
+  state: PanelState
+  /* Absent on the landing, which is the whole of what makes it the landing:
+     the panel with no second cell beside it. */
+  children?: ReactNode
   className?: string
 }
 
 export default function PanelLayout({
-  nav,
-  type = 'intro',
+  state,
   children,
   className,
 }: PanelLayoutProps) {
+  const isLanding = state === 'landing'
+
+  /* `share="morph"` and `default="none"` travel together. The share prop puts
+     the pair in a class the stylesheet can target; default="none" stops these
+     named elements from running a crossfade on every unrelated transition.
+     Setting default="none" WITHOUT an explicit share silently stops the morph
+     altogether, which is a quiet enough failure to be worth naming here. */
+  const nav = (
+    <ViewTransition name="site-nav" share="morph" default="none">
+      {isLanding ? (
+        <NavLinks layout="row" />
+      ) : (
+        <Breadcrumb label={SECTION_LABEL[state]} />
+      )}
+    </ViewTransition>
+  )
+
   return (
-    <div className={[styles.grid, className].filter(Boolean).join(' ')}>
-      <PageIntro className={styles.panel} nav={nav} type={type} />
-      <div className={styles.content}>{children}</div>
+    <div className={[styles.grid, STATES[state], className].filter(Boolean).join(' ')}>
+      <ViewTransition name="page-intro" share="morph" default="none">
+        <PageIntro
+          className={styles.panel}
+          nav={nav}
+          type={isLanding ? 'intro' : state === 'about' ? 'about' : 'intro'}
+          ladder={isLanding ? 'full' : 'panel'}
+        />
+      </ViewTransition>
+
+      {children ? <div className={styles.content}>{children}</div> : null}
     </div>
   )
 }

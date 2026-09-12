@@ -1,19 +1,29 @@
 import type { Metadata } from 'next'
-import Breadcrumb from '@/components/Breadcrumb/Breadcrumb'
 import PanelLayout from '@/components/PanelLayout/PanelLayout'
 import ProjectList from '@/components/ProjectList/ProjectList'
-import styles from './projects.module.css'
 
-/* The project list. Figma: projects / 1448 (482:1878) and its three siblings.
+/* The project list. Figma: phase 7, projects / 1448 (793:2044) and its five
+ * siblings.
  *
- * Panel on the left, list on the right, on the shared page grid. The split is
- * 6 + 6 of twelve at lg and 4 + 4 of four stacked below 768 — both the
- * PanelLayout defaults — but 5 + 3 of eight at md, which is this screen's own
- * and is set below.
+ * NOT A SEPARATE PAGE, despite having a URL of its own. It is the landing with
+ * the list open beside the panel, and it renders the same PanelLayout the
+ * landing does — only the state differs. The panel does not remount across the
+ * navigation; it morphs from the centre of the screen to the left, and the list
+ * arrives in the cell it vacates.
  *
- * PHASE 8 turns the list into the stepped deck. It replaces what ProjectList
- * renders, not where it sits: this screen keeps its grid cell either way,
- * which is the point of building the layout before the behaviour.
+ * The URL stays real and addressable. The user was explicit that these keep
+ * their own routes: deep links, the back button and the breadcrumb all depend
+ * on it, and "not a separate page" describes the composition, not the address.
+ *
+ * The grid, the spans and the breadcrumb all live in PanelLayout now. This file
+ * had a stylesheet of its own until 2026-09-12; everything in it was a
+ * statement about where the panel and the list sit, which is exactly what the
+ * layout component is for.
+ *
+ * PHASE 8 turns the list into the stepped deck and gives its rows the entrance
+ * the user chose — every row flying in independently from the right, rather
+ * than one container moving into place. It replaces what ProjectList renders,
+ * not where it sits.
  *
  * Deck position deliberately stays out of the URL. Reading searchParams would
  * opt this route into dynamic rendering, and giving each card its own URL later
@@ -25,10 +35,7 @@ export const metadata: Metadata = {
 
 export default function ProjectsPage() {
   return (
-    <PanelLayout
-      className={styles.screen}
-      nav={<Breadcrumb label="Projects" />}
-    >
+    <PanelLayout state="projects">
       <ProjectList />
     </PanelLayout>
   )

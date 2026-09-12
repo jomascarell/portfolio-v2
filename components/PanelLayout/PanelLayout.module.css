@@ -1,101 +1,245 @@
-/* The page grid, read from the screen frames rather than from a grid style:
-   every frame on the Design page carries the same COLUMNS grid, and the frames
-   are also GRID auto-layouts whose gaps are the real numbers.
+/* One grid for the whole panel family, replacing the two that used to exist —
+   this file's, which served /projects and /about, and app/landing.module.css,
+   which served the landing. Merging them is most of the routes-to-states
+   change: the landing was drawn on the same grid all along, and keeping it in
+   its own stylesheet is what made it read as a different kind of screen.
+
+   The grid itself, read from the phase 7 frames:
 
      lg    >= 1024   12 columns   gutter 16   row gap 48
      md    768-1023   8 columns   gutter 16   row gap 48
-     sm    640-767    4 columns   gutter 16   row gap 48, two columns of it
-     base  < 640      4 columns   gutter 16   row gap 48, and the two cells
-                                  stack onto two rows instead of sharing one
+     sm    640-767    4 columns   gutter 16   row gap 48
+     base  < 640      4 columns   gutter 16   row gap 48
 
-   Mobile-first, and the column counts are the only thing that changes — the
-   gaps are constant at all four tiers, which is unusual enough in this design
-   to be worth stating so nobody goes looking for the tier that differs.
+   The column counts are the only thing that changes; the gaps are constant at
+   all four tiers. No horizontal inset here — the shell puts --container-inset
+   on the one <main>, which is the same 64 / 32 the frames carry as their grid
+   offset, and applying it again would double it.
 
-   THE sm TIER WAS MISSING UNTIL 2026-09-11. Everything below 768 stacked,
-   because the Design page groups 412 and 640 into one section named "sm ·
-   below 768" and I read the section grouping as the breakpoint model. The two
-   frames inside it do not agree: 640 is drawn as two columns and only 412
-   stacks. See the System / Layout note in tokens.css for the full account and
-   for why the literal is 640. The lesson generalises — the sections are a
-   canvas arrangement, not the responsive model, so frames inside one still have
-   to be diffed against each other.
-
-   No horizontal inset here. The shell puts --container-inset on <main>, which
-   is the same 64 / 32 the Figma frames carry as their grid offset; applying it
-   again would double it. */
+   SPANS UPDATED TO THE PHASE 7 PAGE 2026-09-12. The old file had /projects at
+   6 + 6 of twelve and 5 + 3 of eight; neither is what this page draws. Measured
+   off the frames rather than inferred from a grid style — see each tier below.
+   Two of the lg canvases disagree with each other and that is flagged where it
+   happens rather than averaged away. */
 
 .grid {
-  --panel-span: 4;
-  --content-span: 4;
-
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   column-gap: var(--space-md);
   row-gap: var(--space-2xl);
 }
 
-/* Both cells span the full width and stack, which is what the 412 frames draw:
-   two rows, panel first. The spans below take over from 640 up. */
+/* Everything stacks at the base tier: one cell per row, panel first, full
+   width. That is what all three 412 frames draw. */
 .panel,
 .content {
   grid-column: 1 / -1;
 }
 
-/* ---- sm: >= 640 ---------------------------------------------------------
-   Still four columns, but the two cells stop stacking and take two each. Read
-   off projects / 640 and about / 640, which are identical here: panel 280 at
-   x=32, content 280 at x=328, inside a 640 frame with a 32 inset. 280 is
-   exactly two of the four columns — (640 - 64 - 48) / 4 = 132, and
-   132 * 2 + 16 = 280.
+/* ---- The landing state --------------------------------------------------
 
-   This is also where the panel starts being centred against the taller cell,
-   and the drawings say so at this width too: projects / 640 puts a 604-tall
-   panel at y=256 in a 1116 frame, and about / 640 a 258-tall panel at y=145 in
-   548. Both are 256 and 145 on each side. */
+   Edge to edge below 768, and only here. Every other frame at 412 carries the
+   32px inset — projects and about both do — but landing / 412 has padding 0
+   and a PageIntro the full 412 wide. The shell applies --container-inset for
+   every route, so this cancels it rather than the shell learning about routes.
+
+   Vertically centred here and only here, for the same reason and at the same
+   breakpoint: from 768 up the panel sits at the top of its frame. */
+
+.landing {
+  /* The clearance between the revealed bar and the last of the landing's
+     content. 16px — the closest step on the scale to the 40-48px the
+     landing-footer frames draw between the two. It lives here rather than in
+     tokens.css because it describes the relationship between two elements on
+     one screen, not a value the system reuses. */
+  --reveal-gap: var(--space-md);
+
+  align-content: center;
+
+  /* THE BUDGET. The landing claims the viewport minus the bar minus the gap,
+     so a revealed footer lands on empty space rather than on content.
+     --footer-band is the bar's measured height, published by FooterReveal only
+     while the bar is a fixed overlay; unset it falls back to 0 and this is a
+     plain 100svh, which is the `static` state, the no-JS state, and every route
+     that is not this one.
+
+     min-block-size and not block-size: a minimum cannot clip. If something ever
+     grows taller than the budget the page scrolls and the wheel guard hands the
+     gesture back, which is degradation that is already built rather than
+     content disappearing under a fixed bar.
+
+     A percentage height here would do nothing — measured at 711px on a 760, an
+     800 and a 900 viewport alike, because a percentage does not resolve against
+     a parent sized by min-height plus flex:1. svh resolves unconditionally. */
+  min-block-size: calc(100svh - var(--footer-band, 0px) - var(--reveal-gap));
+
+  margin-inline: calc(var(--container-inset) * -1);
+
+  /* The gap between the end of the content and the top of the footer — 40px at
+     1448/1280/1024, 48px at 640/768. Since the footer became a fixed overlay
+     this reserves nothing; it is what puts the panel's bottom edge exactly on
+     the bar's top edge at the height Figma draws. At an 804px viewport,
+     48 + nav 132 + card 468 = 648, and the bar's top is 804 - 156 = 648.
+
+     A reserved-space version of this was tried and removed: it lifted the
+     content off the bottom of the screen by the height of a bar that is not
+     there yet, so the page looked mis-centred whenever the footer was closed —
+     which is nearly always. The overlap is handled by constraining heights
+     instead. */
+  padding-block: var(--space-2xl);
+}
+
+.landing .panel {
+  /* THE CARD IS THE THING THAT YIELDS, and only on this screen. IntroCard's
+     drawn height is 468 everywhere; here it is capped at whatever the budget
+     leaves after the landing's own chrome. 228px is that chrome — 96 of
+     padding-block plus the 132 the nav block occupies — and it is the one
+     literal in the expression because it is the only part that does not vary.
+
+     At 1440 the budget is 100svh - 175 - 16 and the chrome is 228, so the card
+     gets 100svh - 419. At a 900 viewport that is 481, so min() keeps the drawn
+     468 and nothing changes. At 760 it is 341, and 341 + 228 + 175 + 16 = 760
+     exactly — the bar sits on the gap with the content whole above it.
+
+     Set on the panel rather than inside IntroCard so /projects and /gallery,
+     which have no footer revealing over them, keep the full 468. */
+  --intro-min-block: min(
+    468px,
+    calc(100svh - var(--footer-band, 0px) - var(--reveal-gap) - 228px)
+  );
+}
+
+/* ---- The projects state -------------------------------------------------
+
+   THE CARD IS ABSENT BELOW 768, not hidden — phase 7 draws no IntroCard
+   instance on projects / 412 or projects / 640, so it should be gone for a
+   screen reader too. The threshold used to be 640 in this build; it moved when
+   projects / 640 turned out to have no card either, which is the frame the old
+   reading never checked.
+
+   `display: none` via a custom property rather than a rule on IntroCard: the
+   screen declares it, the component reads it, and the file you open to ask what
+   this screen does at 412 is the file that answers. */
+
+.projects {
+  --intro-card-display: none;
+}
+
+/* ---- sm: >= 640 ---------------------------------------------------------
+
+   Still four columns and still stacked — what changes is that the content cell
+   stops running full width and is centred instead. Read off projects / 640,
+   where the list is 428 wide at x=106 in a 640 frame ((640 - 428) / 2 = 106),
+   and about / 640, where the bio is the same 428 at the same x.
+
+   The panel stays full width at this tier on both screens; on projects it is
+   the nav band alone, which the drawing centres by hugging rather than by any
+   rule here. */
 
 @media (min-width: 640px) {
-  .grid {
-    --panel-span: 2;
-    --content-span: 2;
-  }
-
-  .panel {
-    grid-column: span var(--panel-span);
-    align-self: center;
-  }
-
-  .content {
-    grid-column: span var(--content-span);
+  .projects .content,
+  .about .content {
+    max-inline-size: 428px;
+    margin-inline: auto;
   }
 }
 
 /* ---- md: >= 768 ---------------------------------------------------------
-   Eight columns, and the tier where the two screens stop agreeing: projects is
-   5 + 3, about is 4 + 4, so the split is read from properties the page sets.
-   The cells already share a row and the panel is already centred — both come
-   from sm above, so this block only changes the counts.
 
-   The centring was verified again here at the wider canvases: projects at 1448
-   puts the panel at y=133 in an 870 frame, about at y=58 in 488. */
+   Eight columns, and the tier where projects and about finally agree: both are
+   4 + 4, adjacent, filling the row. Measured on projects / 768 — panel 344 at
+   x=32, list 344 at x=392, inside 704 of content width where a column is 74 —
+   and about / 768 is identical.
+
+   THE OLD 5 + 3 IS GONE. It was read off the Design page and it is the reason
+   this screen had an open wrapping bug: at 3 of 8 the list cell was 248, and
+   "Embassaments" is a single unbreakable word about 300px wide at 46px, so the
+   row broke it mid-word. At 4 of 8 the cell is 344, which is 312 inside the
+   row's padding — it should now fit. Worth measuring in a browser rather than
+   trusting the arithmetic.
+
+   The card comes back on projects at this tier, which is also where it stops
+   being absent. */
 
 @media (min-width: 768px) {
   .grid {
-    --panel-span: 4;
-    --content-span: 4;
-
     grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+
+  .projects {
+    --intro-card-display: flex;
+  }
+
+  .projects .content,
+  .about .content {
+    max-inline-size: none;
+    margin-inline: 0;
+  }
+
+  .projects .panel,
+  .about .panel {
+    grid-column: span 4;
+    align-self: center;
+  }
+
+  .projects .content,
+  .about .content {
+    grid-column: span 4;
+  }
+
+  /* The landing's panel takes all eight: landing / 768 draws PageIntro at 704,
+     which is the full 768 less the 32px inset each side. The inset comes back
+     at this tier, so the negative margin goes with it. */
+  .landing {
+    align-content: start;
+    margin-inline: 0;
   }
 }
 
 /* ---- lg: >= 1024 --------------------------------------------------------
-   Twelve columns, and both screens agree again: 6 and 6. */
+
+   Twelve columns, and all three states place their panel differently.
+
+   landing   the middle eight, two empty columns each side. Checked at both
+             canvases: 1448 puts an 875-wide panel at x=287 and 1024 a 592-wide
+             panel at x=216, and both work out to columns 3 through 10.
+
+   about     panel 1-5, content 7-12, with column 6 left empty. Consistent
+             across all three lg canvases — 1024, 1280 and 1448 all put the bio
+             at exactly column 7.
+
+   projects  panel 1-7, content 9-12, one empty column between them, which is
+             the same shape as about. THE THREE CANVASES DISAGREE HERE and this
+             follows 1280. At 1280 the list starts at column 9 and runs to 12;
+             at 1448 it starts at 8 and stops at 11, leaving the last column
+             empty; at 1024 it starts at 8 and runs to 12, five columns wide.
+             The panel is 1-7 on all three, so only the content cell is
+             unstable. 1280 is taken because it is the one that leaves no orphan
+             column and matches about's structure. Raised with the user rather
+             than averaged. */
 
 @media (min-width: 1024px) {
   .grid {
-    --panel-span: 6;
-    --content-span: 6;
-
     grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .landing .panel {
+    grid-column: 3 / span 8;
+  }
+
+  .projects .panel {
+    grid-column: 1 / span 7;
+  }
+
+  .projects .content {
+    grid-column: 9 / span 4;
+  }
+
+  .about .panel {
+    grid-column: 1 / span 5;
+  }
+
+  .about .content {
+    grid-column: 7 / span 6;
   }
 }

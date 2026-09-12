@@ -58,7 +58,7 @@
      it only breaks a word that cannot fit on a line of its own. It has to be
      available, because the narrow tier genuinely cannot hold these titles —
      "Embassaments" is a single 12-character word about 300px wide at 46px, and
-     at md the column is 216px. See the note in projects.module.css: the fix
+     at md the column is 216px. See the md note in PanelLayout.module.css: the fix
      that does not break a word is a design decision, not a CSS one. */
   overflow-wrap: break-word;
 }

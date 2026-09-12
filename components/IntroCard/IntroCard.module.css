@@ -31,7 +31,7 @@
      instance at all and its PageIntro is the breadcrumb band alone, 136 tall,
      with the list starting at y=184. The page declares that through this
      property, the same way it declares its column spans; see
-     app/projects/projects.module.css.
+     the projects state in components/PanelLayout/PanelLayout.module.css.
 
      `display: none` and not a visibility trick, because the design deletes the
      instance rather than hiding it: it should be gone for a screen reader too.
