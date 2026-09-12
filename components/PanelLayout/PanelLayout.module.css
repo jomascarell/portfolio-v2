@@ -252,8 +252,22 @@
     grid-column: 1 / span 7;
   }
 
+  /* CORRECTED 2026-09-12 BY MEASUREMENT, not by re-reading the drawings. This
+     was `9 / span 4`, taken from the 1280 canvas because it leaves no orphan
+     column. In a browser at 1024 that gives the list 288px, and
+     "Embassaments" — one unbreakable 12-character word about 300px wide at
+     46px — breaks mid-word. Verified both ways in an iframe at a 1024 layout
+     viewport: at `9 / span 4` the word splits, at `8 / -1` it does not, and
+     the cell comes out at 364 which is what the 1024 canvas actually draws.
+
+     So the three lg canvases disagree and 1024 is the one that decides, being
+     the narrowest — it is the only width where the title's minimum is load
+     bearing. 1280 and 1448 get a list slightly wider than drawn (470 and 540
+     against 373 and 429), which costs nothing: the rows are text and the extra
+     room only reduces wrapping. The panel is columns 1-7 at all three
+     canvases, so nothing about the panel is a guess. */
   .projects .content {
-    grid-column: 9 / span 4;
+    grid-column: 8 / -1;
   }
 
   .about .panel {

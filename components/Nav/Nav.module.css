@@ -101,9 +101,23 @@
   box-shadow: var(--shadow-xs);
 }
 
-.crumb {
+/* BOTH list items hug their contents, and the second one is why this rule
+   exists. Measured in a browser: the pill was rendering 46px tall where Figma
+   draws 40. The crumb was fine at 24 — the caret's own box — but the item
+   holding the section label was a plain block, so it inherited the body's
+   18/30 and generated a 30px line box around a 20px span. 30 + 16 of padding
+   is the 46. Making both items flex collapses the second to its span and the
+   pill to max(24, 20) + 16 = 40, which is the drawn height.
+
+   A pre-existing gap rather than one the merge introduced — Breadcrumb had the
+   same structure — and invisible without measuring, since 6px of extra pill is
+   not something the eye flags. */
+.pill > li {
   display: inline-flex;
   align-items: center;
+}
+
+.crumb {
   gap: var(--space-sm);
 }
 
