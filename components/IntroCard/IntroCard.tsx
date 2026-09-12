@@ -11,12 +11,14 @@ import styles from './IntroCard.module.css'
  * widths, so it is media queries, and the only component in this phase that
  * needs them.
  *
- * WHERE those media queries break is a third thing, and it IS a screen's to
- * say — corrected 2026-09-12, audit item L. The file draws three different
- * ladders through the same three drawings, and the landing reaches md at 640
- * where the panel screens are still on sm. `ladder` picks between the two; the
- * stylesheet carries the measurements and the reason a container query cannot
- * do this job.
+ * WHERE those media queries break used to be a third thing, decided per screen
+ * through a `ladder` prop. It is not any more — the phase 7 page steps every
+ * card at the same two widths, 640 for the type and the wordmark and 1024 for
+ * the box, so the prop and the three-ladder model went with the rewrite.
+ * Measured across all 22 instances on that page rather than inferred from the
+ * component sheet, which is what made the old reading go wrong: a variant's
+ * own frame height is what the card is drawn at in the sheet, not a claim
+ * about any screen.
  *
  * Type=about is the wordmark alone. Figma expresses that two ways in the same
  * component set — md and sm delete the tagline and the status block, lg keeps
@@ -44,17 +46,11 @@ const TYPES = {
 
 type IntroCardProps = {
   type?: keyof typeof TYPES
-  /* Which breakpoint ladder the card climbs. `panel` is every screen that
-     seats it in a cell beside content — /projects, /about, the gallery — and
-     `full` is the landing, whose card is the whole screen from 640 up and
-     takes the md drawing there. */
-  ladder?: 'panel' | 'full'
   className?: string
 }
 
 export default function IntroCard({
   type = 'intro',
-  ladder = 'panel',
   className,
 }: IntroCardProps) {
   return (
@@ -62,7 +58,6 @@ export default function IntroCard({
       className={[
         styles.card,
         TYPES[type],
-        ladder === 'full' && styles.full,
         className,
       ]
         .filter(Boolean)

@@ -28,22 +28,18 @@ type PageIntroProps = {
   /* NavLinks on the landing, Breadcrumb everywhere else. */
   nav: ReactNode
   type?: 'intro' | 'about'
-  /* Passed straight through to the card. It is the screen's answer, and this
-     component is only ever the thing standing between the two. */
-  ladder?: 'panel' | 'full'
   className?: string
 }
 
 export default function PageIntro({
   nav,
   type = 'intro',
-  ladder = 'panel',
   className,
 }: PageIntroProps) {
   return (
     <div className={[styles.panel, className].filter(Boolean).join(' ')}>
       {nav}
-      <IntroCard type={type} ladder={ladder} className={styles.card} />
+      <IntroCard type={type} className={styles.card} />
     </div>
   )
 }

@@ -85,7 +85,6 @@ export default function PanelLayout({
           className={styles.panel}
           nav={nav}
           type={isLanding ? 'intro' : state === 'about' ? 'about' : 'intro'}
-          ladder={isLanding ? 'full' : 'panel'}
         />
       </ViewTransition>
 

@@ -34,11 +34,12 @@ import styles from './gallery.module.css'
  *    since the prop exists the gallery uses it.
  *
  * 2. Breakpoints. IntroCard is the only component here with breakpoint rules,
- *    and as of 2026-09-12 it has two ladders through them rather than one:
- *    `panel` is sm -> md at 768 -> lg at 1024, and `full` — the landing's —
- *    reaches md at 640 instead. Type=about climbs neither, going sm -> lg at
- *    768 with no md drawing at all. Resize the window to move all three;
- *    everything else here is fluid or takes a layout prop. */
+ *    and since the phase 7 rewrite there is ONE ladder rather than three: the
+ *    type and the wordmark step at 640, the box opens at 1024, the same on
+ *    every screen. Type=about is the exception in one place only, taking the
+ *    wide box at 640 and giving it back at 768, which the drawing does
+ *    deliberately. Resize the window; everything else here is fluid or takes a
+ *    prop. */
 
 export const metadata: Metadata = {
   title: 'Component gallery',
@@ -143,13 +144,10 @@ export default function GalleryPage() {
       <Section
         title="IntroCard"
         node="482:1157"
-        note="Type is a prop, Breakpoint is media queries, and which breakpoints those are is the ladder. The card paints nothing — no fill and no shadow at any variant."
+        note="Type is a prop, Breakpoint is media queries — one ladder, thresholds at 640 and 1024. The card paints nothing — no fill and no shadow at any variant."
       >
-        <Specimen label="Type = intro, ladder = panel">
+        <Specimen label="Type = intro">
           <IntroCard type="intro" />
-        </Specimen>
-        <Specimen label="Type = intro, ladder = full (md from 640)">
-          <IntroCard type="intro" ladder="full" />
         </Specimen>
         <Specimen label="Type = about (the wordmark alone)">
           <IntroCard type="about" />
