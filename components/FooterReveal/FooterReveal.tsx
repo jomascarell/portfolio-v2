@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { createContext, useEffect, useRef, useState } from 'react'
 import { SKIP_TARGET_ID } from '@/components/SkipLink/SkipLink'
 import styles from './FooterReveal.module.css'
 
@@ -70,6 +70,12 @@ import styles from './FooterReveal.module.css'
  * are stable fixed points rather than a condition that flips itself. */
 
 type RevealState = 'static' | 'hidden' | 'revealed'
+
+/* Exposed so a descendant that is not this component's own children prop
+   (e.g. a small client leaf rendered inside the server-rendered Footer) can
+   read the same state without prop-threading through a Server Component.
+   Default 'static' matches the pre-mount value below. */
+export const RevealStateContext = createContext<RevealState>('static')
 
 /* calebwu.ca's own value. Any wheel closes the bar, but not within this window
    of it opening. */
@@ -321,7 +327,9 @@ export default function FooterReveal({
       data-state={state}
       data-armed={armed ? 'true' : undefined}
     >
-      {children}
+      <RevealStateContext.Provider value={state}>
+        {children}
+      </RevealStateContext.Provider>
     </div>
   )
 }

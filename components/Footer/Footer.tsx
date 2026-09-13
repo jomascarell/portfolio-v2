@@ -1,3 +1,4 @@
+import ChangelogText from '@/components/Footer/ChangelogText'
 import LanguageSwitcher from '@/components/LanguageSwitcher/LanguageSwitcher'
 import { siteConfig } from '@/lib/site-config'
 import styles from './Footer.module.css'
@@ -24,10 +25,12 @@ import styles from './Footer.module.css'
  * what it was built with, and which language you are reading. None of it is a
  * destination, which is why the bar can be an edge rather than a panel.
  *
- * The language control is the only interactive thing in here and the only
- * client component. Everything else is static text, so the footer stays a
- * Server Component and react-icons — which left with SocialIcons — is no
- * longer in its tree at all. */
+ * The language control is the only INTERACTIVE thing in here, but not the
+ * only client component any more: ChangelogText (2026-09-13, ported from
+ * calebwu.ca's own scramble-reveal) needs the browser for its rAF animation
+ * even though it takes no input. Both are leaves — the footer itself stays a
+ * Server Component and react-icons, which left with SocialIcons, is still not
+ * in its tree at all. */
 
 export default function Footer() {
   return (
@@ -37,7 +40,7 @@ export default function Footer() {
           one interactive element sits second in both orders, so the tab
           sequence never disagrees with what the eye follows. That is the
           constraint worth holding if these are ever reordered again. */}
-      <p className={styles.changelog}>Changelog: {siteConfig.changelog}</p>
+      <ChangelogText className={styles.changelog} />
       <LanguageSwitcher className={styles.language} />
       <p className={styles.credits}>{siteConfig.credits}</p>
     </footer>

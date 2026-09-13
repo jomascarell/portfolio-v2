@@ -68,7 +68,7 @@
 .footer {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   column-gap: var(--space-sm);
-  row-gap: var(--space-md);
+  row-gap: var(--space-lg);
   align-content: center;
   padding-block: var(--space-md);
   padding-inline: 0;
@@ -98,7 +98,7 @@
    dimmer white. Left as the literal so it reads as deliberately outside the
    system, the same call Phase 5 made. */
 .changelog {
-  color: rgb(255 255 255 / 80%);
+  color: var(--color-neutral-400);
 }
 
 /* ---- md: 640-1023 -------------------------------------------------------
@@ -116,9 +116,9 @@
   }
 
   .changelog {
-    grid-column: 1 / span 2;
-    grid-row: 1;
-    text-align: left;
+    grid-column: 6 / span 3;
+    grid-row: 2;
+    text-align: right;
   }
 
   .credits {
@@ -129,7 +129,7 @@
 
   .language {
     grid-column: 1 / span 2;
-    grid-row: 2;
+    grid-row: 1;
     justify-content: flex-start;
   }
 }
@@ -153,13 +153,13 @@
   }
 
   .changelog {
-    grid-column: 3 / span 3;
-    grid-row: 1;
+    grid-column: 8 / span 3;
+    grid-row: 2;
   }
 
   .language {
     grid-column: 3 / span 3;
-    grid-row: 2;
+    grid-row: 1;
   }
 
   .credits {

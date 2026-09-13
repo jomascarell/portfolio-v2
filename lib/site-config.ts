@@ -15,12 +15,6 @@
 export const siteConfig = {
   contactEmail: 'jmjvilallonga@gmail.com',
 
-  /* Shown in the footer's meta row. Deliberately a hand-edited constant and
-     not `new Date()`: a build-time date changes on every deploy, which would
-     make the footer differ between two builds of identical source and turn
-     every rebuild into a diff. Bump it when something ships. */
-  changelog: '2026-09-08',
-
   /* The footer's language control. It had no states in the design and shipped
      as the static string 'EN'; Figma gained a three-variant `language` set
      (786:409) on the phase 7 page, so it is a real control now.
