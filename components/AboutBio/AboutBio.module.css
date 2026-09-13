@@ -12,7 +12,7 @@
      block. A gap on the wrapper rather than a margin on either half, because
      both are independently replaceable and neither should carry the other's
      spacing. */
-  gap: var(--space-2xl);
+  gap: var(--space-xl);
   padding-block: var(--space-3xl);
   max-inline-size: 652px;
   color: var(--color-text-primary);
@@ -30,33 +30,27 @@
    drawing is 30, and 78 with this rule still live. The wrapper in AboutBio.tsx
    fixes the cause, so the rule is restored and scoped to the prose. */
 .prose p + p {
-  margin-block-start: var(--line-height-lg);
+  margin-block-start: var(--line-height-md);
 }
 
-/* "Designer". Emphasis, NOT a link — see lib/about.ts for how that was
-   settled. The design gives emphasis an underline in the text's own ink
-   instead of italics, so the italic has to be turned off explicitly.
-
-   from-font takes Figtree's own underline metric rather than the one the
-   browser invents, which is what the Figma node asks for
-   (`[text-underline-position:from-font]`). It is also why this is written as
-   longhand: the `text-decoration` shorthand resets text-underline-position,
-   and the retired build shipped a colour bug for exactly that kind of reason
-   — its shorthand set an accent colour that the next line's
-   `text-decoration-style` could not take back. */
-.bio em {
+/* .bio em {
   font-style: normal;
   text-decoration-line: underline;
   text-decoration-color: currentcolor;
   text-underline-position: from-font;
+} */
+
+.prose p:first-of-type .line:last-child {
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-semibold);
 }
 
 /* Okisam and Strava. Accent and underlined, both in the drawing and in the
    retired build. */
 .bio .link {
   color: var(--color-text-accent);
-  text-decoration-line: underline;
-  text-underline-position: from-font;
+  text-decoration-line: none;
+  /* text-underline-position: from-font; */
   transition: color var(--duration-fast) var(--ease-standard);
 }
 
@@ -74,5 +68,11 @@
 @media (hover: hover) {
   .bio .link:hover {
     color: var(--color-text-accent-hover);
+  }
+}
+
+@media (max-width: 768px) {
+  .bio {
+    padding-top: 0;
   }
 }

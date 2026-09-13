@@ -61,7 +61,7 @@ export default function AboutBio({ className }: AboutBioProps) {
             {paragraph.map((line, lineIndex) => (
               <Fragment key={lineIndex}>
                 {lineIndex > 0 && <br />}
-                {line.map(renderSegment)}
+                <span className={styles.line}>{line.map(renderSegment)}</span>
               </Fragment>
             ))}
           </p>

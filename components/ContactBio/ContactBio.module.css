@@ -1,60 +1,168 @@
-/* Figma: contact-bio, 620 x 275 inside a 652 column, padding [16, 0, 16, 0],
-   with a 0.5px rule along its top edge in color/neutral/400.
+/* Figma: contact-bio (791:1813), and this file is BOTH of its variants —
+   Property 1=Default (791:1812) is the wide drawing, Property 1=Variant2
+   (791:1814) the stacked one. Every number below is read off those two nodes.
 
    THE RULE IS THE ONLY THING THAT SEPARATES THIS FROM THE BIO, and it is a
    half-pixel stroke drawn INSIDE the frame rather than a spacing change. Kept
-   at 0.5px rather than rounded to 1: on the 1x displays where it cannot resolve
-   the browser draws the nearest it can, and on 2x it is exactly what the design
-   asks for. Rounding up would make the only line on the screen twice as heavy
-   as drawn.
+   at 0.5px rather than rounded to 1: on the 1x displays where it cannot
+   resolve, the browser draws the nearest it can, and on 2x it is exactly what
+   the design asks for. Rounding up would make the only line on the screen
+   twice as heavy as drawn.
 
-   FLEX-WRAP RATHER THAN A BREAKPOINT, and that is a deliberate choice about
-   which mechanism fits. The drawing is two rows — intro left with the social
-   row pushed right, then the address beneath — and whether they fit side by
-   side depends on the COLUMN's width, not the viewport's. About's content cell
-   runs 652 at 1448, 568 at 1280, 440 at 1024 and 344 at 768, so a viewport
-   breakpoint would be guessing at a container problem.
+   PLACEMENT IS NAMED AREAS ON THE PARENT, NOT LINE NUMBERS ON EACH CHILD. The
+   drawing is an eight-column grid whose fifth column is a deliberate empty
+   gutter, and naming the areas is the only way to write that down so it reads
+   as the picture it is. It also collapses the stacked variant to one block on
+   .contact: the line-number version restated six grid-row/grid-column pairs
+   across three children at 880, and three of those six repeated the value they
+   were replacing.
 
-   Wrapping solves it without either a new breakpoint or a container query: the
-   intro takes its drawn 305 and the social row its natural width, and when the
-   cell cannot hold both the social row drops to its own line on its own. The
-   address is always its own row. This is the one place in the project where
-   the layout genuinely is fluid rather than three drawings, so it is the one
-   place that gets to be written that way. */
+   THE AREAS ARE THREE LONGHANDS AND MUST STAY THREE LONGHANDS. Folding them
+   into `grid-template: '…' <size> / repeat(8, …)` looks tidier and is invalid:
+   the shorthand's area-string form takes an <explicit-track-list> after the
+   slash, and <explicit-track-list> does not admit repeat(). The whole
+   declaration is then dropped and all three children pile into one cell. It
+   fails silently — lightningcss minifies the bad value through untouched and
+   only the browser rejects it, so `next build` passes and the page is broken.
+   Verified in Chrome: the shorthand form computes grid-template-areas to
+   `none`; this form computes the areas and the eight tracks.
+
+   880 IS OFF THE TOKEN SCALE, DELIBERATELY, AND IT IS THE ONE THING HERE WORTH
+   REVISITING. Every other module in this project is mobile-first on
+   640/768/1024; this one is desktop-first on a number in none of the tokens.
+   The reason is that whether the two-column drawing fits depends on the width
+   of About's CONTENT CELL — 652 at 1448, 568 at 1280, 440 at 1024, 344 at 768
+   — and not on the viewport, so a system breakpoint would be guessing at a
+   container problem exactly as much as 880 is. The honest fix is a container
+   query: `container-type: inline-size` on .bio in AboutBio.module.css, and
+   `@container (max-width: 560px)` here. That is a change to two files and a
+   change of measured quantity, so it is flagged rather than taken. */
 
 .contact {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: var(--space-md);
-  padding-block: var(--space-md);
-  border-block-start: 0.5px solid var(--color-neutral-400);
+  display: grid;
+  /* Figma: eight columns, column 5 drawn empty. The intro takes 1-4 and spans
+     the first two rows; the social row takes 6-8 of the first; the address has
+     the third to itself. */
+  grid-template-areas:
+    'intro  intro  intro  intro  .      social social social'
+    'intro  intro  intro  intro  .      .      .      .     '
+    'mail   mail   mail   mail  mail  mail      .      .     ';
+  grid-template-rows: minmax(0, 1fr) minmax(0, 0.5fr) minmax(0, 1fr);
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  /* 24 between rows, 8 between columns, 32 above and below. */
+  gap: var(--space-lg) var(--space-sm);
+  padding: var(--space-xl) var(--space-lg);
+  /* color/border/strong is the variable Figma binds here, and it resolves to
+     the same #989898 the primitive carries. Named by role so a theme reaches
+     it — tokens.css asks components to reference the Semantic block only. */
+  /* SET ONCE HERE RATHER THAN ON .intro AND .mail SEPARATELY, and that is not
+     only about the duplication. MailLink's own .root declares `color: inherit`
+     on the same element and at the same specificity as anything this file can
+     put on .mail, so which of the two won was decided by the order the two CSS
+     modules happened to land in the bundle. Inheriting removes the tie instead
+     of winning it. .social still overrides, which an inherited value cannot
+     contest. */
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  background-color: var(--color-surface-page);
 }
 
-/* 305 is the drawn width. `flex: 1 1 305px` lets it shrink in a narrow cell
-   rather than forcing the wrap earlier than it has to. */
+/* Figma text style: body/base — 16/26.2 Regular. Stated in full, as every
+   other type block in this project states it, so the rule can be read against
+   the named style without opening globals.css. */
 .intro {
-  flex: 1 1 305px;
-  max-inline-size: 305px;
+  grid-area: intro;
   font-size: var(--font-size-md);
   line-height: var(--line-height-md);
   font-weight: var(--font-weight-regular);
   letter-spacing: var(--letter-spacing-normal);
-  color: var(--color-text-primary);
 }
 
 /* Pushed to the far edge of the row, which is what Figma's MAX primary-axis
    alignment does inside a FILL frame: the icons sit right even though the
-   group is only 150 wide. `margin-inline-start: auto` rather than
-   space-between on the parent, so the address below is unaffected when the
-   social row wraps onto its own line. */
+   group is only 150 wide.
+
+   NO `align-items` HERE. SocialIcons' own .row already sets flex-start, on
+   this same element and at this same specificity, so repeating it was a second
+   coin-toss on module order — and the stacked variant used to lose or win that
+   toss for `center`. The variant does not need it either (see below), so the
+   property belongs to SocialIcons alone. */
 .social {
-  flex: 0 0 auto;
-  margin-inline-start: auto;
+  grid-area: social;
+  display: flex;
+  justify-content: flex-end;
+
+  /* FLAG — a primitive, where tokens.css says components reference the
+     Semantic block and nothing above it. There is no semantic role for this
+     ink: --color-text-accent-hover is the only alias resolving to blue/800,
+     and borrowing a hover role for a resting state would read worse than the
+     violation. Left as the primitive on purpose until the role exists. */
+  color: var(--color-blue-800);
 }
 
-/* Its own row at every width — the drawing puts it below both. */
+/* Its own row in both drawings. */
 .mail {
-  flex: 1 0 100%;
-  color: var(--color-text-primary);
+  grid-area: mail;
+
+  /* The address is one unbreakable token, so in a narrow cell it would widen
+     the grid rather than wrap. Figma sets word-break on this node too. No
+     effect at the current 344px minimum, where it fits. */
+  overflow-wrap: break-word;
+}
+
+/* ---- Property 1=Variant2 (791:1814) — the stacked drawing -----------------
+
+   Four columns, four rows, everything full width and centred. The drawn
+   column gap here is 10 rather than 8; it is left at --space-sm because no
+   item stops short of the fourth column, so the value cannot be seen. */
+
+@media (max-width: 880px) {
+  .contact {
+    grid-template-areas:
+      'intro  intro  intro  intro '
+      'intro  intro  intro  intro '
+      'social social social social'
+      'mail   mail   mail   mail  ';
+    grid-template-rows:
+      minmax(0, 1fr)
+      minmax(0, 0.5fr)
+      minmax(0, 1fr)
+      minmax(0, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  /* The intro still spans the 1fr + 0.5fr pair, so its box is taller than its
+     two lines of copy; Figma centres the copy inside it rather than hanging it
+     from the top. The flex column is how the drawn node does it, and it holds
+     because the paragraph's content is a single string. */
+  .intro {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+  }
+
+  /* `start`, not the stretch a grid item takes by default, because Variant2
+     draws the row hugging its content.
+
+     MEASURED, AND IT CHANGES NOTHING AT ANY WIDTH THIS PAGE ACTUALLY REACHES —
+     412, 860, 900 and 1440 all put the row's top edge in the same place either
+     way. The reason is that the icon row is what SETS the fr unit here: its
+     own 33px over 1fr beats the intro's contribution (two lines of 26.2 across
+     1fr + 24 gap + 0.5fr) and the address's 26.2, so row three resolves to
+     exactly the row's own height and there is no slack for stretch to take up.
+     The two only diverge if the intro ever wraps to three lines or more, and
+     `start` is the side the drawing is on. It is also what makes the absent
+     `align-items` above a non-issue: at icon height, cross-axis alignment
+     inside the box has nothing left to move. */
+  .social {
+    align-self: start;
+    justify-content: center;
+  }
+
+  .mail {
+    align-self: center;
+    text-align: center;
+  }
 }
