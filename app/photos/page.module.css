@@ -8,12 +8,30 @@
    it — 64/32/32 at lg-xl/md/sm-base — so adding a second inset would double
    it. */
 
+/* FIXED, NOT STATIC — the thing that distinguishes photos (and project-detail
+   later) from the panel family. Landing/projects/about are each roughly one
+   screen and never really scroll, so an in-flow Nav already reads as "always
+   there." Photos genuinely scrolls, potentially thousands of pixels, and an
+   in-flow Nav would scroll away with it — the one thing calebwu.ca's case
+   pages never do, since his nav is `position: fixed` on every route.
+
+   z-index 50, matching the value FooterReveal.module.css already reserved
+   for this: "the reference uses 20 for [the footer] and 50 for the nav
+   above it; we have no nav, so the gap is ours to spend later." Spent here.
+   Skip link stays on top at 100. The footer doesn't render on this route at
+   all (landing-only), so there is no live conflict to resolve, only the
+   scheme to honour.
+
+   No background here, deliberately — only .pill paints itself. The wrapper
+   is a transparent strip so content is visible scrolling past on either
+   side of the pill, the same relationship the wrapper has in-flow. */
 .navRow {
   display: flex;
   justify-content: center;
-  /* Measured, not guessed: content and the rail both start 48px below the
-     Nav block at every canvas (184 - 136), which is --space-2xl. */
-  margin-block-end: var(--space-2xl);
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 50;
 }
 
 .grid {
@@ -21,6 +39,22 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
   column-gap: var(--space-md);
   row-gap: var(--space-2xl);
+  /* --fixed-nav-clearance: how much vertical space the fixed Nav plus its own
+     gap consumes, published here so CollectionNav.module.css can clear the
+     same distance instead of colliding with the now-fixed bar (it inherits
+     this — a CSS custom property crosses stylesheets fine, it just doesn't
+     cross component boundaries that don't render inside .grid). Replaces
+     .navRow's old margin-block-end now that the nav is out of flow and
+     reserves no space of its own. 184 = Nav's own 136 (constant across every
+     breakpoint, verified in Chrome) plus 48 (--space-2xl) — the same number
+     Figma draws between the nav band and the content/rail row, so the page
+     looks identical at scroll position 0 to how it looked in flow; only
+     scrolling now reveals the difference. Not a token: it is two tokens'
+     worth of Nav's own rendered height plus a gap, and Nav's height belongs
+     to Nav, not to a number restated here. */
+  --fixed-nav-clearance: 184px;
+
+  padding-top: var(--fixed-nav-clearance);
 }
 
 .rail {
@@ -112,8 +146,8 @@
 
 /* Figma text style: body/base — 16/26.2 Regular. */
 .body {
-  font-size: var(--font-size-md);
-  line-height: var(--line-height-md);
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-lg);
   font-weight: var(--font-weight-regular);
   letter-spacing: var(--letter-spacing-normal);
   color: var(--color-text-primary);
@@ -147,8 +181,8 @@
 
 /* Figma text style: body/sm — 14/20 Regular, color/text/secondary. */
 .collectionDescription {
-  font-size: var(--font-size-sm);
-  line-height: var(--line-height-sm);
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-lg);
   font-weight: var(--font-weight-regular);
   letter-spacing: var(--letter-spacing-normal);
   color: var(--color-text-secondary);
