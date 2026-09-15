@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { IoHomeSharp } from 'react-icons/io5'
+import { RiHomeLine } from 'react-icons/ri'
 import NavLink from '@/components/NavLink/NavLink'
 import { siteConfig } from '@/lib/site-config'
 import styles from './Nav.module.css'
@@ -77,12 +77,10 @@ type NavProps = {
    (`fi-ss-home`, Flaticon's "sharp solid" style) and asked for the code to
    follow suit from a library rather than a redrawn path.
 
-   `IoHomeSharp` (Ionicons 5) is the closest match in react-icons to that
-   naming: Ionicons ships outline/sharp/sharp-outline families, and "sharp" is
-   its own filled, hard-cornered style — the same pairing of words Flaticon
-   uses. Chosen by name and by the Figma screenshot, not measured against the
-   Flaticon original path-for-path; swap it for another `Io*Sharp` or a
-   different pack's icon if it doesn't read right next to "Joan".
+   `RiHomeLine` (Remix Icon) is the user's own pick — an outline house rather
+   than a match for Flaticon's filled "sharp solid" original, so this is a
+   deliberate departure from the Figma reference's fill, not an attempt to
+   reproduce it exactly.
 
    The caret stays hand-drawn: nothing changed about it, and the case for
    leaving well-fitted inline SVG alone still applies to anything not
@@ -143,7 +141,7 @@ export default function Nav({
       <ol className={styles.pill}>
         <li className={styles.crumb}>
           <Link className={styles.home} href="/">
-            <IoHomeSharp className={styles.houseIcon} aria-hidden="true" />
+            <RiHomeLine className={styles.houseIcon} aria-hidden="true" />
             <span>Joan</span>
           </Link>
           <CaretIcon />
