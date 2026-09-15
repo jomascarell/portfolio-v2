@@ -1,0 +1,88 @@
+/* Figma: collection-nav (879:2473). Hidden below 768 — decided 2026-09-15,
+   640 does not get a smaller version of this, it goes indexless like 412.
+   Sticky, not self-start: Figma has no sticky concept and draws the rail as a
+   short fixed-height block beside a stream that can run past 5000px, but a
+   scroll-spy rail that scrolls away with the first screen answers a question
+   nobody can see any more. --nav-height is reused here as the sticky offset
+   for exactly this, per its own token comment ("nav band height"). */
+
+.nav {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .nav {
+    display: block;
+    position: sticky;
+    top: var(--nav-height);
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  /* 12px in Figma, not bound to a variable there and not on the space scale
+     (8 or 16 are the neighbours) — left as the literal per the project's
+     standing rule against rounding a measured value onto the nearest token. */
+  gap: 12px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Figma text style: body/base — 16/26.2 Regular, color/text/accent. Inactive
+   is the accent colour and CURRENT is the one styled as ink — backwards from
+   the usual "accent means interactive," but it is what all four entries in
+   the file show, and NavLink's own sidebar precedent (SectionNav in the
+   retired build) frames the same inversion as deliberate rather than a
+   design slip. */
+.item {
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--color-text-accent);
+  text-decoration-line: none;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.item:focus-visible {
+  color: var(--color-text-accent-hover);
+  outline: 2px solid var(--color-text-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+@media (hover: hover) {
+  .item:hover {
+    color: var(--color-text-accent-hover);
+  }
+}
+
+/* Figma text style: 16/28 SemiBold, color/text/primary — font-size-md with
+   line-height-md-loose, not line-height-md. The two active/inactive entries
+   share a font size and differ in weight, colour AND line-height; not
+   rounding the current entry onto the inactive one's 26.2. Primary ink has no
+   "-hover" companion token the way accent does, so the affordance on hover is
+   an underline rather than a colour deepen — a real difference in mechanism,
+   not an inconsistency. */
+.current {
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md-loose);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--color-text-primary);
+  text-decoration-line: none;
+}
+
+.current:focus-visible {
+  outline: 2px solid var(--color-text-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+@media (hover: hover) {
+  .current:hover {
+    text-decoration-line: underline;
+  }
+}
