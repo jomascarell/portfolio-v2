@@ -19,6 +19,49 @@
   padding-top: var(--space-3xl);
 }
 
+/* PHASE 10 — the item entrance. Studied calebwu.ca's landing links for this
+   (About/Playground/Projects) and found nothing to port: they carry
+   transition-colors for the label-swap case but no hover state and no
+   entrance of their own — his nav is never wrapped in a fresh mount the way
+   ours is, since it is one persistent DOM node. What IS worth adding is ours:
+   every Nav mount (a fresh page load, or landing on a route that has no
+   ViewTransition pairing yet) currently pops its items in with no motion at
+   all. --item-index is set inline per <li> in Nav.tsx, same convention as
+   ProjectList's --row-index, so the stagger survives however many items a
+   given state renders (3 on the landing, 2 in the breadcrumb).
+
+   THE MATH IS DELIBERATE, NOT A COINCIDENCE LEFT UNCHECKED. Duration 240ms
+   (--duration-base) plus a 40ms-per-item stagger means the landing's third
+   pill finishes at 80ms + 240ms = 320ms — exactly --duration-slow, the
+   ::view-transition-group(.morph) duration in globals.css. During a
+   cross-route navigation the live DOM animates BEHIND the view-transition
+   overlay (the browser snapshots old and new, then crossfades the images;
+   the real elements are hidden until that finishes), so by the time the
+   overlay lifts at 320ms this entrance has already completed and is
+   invisible — which is the safe outcome, not a bug: no double-animation, no
+   half-finished stagger revealed mid-motion. The entrance is only ever SEEN
+   on a plain page load or hard refresh, where nothing hides it. Distance is
+   vertical, not the row-entrance's horizontal one — a nav settling down into
+   place reads as chrome arriving; sliding sideways would borrow the project
+   list's language for a different kind of element. */
+.links > li,
+.pill > li {
+  animation: nav-item-in var(--duration-base) var(--ease-standard) backwards;
+  animation-delay: calc(var(--item-index, 0) * 40ms);
+}
+
+@keyframes nav-item-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-sm));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ---- State = landing ----------------------------------------------------
 
    The list reset lives here rather than coming from a `role="list"` and the

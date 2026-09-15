@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import Link from 'next/link'
 import { RiHomeLine } from 'react-icons/ri'
 import NavLink from '@/components/NavLink/NavLink'
@@ -116,8 +117,8 @@ export default function Nav({
             layout === 'stack' ? styles.stack : styles.row,
           ].join(' ')}
         >
-          {siteConfig.nav.map((item) => (
-            <li key={item.href}>
+          {siteConfig.nav.map((item, index) => (
+            <li key={item.href} style={{ '--item-index': index } as CSSProperties}>
               <NavLink href={item.href} label={item.label} />
             </li>
           ))}
@@ -139,14 +140,17 @@ export default function Nav({
   return (
     <nav className={root} aria-label="Breadcrumb">
       <ol className={styles.pill}>
-        <li className={styles.crumb}>
+        <li
+          className={styles.crumb}
+          style={{ '--item-index': 0 } as CSSProperties}
+        >
           <Link className={styles.home} href="/">
             <RiHomeLine className={styles.houseIcon} aria-hidden="true" />
             <span>Joan</span>
           </Link>
           <CaretIcon />
         </li>
-        <li>
+        <li style={{ '--item-index': 1 } as CSSProperties}>
           <span className={styles.current} aria-current="page">
             {current}
           </span>
