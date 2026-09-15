@@ -1,185 +1,170 @@
-/* Three breakpoints, three genuinely different grids — not one grid reflowing.
-   Read from the Figma variants (236:2623 lg, 236:2746 md, 236:2752 sm):
+/* Three cells, three tiers. Read from the phase 7 Footer variants — 236:2623
+   lg, 236:2746 md, 236:2752 sm — and from the instances on the six
+   landing-footer frames.
 
-     lg  >= 1024   12 cols x 2 rows   inset 64   intro on row 1
-     md  768-1023   8 cols x 3 rows   inset 32   intro spans rows 1-2
-     sm  < 768      4 cols x 5 rows   inset  0   intro absent, everything centred
+     lg  >= 1024   12 cols   gutter 16   inset 64   96 tall   2 rows
+     md   640-1023  8 cols   gutter  8   inset 32   84 tall   2 rows
+     sm   < 640     4 cols   gutter  8   inset  0  128 tall   3 rows
 
-   Written mobile-first so each tier adds to the one below it, matching the
-   direction tokens.css already steps --container-inset in. The breakpoint
-   literals are repeated here because a media query cannot read
-   --breakpoint-md/lg — see the caution in tokens.css System / Layout.
+   The gutter genuinely differs: 16 at lg and 8 below it. Derived rather than
+   assumed — at 768 the credits cell is 259 wide, and 3 of 8 columns comes to
+   259 only if the gutter is 8 ((704 - 7*8)/8 = 81, 3*81 + 2*8 = 259). With 16
+   it would be 254. The same arithmetic holds at 640 and at all three lg
+   canvases in the other direction.
 
-   The column spans are the only description of this layout anywhere in the
-   codebase, which is why each tier is written out in full rather than patched
-   from the previous one.
+   THE VISUAL ORDER IS NOT THE DOM ORDER at md or sm, which is why every cell
+   is placed explicitly rather than flowing. lg reads changelog / language on
+   the left and credits on the right; md moves credits up beside changelog and
+   drops language below; sm stacks credits, language, changelog in that order,
+   centred. The one interactive cell is second in every order, so the tab
+   sequence and the reading order never disagree.
 
-   The column gap is space/sm at all three tiers. The ROW gap is not: Figma
-   sets it per variant — 32 at sm, 16 at md, 64 at lg — so it is declared once
-   per tier below rather than once here. Phase 5 shipped a single 32 for all
-   three, which was right at sm, too loose at md and half what lg wants. */
+   The breakpoint literals are repeated here because a media query cannot read
+   --breakpoint-md/lg — see the caution in tokens.css System / Layout. */
 
 .footer {
   display: grid;
-  column-gap: var(--space-sm);
-
   background: var(--color-surface-inverse);
   color: var(--color-text-inverse);
-
   font-size: var(--font-size-sm);
   line-height: var(--line-height-sm);
   letter-spacing: var(--letter-spacing-normal);
 }
 
-/* ---- sm: < 768 ----------------------------------------------------------
-   Four columns, five rows, and the only tier that goes edge to edge — Figma
-   gives it padding [32, 0, 32, 0], so no horizontal inset at all. The centred
-   items sit in columns 2-3 of 4 rather than being centred by alignment, which
-   is what keeps them on the same axis as each other.
+/* THE 10VH RULE, AND THE FLOOR THAT MAKES IT SAFE.
 
-   Note the visual order is NOT the DOM order here: language comes before
-   changelog on screen. Both are static text, so nothing interactive is
-   reordered and the tab sequence is unaffected. */
+   The reference's bar is a flat `height: 10vh`, and the user asked for the same
+   approach "with a floor value so the rule holds wherever possible while
+   keeping the footer readable on smaller phones". --footer-floor is that floor,
+   set per tier below to the height Figma actually draws.
+
+   Those drawn heights ARE 10vh of a plausible viewport at the two wide tiers —
+   96 is a tenth of 960, 84 a tenth of 840 — so on a normal desktop the two
+   agree and the max() is inert. They part company on a phone: the sm bar is 128
+   and a tenth of an 850-tall phone is 85, which cannot hold three stacked rows.
+   The floor is what stops the rule from eating its own content there.
+
+   WHY min-block-size AND NOT block-size, which is a deviation from "maximum"
+   and is deliberate. A hard height on a bar made entirely of text clips that
+   text the first time a translated string wraps — and this footer is about to
+   gain translations, since the control for them is sitting inside it. A
+   minimum gives the same number on every realistic viewport, still lets the bar
+   scale with tall screens the way the reference does, and fails by growing
+   rather than by hiding a line. Flagged to the user rather than filed as a
+   detail. */
+.footer {
+  --footer-floor: 128px;
+
+  min-block-size: max(10vh, var(--footer-floor));
+}
+
+/* ---- sm: < 640 ----------------------------------------------------------
+   Four columns, three rows, and the only tier that goes edge to edge — Figma
+   gives it padding [16, 0, 16, 0], so no horizontal inset at all. Centred
+   items sit in columns 2-3 of 4 rather than being centred by alignment, which
+   is what keeps them on one axis with each other. Credits spans all four
+   because the string is wider than two columns at 412. */
 
 .footer {
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  grid-template-rows: repeat(5, min-content);
-  row-gap: var(--space-xl);
-  padding-block: var(--space-xl);
+  column-gap: var(--space-sm);
+  row-gap: var(--space-lg);
+  align-content: center;
+  padding-block: var(--space-md);
   padding-inline: 0;
 }
 
-/* The sm variant drops this copy entirely — it is not hidden in the design,
-   it is absent. display:none rather than visual-only hiding, so it is gone
-   for screen readers too and the footer reads the same way it looks. */
-.intro {
-  display: none;
-}
-
-.mail {
-  grid-column: 1 / span 4;
+.credits {
+  grid-column: 1 / -1;
   grid-row: 1;
   text-align: center;
 }
 
-.social {
+.language {
   grid-column: 2 / span 2;
   grid-row: 2;
   justify-content: center;
 }
 
-.language {
+.changelog {
   grid-column: 2 / span 2;
   grid-row: 3;
   text-align: center;
 }
 
+/* The changelog is the only text in the footer that is not full white. Figma
+   paints it white at 80%, which has no token — the neutral ramp carries no
+   alpha steps, and --color-neutral-400 is a different colour rather than a
+   dimmer white. Left as the literal so it reads as deliberately outside the
+   system, the same call Phase 5 made. */
 .changelog {
-  grid-column: 2 / span 2;
-  grid-row: 4;
-  text-align: center;
-  /* The only text in the footer that is not full white. Figma has it at 80%,
-     which has no token — the neutral ramp carries no alpha steps. Left as a
-     literal so it reads as deliberately outside the system. */
-  color: rgb(255 255 255 / 0.8);
+  color: var(--color-neutral-400);
 }
 
-.credits {
-  grid-column: 1 / span 4;
-  grid-row: 5;
-  text-align: center;
-}
+/* ---- md: 640-1023 -------------------------------------------------------
+   Eight columns, two rows, 84 tall. Changelog and credits share row 1 at
+   opposite ends; language drops to row 2 under the changelog.
+   --container-inset is already 32px below 1024, so no literal is needed. */
 
-/* ---- md: 768-1023 -------------------------------------------------------
-   Eight columns, three rows. The intro returns and spans both of the first
-   two rows, which is what pushes the meta row down to row 3. --container-inset
-   is already 32px below 1024, so the inset needs no literal here. */
-
-@media (min-width: 768px) {
+@media (min-width: 640px) {
   .footer {
+    --footer-floor: 84px;
+
     grid-template-columns: repeat(8, minmax(0, 1fr));
-    grid-template-rows: repeat(3, min-content);
-    row-gap: var(--space-md);
-    padding-block: var(--space-lg);
     padding-inline: var(--container-inset);
-  }
-
-  .intro {
-    display: block;
-    grid-column: 1 / span 2;
-    grid-row: 1 / span 2;
-    align-self: start;
-  }
-
-  .mail {
-    grid-column: 4 / span 3;
-    grid-row: 1;
-    text-align: left;
-  }
-
-  .social {
-    grid-column: 7 / span 2;
-    grid-row: 1;
-    justify-content: flex-end;
+    row-gap: var(--space-sm);
   }
 
   .changelog {
-    grid-column: 1 / span 2;
-    grid-row: 3;
-    text-align: left;
-  }
-
-  .language {
-    grid-column: 3 / span 2;
-    grid-row: 3;
-    text-align: left;
+    grid-column: 6 / span 3;
+    grid-row: 2;
+    text-align: right;
   }
 
   .credits {
     grid-column: 6 / span 3;
-    grid-row: 3;
+    grid-row: 1;
     text-align: right;
+  }
+
+  .language {
+    grid-column: 1 / span 2;
+    grid-row: 1;
+    justify-content: flex-start;
   }
 }
 
 /* ---- lg: >= 1024 --------------------------------------------------------
-   Twelve columns, two rows. The intro drops back to a single row and the meta
-   row moves up to row 2. --container-inset steps to 64px on the same query. */
+   Twelve columns, two rows, 96 tall, and the gutter doubles to 16.
+
+   The three cells do NOT start at column 1 here: changelog and language both
+   begin at column 3 and credits at column 7. Verified at all three lg canvases
+   — at 1448 the changelog sits at x=286.67 and credits at x=732, which are
+   columns 3 and 7 of a 12-column grid inset 64 — and the widths agree too, at
+   2, 3 and 4 columns respectively. --container-inset steps to 64 on the same
+   query, so only the grid placement is stated. */
 
 @media (min-width: 1024px) {
   .footer {
+    --footer-floor: 96px;
+
     grid-template-columns: repeat(12, minmax(0, 1fr));
-    grid-template-rows: minmax(0, 2fr) minmax(0, 1fr);
-    row-gap: var(--space-3xl);
-  }
-
-  .intro {
-    grid-column: 1 / span 3;
-    grid-row: 1;
-  }
-
-  .mail {
-    grid-column: 6 / span 3;
-    grid-row: 1;
-  }
-
-  .social {
-    grid-column: 10 / span 3;
-    grid-row: 1;
+    column-gap: var(--space-md);
   }
 
   .changelog {
-    grid-column: 1 / span 2;
+    grid-column: 8 / span 3;
     grid-row: 2;
   }
 
   .language {
-    grid-column: 3 / span 2;
-    grid-row: 2;
+    grid-column: 3 / span 3;
+    grid-row: 1;
   }
 
   .credits {
-    grid-column: 9 / span 4;
-    grid-row: 2;
+    grid-column: 8 / span 3;
+    grid-row: 1;
+    text-align: right;
   }
 }

@@ -5,7 +5,7 @@ import styles from './NavLink.module.css'
  *
  * Two states, not three. `State=active` was deleted from the file on
  * 2026-09-09 and the reasoning is worth keeping next to the code, because the
- * obvious instinct is to add it back: NavLinks renders on the landing and its
+ * obvious instinct is to add it back: Nav's landing state renders on the
  * footer state ONLY, where the current page is `/` and none of Projects,
  * About or Photos is current — so an active pill had no reachable consumer
  * anywhere in the design. The accent-thumb pattern it was copied from is the

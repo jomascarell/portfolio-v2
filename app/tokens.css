@@ -117,15 +117,28 @@
   --line-height-xs: 18px; /* with font-size-xs (12px) — 1.50 */
   --line-height-sm: 20px; /* with font-size-sm (14px) — 1.43 */
 
-  /* 20.2px with font-size-md (16px) — 1.26. The body rhythm, confirmed
-     2026-09-08, and the one fractional value in the ramp. Carried over
-     verbatim from the retired build's text-base/font-Regular rather than
-     rounded, so the number matches that build exactly. Two earlier values are
-     superseded and must not come back: 27.2px (shipped build) and 28px (this
-     Figma file, before the decision). 1.26 sits close to the ~1.2 default the
-     rebuild removed — this is the number to revisit if paragraphs read
-     cramped in the Phase 11 audit. */
-  --line-height-md: 20.2px;
+  /* 26.2px with font-size-md (16px) — 1.64. CHANGED FROM 20.2px AT GATE 07,
+     2026-09-11, on the user's instruction to decide it rather than hold it.
+
+     Figma holds 26.2 and the drawn screens are laid out at it: IntroCard's
+     tagline frame is 53px for two lines of body/base-medium (2 x 26.2 = 52.4)
+     and the sm status line is 27px for one. At 20.2 those frames would be 40
+     and 20. Phase 7 reproduces 36 screens against those drawings, so a
+     stylesheet that disagrees with them turns every comparison into a
+     deviation to explain.
+
+     It is also the better value on its own merits. 1.26 is tighter than body
+     copy wants — the 2026-09-08 note already flagged it as the number to
+     revisit if paragraphs read cramped, and 1.64 is close to the "1.7 rhythm"
+     the file's own style descriptions still talk about.
+
+     CAUTION, AND THE REASON THIS IS WORTH RE-CHECKING: 26.2 is not any of the
+     three values with a history here — not the 20.2 decided on 2026-09-08,
+     not the 27.2 the retired build shipped, not the 28 this file held before
+     that decision. It may well be a mistyped 20.2 or 27.2. If it is, the fix
+     belongs in Figma and this follows it; what must not happen is the two
+     drifting apart again silently. */
+  --line-height-md: 26.2px;
 
   /* 28px, also with font-size-md (16px) — 1.75. The looser setting for the
      16px tier, split out so heading/h4 could keep its 28px when body
@@ -143,7 +156,24 @@
      UNIT CONVERSION: Figma stores these as percentages (-2, 0, 1.4); CSS has
      no percentage letter-spacing, so they are emitted as em, which is the same
      proportional quantity. 1.4% of the 16px body size is 0.224px, which is
-     exactly what the retired build hardcoded. */
+     exactly what the retired build hardcoded.
+
+     CHECKED AGAIN AT GATE 07, 2026-09-11, AND LEFT ALONE — but the file does
+     not currently agree with it, so this needs applying in Figma.
+
+     The two text styles bound to letter-spacing/tight, heading/h1 and
+     display/numeral, carry the unit PIXELS rather than PERCENT, so Figma
+     renders them at -2px: -4.3% on a 46px heading and -7.1% on the 28px year
+     stamp, instead of -2% on both. That reads as an authoring accident rather
+     than intent, and the predecessor file settles it — v1's Figma stored this
+     as a percentage explicitly ("letterSpacing 1.4%" in text-base/font-Regular)
+     and v1's CSS carried the arithmetic in its own comment: 1.4% of 16px is
+     0.224px. Percentages are the convention these numbers were authored in.
+
+     So the em values below stay, and the correction belongs on the Figma side:
+     switch those two styles to PERCENT. Doing it will slightly reflow every
+     h1 and every year stamp in the drawings, which is expected — the drawings
+     are currently the thing that is wrong. */
 
   --letter-spacing-tight: -0.02em; /* -2%. Display sizes (xl and up), where default tracking reads loose. */
   --letter-spacing-normal: 0em; /* 0%. Body and UI text. The default. */
@@ -273,19 +303,40 @@
 
   /* ---- System / Layout ----------------------------------------------------
 
-     CAUTION: the four breakpoints are documentation, not machinery. CSS cannot
+     CAUTION: the five breakpoints are documentation, not machinery. CSS cannot
      read a custom property inside a media query — `@media (min-width:
      var(--breakpoint-lg))` does not work and fails silently. Write the literal
-     in the query and keep these as the record of what the literal means. */
+     in the query and keep these as the record of what the literal means.
 
-  --breakpoint-sm: 0px; /* Base. Everything below md. Canvases 412 and 640 both land here. */
+     THE FIFTH BREAKPOINT WAS ADDED 2026-09-11, and why matters more than the
+     number. This block used to read `--breakpoint-sm: 0px`, commented "Canvases
+     412 and 640 both land here". That sentence was an assumption written as a
+     fact, and it was wrong. The Design page draws projects / 640 and about /
+     640 as TWO COLUMNS — panel 280 at x=32, content 280 at x=328, a four-column
+     grid with a 16 gutter — and only the 412 canvases stack. A second and
+     independent signal agrees: landing-footer / 640 carries the 182px Footer
+     variant that 768 uses, not the 286px one 412 uses. By both measures 640
+     behaves like md, and only 412 is the base tier.
+
+     640 is the literal because the file's own pattern sets it: a tier's
+     breakpoint is its smallest drawn canvas, which is how 768 and 1024 were
+     chosen. That it matches a common framework default is a coincidence, not
+     the reason.
+
+     STILL TO DO IN FIGMA: the four-breakpoint decision is recorded there too.
+     This file and that one now disagree until the fifth is added on the Tokens
+     page. */
+
+  --breakpoint-base: 0px; /* Phones. The 412 canvas, and the only tier that stacks. */
+  --breakpoint-sm: 640px; /* The 640 canvas: two columns on a four-column grid. */
   --breakpoint-md: 768px; /* Tablet. */
   --breakpoint-lg: 1024px; /* Desktop — where layout structure actually changes. */
   --breakpoint-xl: 1440px; /* Wide desktop. Replaces the old 1280/1362/1448 spread. */
 
-  /* Horizontal page inset at sm AND md. The 8-column md grid uses a 32px
-     offset, so the inset does NOT step up until lg. Confirmed 2026-09-08:
-     tablet is always 32px. */
+  /* Horizontal page inset at base, sm AND md — it is 32px everywhere below lg.
+     The 8-column md grid uses a 32px offset, so the inset does NOT step up
+     until lg. Confirmed 2026-09-08: tablet is always 32px. The name predates
+     the fifth breakpoint and means "the small inset", not "the inset at sm". */
   --container-inset-sm: var(--space-xl);
 
   /* Horizontal page inset at lg and xl, matching the 12-column grid's offset.

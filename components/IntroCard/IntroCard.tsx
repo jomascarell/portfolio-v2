@@ -11,6 +11,15 @@ import styles from './IntroCard.module.css'
  * widths, so it is media queries, and the only component in this phase that
  * needs them.
  *
+ * WHERE those media queries break used to be a third thing, decided per screen
+ * through a `ladder` prop. It is not any more — the phase 7 page steps every
+ * card at the same two widths, 640 for the type and the wordmark and 1024 for
+ * the box, so the prop and the three-ladder model went with the rewrite.
+ * Measured across all 22 instances on that page rather than inferred from the
+ * component sheet, which is what made the old reading go wrong: a variant's
+ * own frame height is what the card is drawn at in the sheet, not a claim
+ * about any screen.
+ *
  * Type=about is the wordmark alone. Figma expresses that two ways in the same
  * component set — md and sm delete the tagline and the status block, lg keeps
  * them and switches them off — and the result is identical, so this renders
@@ -46,7 +55,11 @@ export default function IntroCard({
 }: IntroCardProps) {
   return (
     <div
-      className={[styles.card, TYPES[type], className]
+      className={[
+        styles.card,
+        TYPES[type],
+        className,
+      ]
         .filter(Boolean)
         .join(' ')}
     >
@@ -65,9 +78,17 @@ export default function IntroCard({
           <p className={styles.current}>{siteConfig.status.current}</p>
           <p className={styles.previous}>
             {siteConfig.status.previous}
-            <span className={styles.handle}>
-              {siteConfig.status.previousHandle}
-            </span>
+            {/* rel="noopener noreferrer" written out rather than relying on the
+                default target="_blank" implies — the same call AboutBio makes,
+                for the same reason. */}
+            <a
+              className={styles.handle}
+              href={siteConfig.status.previousHandle.href}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {siteConfig.status.previousHandle.handle}
+            </a>
           </p>
         </div>
       )}

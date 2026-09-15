@@ -1,50 +1,81 @@
-/* Mobile-first, sm as the base — the lesson Phase 5 paid for on the Footer.
-   The three breakpoint variants are three different drawings, not one that
-   reflows: the padding triples at lg, the gap disappears, the vertical
-   distribution changes from centred to space-between, the wordmark changes
-   size, and the tagline and the status line change TEXT STYLE. Read each
-   variant before assuming any of it carries over.
+/* Mobile-first, with TWO thresholds and one ladder — 640 and 1024, the same
+   for every screen that carries a card.
 
-   Heights are min-block-size and not block-size. Figma fixes the intro card's
-   height at every breakpoint (439 / 532 / 468) and hugs the about card, which
-   is exactly what a minimum reproduces — with the difference that text which
-   wraps one line further than the drawing grows the card instead of spilling
-   out of it. At lg the minimum is load-bearing for another reason: with
-   space-between, the height is what there is to distribute. */
+   REWRITTEN AGAINST THE PHASE 7 PAGE 2026-09-12, and this is a simplification
+   rather than a correction list. The previous version carried three ladders —
+   landing, projects and about each stepping tiers at different widths — plus a
+   `ladder` prop to choose between them and a container-query analysis
+   explaining why the card's own width could not decide it. The phase 7 page
+   collapses all of that: measured across all 22 IntroCard instances on the
+   page, every card steps its type and its wordmark at 640 and its box at 1024.
+   The prop is gone with the model.
+
+   HEIGHT IS 468 AT EVERY WIDTH for Type=intro, phone included, with the content
+   centred in whatever slack is left. The old file hugged below 640 on the
+   reading that landing / 412 was drawn at 235 — true of the retired Design
+   page, not this one. The frame geometry settles it: landing / 412 gives
+   PageIntro 688, which is the stacked nav's 220 plus exactly 468.
+
+   Still min-block-size and not block-size, for the original reason: text that
+   wraps one line further than the drawing should grow the card rather than
+   spill out of it. At 1024 the minimum is load-bearing for a second reason —
+   with space-between, the height is what there is to distribute. */
 
 .card {
-  display: flex;
+  /* THE ONE SCREEN THAT REMOVES THE CARD rather than resizing it is /projects
+     below 768. Phase 7 draws no IntroCard instance on projects / 412 or
+     projects / 640; the threshold used to be 640 here, and moved when the 640
+     frame turned out to have no card either — the frame the old reading never
+     checked.
+
+     `display: none` and not a visibility trick, because the design deletes the
+     instance rather than hiding it: it should be gone for a screen reader too.
+     That is the call Phase 5 made on the Footer's sm intro copy, and this is
+     the same shape of decision. The screen declares it and this component
+     reads it — see the projects state in PanelLayout.module.css. */
+  display: var(--intro-card-display, flex);
   flex-direction: column;
   align-items: center;
   gap: var(--space-md);
   padding: var(--space-md);
 }
 
+/* 468 is the drawn height and stays the default, so /projects and the gallery
+   are unchanged. It is a variable because the LANDING needs it to yield: that
+   screen has a footer revealing over it, and on a short viewport something has
+   to give so the bar never crosses the content. The card is the right thing to
+   give — the largest single block on the screen and the only one with slack —
+   but only where a footer is actually involved, which is why the override
+   lives in the landing's own rules and not here. */
 .intro {
-  min-block-size: 439px;
+  min-block-size: var(--intro-min-block, 468px);
   justify-content: center;
 }
 
-/* The about card is the wordmark and nothing else, so it hugs. */
+/* The about card is the wordmark and nothing else, so it hugs at every width.
+   Its four drawn heights — 122, 236, 172, 236 — all fall out of padding plus
+   the mark, so none of them is stated. */
 .about {
   min-block-size: auto;
 }
 
-/* The mark's size belongs to the card, not to the mark — .card .wordmark is
-   two classes deep on purpose, so it outranks the size class Wordmark sets on
-   the same element regardless of which of the two stylesheets loads first. */
 .card .wordmark {
   --wordmark-height: 90px;
 }
 
-/* Figma text style: ui/label — 14/20 Medium. It becomes body/base-medium from
-   768 up, which is the one place in this file where a breakpoint changes
-   typography rather than layout. */
+/* Figma text style: body/base — 16/26.2 Regular.
+
+   CORRECTED 2026-09-12, and the previous correction is why this needs saying.
+   A note dated the same day changed these three declarations from 16/26.2
+   Regular to 14/20 Medium, on the grounds that landing / 412 draws the tagline
+   at ui/label. That is true of the retired Design page. The phase 7 page draws
+   it at body/base — 301 x 53, which is two lines of 26.2 — so the value that
+   correction removed is the value the design now wants. Measured, not
+   reasoned: 16/26.2 Regular at 412, 18/30 Regular from 640 up. */
 .tagline {
-  max-inline-size: 301px;
-  font-size: var(--font-size-sm);
-  line-height: var(--line-height-sm);
-  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
+  font-weight: var(--font-weight-regular);
   letter-spacing: var(--letter-spacing-normal);
   color: var(--color-text-secondary);
   text-align: center;
@@ -54,11 +85,12 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
-  align-items: flex-start;
+  align-items: center;
 }
 
-/* Figma text style: body/base-medium — 16/20.2 SemiBold. Becomes heading/h3
-   (18/30 Medium) from 768 up. */
+/* Figma text style: body/base-medium — 16/26.2 SemiBold. Becomes heading/h3
+   (18/30 Medium) from 640 up. Both measured on the phase 7 frames and both
+   already correct before this rewrite. */
 .current {
   font-size: var(--font-size-md);
   line-height: var(--line-height-md);
@@ -67,7 +99,9 @@
   color: var(--color-text-secondary);
 }
 
-/* Figma text style: body/lg — 18/30 Regular, at every breakpoint. */
+/* Figma text style: body/lg — 18/30 Regular, at every breakpoint. The one line
+   in this card that never changes, and phase 7 keeps it that way: 18/30 on
+   landing / 412, / 640 and / 1448 alike. */
 .previous {
   font-size: var(--font-size-lg);
   line-height: var(--line-height-lg);
@@ -76,52 +110,106 @@
   color: var(--color-text-secondary);
 }
 
-/* The handle is accent-coloured and is NOT a link in the design — no href, no
-   hover, no underline. Left as text rather than promoted to a link, because
-   making it one would invent an interaction and a destination. */
+/* A LINK, and the destination is not invented. The drawing states only the
+   appearance — accent ink, no underline — and the URL comes from the retired
+   build, where AboutBio links the same word to https://okisam.com/. The two
+   screens say the same word about the same employer; one of them being inert
+   would be the odd result.
+
+   Hover and focus are added on top and are the part the drawing does not
+   cover. A link with no state at all is not a fidelity win, it is a link the
+   pointer and the keyboard cannot tell is there. */
 .handle {
   color: var(--color-text-accent);
+  text-decoration-line: none;
+  transition: color var(--duration-fast) var(--ease-standard);
 }
 
-/* ---- md: >= 768 ---------------------------------------------------------
-   Same centred column and same 16px gap and padding as sm. What changes is
-   the type: the tagline steps up to body/base-medium and the status line to
-   heading/h3, and the wordmark takes its large size. */
+/* Outside the hover query, so a keyboard reaches it on a touch device too. */
+.handle:focus-visible {
+  color: var(--color-text-accent-hover);
+  outline: 2px solid var(--color-text-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
 
-@media (min-width: 768px) {
-  .intro {
-    min-block-size: 532px;
+/* Inside it, because on a touch device :hover sticks after a tap. */
+@media (hover: hover) {
+  .handle:hover {
+    color: var(--color-text-accent-hover);
   }
+}
 
+/* ---- 640: the type and the mark step up ---------------------------------
+   One threshold, every screen. The box is unchanged here — padding, gap and
+   distribution all wait for 1024 — so this tier is purely typographic plus the
+   wordmark.
+
+   The old file stepped the landing at 640 and the panel screens at 768, which
+   needed the `ladder` prop to express. Phase 7 removes the disagreement:
+   /projects has no card at all below 768, so there is nothing there to step,
+   and about / 640 already carries the large mark. */
+
+@media (min-width: 640px) {
   .card .wordmark {
     --wordmark-height: 140px;
   }
 
+  /* body/lg — 18/30 Regular. */
   .tagline {
-    font-size: var(--font-size-md);
-    line-height: var(--line-height-md);
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-lg);
   }
 
+  /* heading/h3 — 18/30 Medium. */
   .current {
     font-size: var(--font-size-lg);
     line-height: var(--line-height-lg);
     font-weight: var(--font-weight-medium);
   }
+
+  /* ABOUT TAKES THE WIDE BOX AT 640 AND GIVES IT BACK AT 768, and that
+     inversion is deliberate — confirmed by the user 2026-09-12 after being
+     raised as a probable slip. about / 640 is drawn at padding 48, gap 0 and
+     top-aligned, which is the 1024 treatment, while the WIDER about / 768 is
+     back at padding 16. Every other card below 1024 has 16.
+
+     Written as its own tier rather than folded into the 1024 block, because
+     folding it would hide the fact that the ladder is not monotonic here. If
+     this ever looks wrong, it is the drawing that decides, not this file. */
+  .about {
+    gap: 0;
+    padding: var(--space-2xl);
+    justify-content: flex-start;
+  }
 }
 
-/* ---- lg: >= 1024 --------------------------------------------------------
-   The card opens up: padding triples to 48, the gap goes to zero, and the
-   three blocks are pushed apart to the full height instead of being centred
-   as a group. The type is unchanged from md. */
+@media (min-width: 768px) {
+  .about {
+    gap: var(--space-md);
+    padding: var(--space-md);
+  }
+}
+
+/* ---- 1024: the box opens up --------------------------------------------
+   Padding triples to 48, the gap goes to zero, and the three blocks are pushed
+   apart to the full height instead of being centred as a group. The type is
+   unchanged from the 640 tier. */
 
 @media (min-width: 1024px) {
   .card {
-    gap: 0;
+    gap: var(--space-xl);
     padding: var(--space-2xl);
   }
 
+  /* The height is unchanged — only the distribution. */
   .intro {
-    min-block-size: 468px;
     justify-content: space-between;
+  }
+
+  .about {
+    gap: 0;
+    padding: var(--space-2xl);
+    justify-content: flex-start;
   }
 }

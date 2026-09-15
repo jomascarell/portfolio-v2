@@ -24,3 +24,46 @@
 .list > li > * {
   flex: 1;
 }
+
+/* PHASE 8 STEP 7 — Option B, the row entrance. The user chose "every row flies
+   in independently" over my recommendation (a single travelling block whose
+   rows barely move, ported from the retired menu's 8px/20ms nudge). Option B
+   explicitly has no parent container to carry the motion, so each row needs
+   its own real travel distance, not a nudge — and neither Figma nor the
+   retired build gives one, since the old spec was written for the shape that
+   was rejected. --space-2xl is a stand-in for "far enough to read as arriving
+   from off-panel," not a measured value; the 60ms stagger is likewise a first
+   pass. Tune both once this is in a browser.
+
+   --row-index is set inline per <li> in ProjectList.tsx rather than via
+   :nth-child, so the stagger still works if the list is ever built from a
+   filtered or reordered array.
+
+   --ease-standard is Figtree's own cubic-bezier(0.4, 0, 0.6, 1) — the same
+   curve lib/menu-motion.ts specifies, so Option B keeps that much of the old
+   spec even though its distance and shape do not carry over.
+
+   fill-mode backwards holds each row at its 0% state until its delay elapses,
+   so nothing flashes at its final position before animating in. The global
+   reduced-motion rule already collapses animation-duration to near-zero; see
+   its animation-delay override in globals.css for why rows do not still
+   visibly stagger under that query. */
+.list > li {
+  --row-distance: var(--space-2xl);
+  --row-stagger: 60ms;
+
+  animation: row-in var(--duration-base) var(--ease-standard) backwards;
+  animation-delay: calc(var(--row-index, 0) * var(--row-stagger));
+}
+
+@keyframes row-in {
+  from {
+    opacity: 0;
+    transform: translateX(var(--row-distance));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

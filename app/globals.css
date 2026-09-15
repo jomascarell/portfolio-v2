@@ -80,6 +80,7 @@ a {
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
@@ -91,3 +92,59 @@ a {
     animation: none !important;
   }
 }
+
+/* ---- The panel morph ----------------------------------------------------
+
+   Landing, /projects and /about are one composition in three states, so the
+   panel and the nav carry stable view-transition names across all three routes
+   (see components/PanelLayout). React pairs them by name, and the browser
+   animates the old and new positions — the panel slides from the centre of the
+   screen to the left, and the nav's three pills become the breadcrumb pill, in
+   the same beat.
+
+   `share="morph"` on the component puts each pair in this class. Without a
+   class the rules below would have to target every named pair with (*), which
+   would also catch pairs added later and give them a duration chosen for this
+   one.
+
+   320ms is --duration-slow, "large surfaces entering or leaving", and it is the
+   value the morph spec in Figma settled on for the container. --duration-deck
+   (700ms) is deliberately NOT used here: it exists for the measured-width morph
+   technique the reference needs because it has no view transitions, and that
+   technique is not what we ended up building. The token keeps its consumer in
+   the deck itself.
+
+   The reduced-motion block above already kills every view-transition animation,
+   so these need no query of their own — the state still changes, it just
+   arrives instantly. */
+::view-transition-group(.morph) {
+  animation-duration: var(--duration-slow);
+  animation-timing-function: var(--ease-entrance);
+}
+
+/* THE CROSSFADE IS LEFT ALONE ON PURPOSE, and the rule that used to be here
+   was the cause of the flicker reported 2026-09-12.
+
+   It killed the old and new snapshots' animations —
+
+     ::view-transition-old(.morph), ::view-transition-new(.morph)
+       { animation: none; mix-blend-mode: normal }
+
+   — on the stated premise that "the panel's two snapshots are the same object
+   at two sizes, so crossfading them just blurs the wordmark against itself".
+   That premise is false, and the states say so plainly: the nav goes from three
+   pills to a breadcrumb pill, and on about the tagline and both status lines
+   are not rendered at all. The two snapshots hold DIFFERENT content.
+
+   Removing their animations does not remove the fade, it freezes both at
+   opacity 1. The pair stacks old under new inside
+   ::view-transition-image-pair, so for the whole 320ms two different images are
+   painted fully opaque on top of each other, with the old one stretched from
+   its own size to the new one by the group animation. Superimposed text that
+   snaps clear at the end is exactly what "flickering on the intro page" looks
+   like.
+
+   The default UA animations — old fades out, new fades in, over the group's
+   duration — are what make a morph read as one thing moving. They only need
+   overriding when a pair is genuinely the same pixels, which is the case the
+   Next guide's blur example is written for and is not this one. */

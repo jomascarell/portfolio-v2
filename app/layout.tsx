@@ -1,7 +1,5 @@
 import type { Metadata } from 'next'
 import { Figtree } from 'next/font/google'
-import Footer from '@/components/Footer/Footer'
-import FooterReveal from '@/components/FooterReveal/FooterReveal'
 import SkipLink, { SKIP_TARGET_ID } from '@/components/SkipLink/SkipLink'
 import shell from './layout.module.css'
 import './tokens.css'
@@ -55,10 +53,9 @@ const figtree = Figtree({
    (Gate 03) rather than by a pipeline, so unlike the original plan it IS
    hand-editable — see its header for how to regenerate.
 
-   Phase 5 added the persistent frame, the skip-link target, <Footer /> and the
-   footer reveal. See layout.module.css for why the frame lives in the layout,
-   and components/FooterReveal for how the reveal is triggered and why it sits
-   in normal flow rather than fixed as the design's wording suggests. */
+   Phase 5 added the persistent frame and the skip-link target. It also put the
+   footer here; Phase 7 moved it to app/page.tsx — see the note at the bottom of
+   the tree, and components/FooterReveal for the mechanic it now implements. */
 
 export const metadata: Metadata = {
   // The retired build shipped "Jan Mascarell" here for months. It is Joan.
@@ -86,15 +83,19 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           <main className={shell.content} id={SKIP_TARGET_ID} tabIndex={-1}>
             {children}
           </main>
-          {/* <Footer /> is passed as children, not imported by FooterReveal.
-              A Server Component handed to a Client Component as a prop is not
-              part of that component's module graph — it is rendered on the
-              server and passed in as output. So the footer, and react-icons
-              with it, stay out of the client bundle exactly as Phase 5
-              verified; the island ships only the observer. */}
-          <FooterReveal>
-            <Footer />
-          </FooterReveal>
+          {/* THE FOOTER IS NOT HERE, AND THAT IS THE POINT — moved to
+              app/page.tsx 2026-09-11. Phase 5 put it in the shell on the
+              reading that it was a persistent, every-route element revealed at
+              the end of each scrolling page. The Figma drawings say otherwise
+              and say it unambiguously: across all 36 frames on the Design page
+              the Footer appears on 6, and all 6 are landing-footer. Zero on
+              projects, about, photos or project-detail, at any width. So the
+              footer belongs to one route, and a component mounted in the layout
+              is a component on five.
+
+              The reference does the same thing — calebwu.ca renders its footer
+              inside the landing component, and the markup is absent from the
+              served HTML of every other route rather than hidden by CSS. */}
         </div>
       </body>
     </html>

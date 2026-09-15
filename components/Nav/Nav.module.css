@@ -1,0 +1,187 @@
+/* THE BAND IS THE SAME IN EVERY STATE, and that is the measurement the whole
+   morph rests on. Figma gives Nav's outer wrapper space/3xl above and space/xl
+   below in all ten variants, so the slot reserves identical space whether it
+   holds three pills or a breadcrumb — the intro panel below it does not move
+   between the landing and everywhere else. It is the same 64 as --nav-height,
+   which the design derives from the same band.
+
+   Both inner containers are already radius/lg too. Caleb's nav has to animate
+   radius, padding and a wrapper offset between its two states; ours has to
+   animate position and width, because the design had already settled
+   everything else. That is why the morph is a view-transition name and not a
+   measurement rig — see components/PanelLayout.
+
+   Not carried over: the Figma frame around the landing's pills has radius/lg
+   and no fill, so the corner paints nothing. Written down rather than copied —
+   an inert declaration in a stylesheet reads like an intention. */
+
+.root {
+  padding-top: var(--space-3xl);
+}
+
+/* ---- State = landing ----------------------------------------------------
+
+   The list reset lives here rather than coming from a `role="list"` and the
+   global `ul[role='list']` rule. That role is the Safari workaround — removing
+   the bullets there also removes the list semantics — but the strict jsx-a11y
+   config in this project rejects it as a redundant role, and Phase 5 settled
+   the question the same way on SocialIcons. One convention, not two.
+
+   THE CONTAINER PAINTS NOTHING HERE. Each pill carries color/surface/subtle
+   and the container is transparent; on the interior states below it is the
+   other way round. That hand-off is what makes three pills read as merging
+   into one, and it is derived from the existing drawings rather than invented
+   for the animation. */
+
+.links {
+  display: flex;
+  gap: var(--space-sm);
+  /* 2px of inline padding so a focus ring on the first or last pill is not
+     clipped by a parent that ever gains overflow. Figma draws it too. */
+  padding-inline: var(--space-2xs);
+  margin: 0;
+  list-style: none;
+}
+
+/* `row` IS RESPONSIVE, and the design is why. The landing is the only state
+   with a drawn stack, and below 640 it is the ONLY thing drawn: landing / 412
+   is the one Nav instance in the file with Layout=stack, and no frame anywhere
+   keeps the pills in a row at that width. So "row" names the layout from 640
+   up, and the narrow tier has one answer rather than a choice.
+
+   Figma, landing / 412: the nav block is 97 x 220 at x=157.5 in a 412 frame —
+   (412 - 97) / 2, so the block centres while the pills inside it stay left
+   aligned. 97 is the widest pill (93) plus this list's 2px inline padding on
+   each side. The 8px gap and the 64/32 band are identical in both directions,
+   which is why only two properties move. */
+
+.row {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+@media (min-width: 640px) {
+  .row {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .root {
+    padding-block: var(--space-3xl) var(--space-xl);
+  }
+}
+
+/* Unconditional. The prop still exists so /gallery can show the variant at any
+   width, and so a future screen can opt into stacking above 640 — the design
+   does not ask for that today. */
+.stack {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* ---- State = projects | about | photos | project-detail -----------------
+
+   Identical at every breakpoint, which is what Figma's four interior x stack
+   variants record: they are intentional duplicates of their row counterparts,
+   kept only to complete the matrix. So there is no media query in this half of
+   the file, and `layout` is inert here.
+
+   This is the other side of the ground hand-off — the container takes
+   color/surface/subtle and the items inside it paint nothing. */
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  /* 8px between every item. The caret-to-label gap is topped up to Figma's 16
+     on .current below, because pulling the caret out of the link split one
+     16px gap into two — see the note in Nav.tsx. */
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  margin: 0;
+  list-style: none;
+  border-radius: var(--radius-lg);
+  background-color: var(--color-surface-subtle);
+  color: var(--color-text-primary);
+  box-shadow: var(--shadow-xs);
+}
+
+/* BOTH list items hug their contents, and the second one is why this rule
+   exists. Measured in a browser: the pill was rendering 46px tall where Figma
+   draws 40. The crumb was fine at 24 — the caret's own box — but the item
+   holding the section label was a plain block, so it inherited the body's
+   18/30 and generated a 30px line box around a 20px span. 30 + 16 of padding
+   is the 46. Making both items flex collapses the second to its span and the
+   pill to max(24, 20) + 16 = 40, which is the drawn height.
+
+   A pre-existing gap rather than one the merge introduced — Breadcrumb had the
+   same structure — and invisible without measuring, since 6px of extra pill is
+   not something the eye flags. */
+.pill > li {
+  display: inline-flex;
+  align-items: center;
+}
+
+.crumb {
+  gap: var(--space-sm);
+}
+
+.home {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  /* Figma text style: body/sm — 14/20 Regular, tracking 0. */
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+/* Outside the hover query, so a keyboard reaches it on a touch device too —
+   the precedent Phase 5 settled on SocialIcons. */
+.home:focus-visible {
+  outline: 2px solid var(--color-text-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* No hover is drawn for the breadcrumb's home link, but it is a link in a pill
+   that does not otherwise move, so it gets MailLink's designed treatment
+   rather than nothing at all. Inside the query, because on a touch device
+   :hover sticks after a tap. */
+@media (hover: hover) {
+  .home:hover {
+    color: var(--color-text-accent);
+  }
+}
+
+/* Both icons take their box from the size scale and their colour from the text
+   around them, so an icon can never disagree with its label. */
+.houseIcon {
+  inline-size: var(--size-icon-sm);
+  block-size: var(--size-icon-sm);
+  fill: currentColor;
+  flex-shrink: 0;
+}
+
+.caret {
+  inline-size: var(--size-icon-md);
+  block-size: var(--size-icon-md);
+  fill: var(--color-text-primary);
+  flex-shrink: 0;
+}
+
+.current {
+  /* Figma text style: body/sm, in color/text/muted — the current page reads
+     back from the link that leads away from it, not forward. */
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--color-text-muted);
+  /* Tops the 8px flex gap up to the 16px Figma draws between the home group
+     and the section label. */
+  margin-inline-start: var(--space-sm);
+}
