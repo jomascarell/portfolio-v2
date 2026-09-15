@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import ProjectListRow from '@/components/ProjectListRow/ProjectListRow'
 import { projects } from '@/lib/projects'
 import styles from './ProjectList.module.css'
@@ -12,12 +13,15 @@ import styles from './ProjectList.module.css'
  * out — Phase 7 builds those against the design page, where the projects
  * screen does exist at all six canvases.
  *
- * THIS COMPONENT BECOMES THE DECK IN PHASE 8. They are not two things: the
- * Animations page frame "Project list — the deck" is the spec for this
- * component at runtime, where it steps one project at a time instead of
- * standing still. Four static rows is what Figma draws and what ships now; the
- * stepping, the wrap-around and the five rendered copies land in Phase 8 on
- * top of exactly this markup. Anything added here should survive that. */
+ * THE STEPPING DECK NEVER HAPPENED, AND THAT IS CORRECT NOW, NOT AN OVERSIGHT.
+ * This comment used to say Phase 8 turns the list into an endless, wrapped,
+ * index-stepped carousel per the Animations page's "the deck" spec. That spec
+ * predates the 12 Sep decision that /projects is a real route rendering a
+ * static panel, not a card the user steps through — the carousel concept
+ * belonged to the retired MenuOverlay reading, which the phase 7 page
+ * superseded. What Phase 7/8 actually built instead is a row-entrance
+ * animation on navigation — see .list > li below — which is the part of the
+ * old spec that did survive: motion on arrival, not a mechanism for cycling. */
 
 type ProjectListProps = {
   className?: string
@@ -26,8 +30,8 @@ type ProjectListProps = {
 export default function ProjectList({ className }: ProjectListProps) {
   return (
     <ul className={[styles.list, className].filter(Boolean).join(' ')}>
-      {projects.map((project) => (
-        <li key={project.slug}>
+      {projects.map((project, index) => (
+        <li key={project.slug} style={{ '--row-index': index } as CSSProperties}>
           <ProjectListRow project={project} />
         </li>
       ))}
