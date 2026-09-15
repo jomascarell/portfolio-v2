@@ -198,7 +198,7 @@
 
 @media (min-width: 1024px) {
   .card {
-    gap: 0;
+    gap: var(--space-xl);
     padding: var(--space-2xl);
   }
 

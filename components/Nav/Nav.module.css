@@ -16,7 +16,7 @@
    an inert declaration in a stylesheet reads like an intention. */
 
 .root {
-  padding-block: var(--space-3xl) var(--space-xl);
+  padding-top: var(--space-3xl);
 }
 
 /* ---- State = landing ----------------------------------------------------
@@ -64,6 +64,10 @@
   .row {
     flex-direction: row;
     align-items: center;
+  }
+
+  .root {
+    padding-block: var(--space-3xl) var(--space-xl);
   }
 }
 
