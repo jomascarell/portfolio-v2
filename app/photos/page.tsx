@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { ViewTransition } from 'react'
 import CollectionNav from '@/components/CollectionNav/CollectionNav'
 import Nav from '@/components/Nav/Nav'
 import PhotoStream from '@/components/PhotoStream/PhotoStream'
@@ -14,7 +15,25 @@ import styles from './page.module.css'
  *
  * Collections, not years — the IA decision this page implements. "Ongoing"
  * is the standing exception; everything else is a trip, a season, or a
- * thread that keeps going. */
+ * thread that keeps going.
+ *
+ * TWO SHARED-ELEMENT NAMES, MATCHING THE PANEL FAMILY'S OWN — decided
+ * 2026-09-15, after studying calebwu.ca's case pages (documented on the
+ * Reference page, "The motion dance"). `site-nav` is what every other route
+ * already wraps its Nav in (see PanelLayout.tsx); without it here, arriving
+ * at /photos from /projects would hard-swap the breadcrumb pill while every
+ * other pair of routes morphs it — an inconsistency this page shipped with
+ * and nobody had caught.
+ *
+ * `page-intro` is new here by decision, not by precedent: CollectionNav takes
+ * the name the panel-family's PageIntro carries, so navigating from a panel
+ * screen morphs the outgoing panel into the incoming rail as one reshaping
+ * object — narrowing from card-width to rail-width — rather than the panel
+ * vanishing and the rail fading in on its own. The two names are independent
+ * regions (as they already are inside PanelLayout, where `site-nav` nests
+ * inside `page-intro`), so pairing CollectionNav with `page-intro` costs
+ * nothing structurally even though photos lays Nav and the rail out as
+ * siblings rather than nesting one inside the other. */
 
 export const metadata: Metadata = {
   title: 'Photos — Joan Mascarell',
@@ -29,15 +48,19 @@ export default function PhotosPage() {
   return (
     <>
       <div className={styles.navRow}>
-        <Nav state="photos" />
+        <ViewTransition name="site-nav" share="morph" default="none">
+          <Nav state="photos" />
+        </ViewTransition>
       </div>
 
       <div className={styles.grid}>
-        <CollectionNav
-          items={navItems}
-          label="Collections"
-          className={styles.rail}
-        />
+        <ViewTransition name="page-intro" share="morph" default="none">
+          <CollectionNav
+            items={navItems}
+            label="Collections"
+            className={styles.rail}
+          />
+        </ViewTransition>
 
         <div className={styles.content}>
           <header className={styles.intro}>
