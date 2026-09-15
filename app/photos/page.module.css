@@ -1,0 +1,155 @@
+/* Figma: the "9️⃣phase 9" page, all six canvases measured directly (not
+   sampled — 1448/1280/1024 agree exactly, unlike the panel family's projects
+   span, so there is no per-canvas judgement call to record here).
+
+   No horizontal inset here, same reasoning as PanelLayout.module.css: the
+   shell already puts --container-inset on the one <main>, and every child x
+   position measured in Figma is that inset plus a 12-column grid on top of
+   it — 64/32/32 at lg-xl/md/sm-base — so adding a second inset would double
+   it. */
+
+.navRow {
+  display: flex;
+  justify-content: center;
+  /* Measured, not guessed: content and the rail both start 48px below the
+     Nav block at every canvas (184 - 136), which is --space-2xl. */
+  margin-block-end: var(--space-2xl);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: var(--space-md);
+  row-gap: var(--space-2xl);
+}
+
+.rail {
+  /* CollectionNav.module.css hides itself below 768 and un-hides here too;
+     an unpositioned display:none item ignores grid-column, so nothing below
+     conflicts with this rule running unconditionally.
+
+     align-self: start IS LOAD-BEARING, not tidiness — without it the grid's
+     default stretch grows the rail to the row's full height (matching the
+     content column, thousands of pixels), and a stretched grid item's
+     position: sticky does not stick in this browser: verified by toggling
+     this one rule in a live page, sticky went from "not stuck at all" to
+     "clamped at top: 64px exactly" with nothing else changed. The retired
+     build's SectionNav already carried this exact rule for what is probably
+     the same reason; porting its scroll-spy JS without this CSS half of the
+     fix was the gap. */
+  grid-column: 1 / span 2;
+  align-self: start;
+}
+
+.content {
+  grid-column: 1 / -1;
+}
+
+/* ---- sm: >= 640 -----------------------------------------------------------
+   No rail yet — decided 2026-09-15, 640 goes indexless like 412 rather than
+   keeping a smaller version of it. Content centres at the same 428px cap
+   PanelLayout uses for /projects and /about at this tier, read off the same
+   phase 9 frames: 428 wide at x=106 in a 640 canvas. */
+
+@media (min-width: 640px) {
+  .content {
+    max-inline-size: 428px;
+    margin-inline: auto;
+  }
+}
+
+/* ---- md: >= 768 ------------------------------------------------------------
+   The rail appears. 8 columns; rail spans 1-2, content 3-7, column 8 empty —
+   measured at 768: rail 164 at x=32, content 434 at x=212, which is exactly
+   5 columns of 74 with a 16px gutter, leaving the eighth column unclaimed the
+   same way the panel family leaves a trailing column empty elsewhere. */
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+
+  .content {
+    grid-column: 3 / span 5;
+    max-inline-size: none;
+    margin-inline: 0;
+  }
+}
+
+/* ---- lg: >= 1024 -----------------------------------------------------------
+   12 columns; rail spans 1-2, content 3-11, column 12 empty. Verified at all
+   three lg/xl canvases (1024, 1280, 1448) and they agree exactly — unlike the
+   panel family's projects content span, there is no disagreement to resolve
+   here. */
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .content {
+    grid-column: 3 / span 9;
+  }
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin-block-end: var(--space-3xl);
+}
+
+/* Figma text style: 28/36 Medium, color/text/primary — font-size-xl,
+   described in tokens.css as "card and section titles," which is exactly
+   this heading's job here. */
+.heading {
+  font-size: var(--font-size-xl);
+  line-height: var(--line-height-xl);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--color-text-primary);
+}
+
+/* Figma text style: body/base — 16/26.2 Regular. */
+.body {
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--color-text-primary);
+}
+
+.collection + .collection {
+  /* The gap between the intro block and the first collection, and between
+     collections, is the same 64px (space/3xl) in Figma — one rule handles
+     both by living on .intro's margin-block-end above and this adjacent-
+     sibling rule, rather than a gap on a wrapping list nothing else needs. */
+  margin-block-start: var(--space-3xl);
+}
+
+.collectionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  /* 16px between the header block and the stream below it — measured as the
+     collection frame's total height minus its two children's own heights. */
+  margin-block-end: var(--space-md);
+}
+
+/* Figma text style: heading/h3 — 18/30 Medium. */
+.collectionTitle {
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-lg);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--color-text-primary);
+}
+
+/* Figma text style: body/sm — 14/20 Regular, color/text/secondary. */
+.collectionDescription {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--color-text-secondary);
+}

@@ -1,0 +1,28 @@
+/* Figma: "stream" — vertical list, gap 16. Not bound to a variable in Figma
+   but exactly matches --space-md, so this uses the token rather than the
+   literal: rounding is the thing to avoid, not reaching for a token that
+   already fits. */
+
+.stream {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-sm);
+}
+
+/* Figma's own placeholder fill is #dcdcdc — color/neutral/200 exactly. No
+   semantic alias fits ("border-default" and "text-subtle" both point here
+   too, but neither means "empty photo fill"), so this reaches for the
+   primitive rather than borrowing a name that would read wrong. */
+.placeholder {
+  background-color: var(--color-neutral-200);
+}
