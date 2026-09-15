@@ -50,27 +50,21 @@ export const photoCollections: PhotoCollection[] = [
     ]),
   },
   {
-    slug: 'girona-spring',
-    title: 'Girona, spring',
+    slug: 'altea-summer',
+    title: 'Altea, estiu 2026',
     description: 'A weekend that turned into a small project.',
-    photos: placeholders('girona-spring', [
+    photos: placeholders('altea-summer', [
       [1600, 947],
       [1500, 1000],
     ]),
   },
   {
-    slug: 'iceland',
-    title: 'A week in Iceland',
+    slug: 'amsterdam',
+    title: 'A few days visiting Amsterdam',
     description: 'The trip that finally used the wide-angle.',
-    photos: placeholders('iceland', [
+    photos: placeholders('amsterdam', [
       [1600, 800],
       [1600, 947],
     ]),
-  },
-  {
-    slug: 'portraits',
-    title: 'Portraits, 2024–',
-    description: 'An open collection — added to whenever one is worth keeping.',
-    photos: placeholders('portraits', [[1200, 1333]]),
   },
 ]
