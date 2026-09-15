@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { IoHomeSharp } from 'react-icons/io5'
 import NavLink from '@/components/NavLink/NavLink'
 import { siteConfig } from '@/lib/site-config'
 import styles from './Nav.module.css'
@@ -67,24 +68,25 @@ type NavProps = {
   | { state: 'project-detail'; label: string }
 )
 
-/* Both icons are inline SVG rather than an icon-library import, per the
-   architecture decision: react-icons is in the project for brand marks only,
-   because those have to stay accurate through a rebrand. Everything else is
-   the file's own drawing, and these two are exported from it.
+/* THE HOUSE MOVED TO react-icons 2026-09-15, AT THE USER'S REQUEST — a
+   deliberate exception to the architecture decision below, not a reversal of
+   it. The rule was: react-icons is for brand marks only, because a logo has
+   to track a rebrand and everything else is the file's own drawing. That
+   still holds for the caret. The house is different because the user
+   replaced Figma's placeholder home glyph with a specific icon
+   (`fi-ss-home`, Flaticon's "sharp solid" style) and asked for the code to
+   follow suit from a library rather than a redrawn path.
 
-   The house is two paths, not the three Figma exports — the door is drawn
-   twice in the export, identical `d` and identical fill, so the duplicate is
-   dropped and nothing changes visually. The export's clipPath goes too: the
-   outer path is exactly 16 x 16, so it clips nothing. */
+   `IoHomeSharp` (Ionicons 5) is the closest match in react-icons to that
+   naming: Ionicons ships outline/sharp/sharp-outline families, and "sharp" is
+   its own filled, hard-cornered style — the same pairing of words Flaticon
+   uses. Chosen by name and by the Figma screenshot, not measured against the
+   Flaticon original path-for-path; swap it for another `Io*Sharp` or a
+   different pack's icon if it doesn't read right next to "Joan".
 
-function HomeIcon() {
-  return (
-    <svg className={styles.houseIcon} viewBox="0 0 16 16" aria-hidden="true">
-      <path d="M11.3333 11.9948V15.9948H14C15.1046 15.9948 16 15.0994 16 13.9948V7.91414C16.0002 7.5678 15.8656 7.23499 15.6247 6.98614L9.95934 0.861455C8.95972 -0.220108 7.27259 -0.286514 6.19103 0.713111C6.13966 0.760611 6.09016 0.81008 6.04269 0.861455L0.387344 6.98414C0.139156 7.23402 -0.0000937027 7.57196 0 7.92414V13.9948C0 15.0994 0.895437 15.9948 2 15.9948H4.66666V11.9948C4.67912 10.1769 6.14684 8.69242 7.91894 8.64967C9.75031 8.60549 11.3194 10.1153 11.3333 11.9948Z" />
-      <path d="M8 9.99451C6.89544 9.99451 6 10.8899 6 11.9945V15.9945H10V11.9945C10 10.8899 9.10456 9.99451 8 9.99451Z" />
-    </svg>
-  )
-}
+   The caret stays hand-drawn: nothing changed about it, and the case for
+   leaving well-fitted inline SVG alone still applies to anything not
+   explicitly asked to move. */
 
 function CaretIcon() {
   return (
@@ -141,7 +143,7 @@ export default function Nav({
       <ol className={styles.pill}>
         <li className={styles.crumb}>
           <Link className={styles.home} href="/">
-            <HomeIcon />
+            <IoHomeSharp className={styles.houseIcon} aria-hidden="true" />
             <span>Joan</span>
           </Link>
           <CaretIcon />
