@@ -12,11 +12,24 @@
   padding: 0;
 }
 
+.figure {
+  margin: 0;
+}
+
 .image {
   display: block;
   width: 100%;
   height: auto;
   border-radius: var(--radius-sm);
+}
+
+/* font-size-sm's own tokens.css comment names "captions" as one of its
+   intended uses — this is that use. */
+.caption {
+  margin-block-start: var(--space-sm);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
+  color: var(--color-text-secondary);
 }
 
 /* Figma's own placeholder fill is #dcdcdc — color/neutral/200 exactly. No
