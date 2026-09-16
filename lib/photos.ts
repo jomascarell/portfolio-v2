@@ -6,6 +6,13 @@ export type Photo = {
      with a placeholder's numbers, which only fix a ratio. */
   src?: string
   alt: string
+  /* Optional per-photo caption, shown under the image. A deliberate reversal
+     of the Phase 9 IA decision ("no captions under photos" — see
+     [[photos-page-ia-decision]]), made 2026-09-16 at the user's request.
+     Omit it on photos that don't need one; PhotoStream renders nothing when
+     absent, so mixing captioned and uncaptioned photos in one stream is
+     fine. */
+  caption?: string
   width: number
   height: number
 }
@@ -21,19 +28,6 @@ export function collectionAnchorId(slug: string) {
   return `collection-${slug}`
 }
 
-/* Ratios are Figma's own (measured off the phase 9 page, xl canvas), not
-   invented: 1.69, 2.00 for Ongoing; 1.69, 1.50 for Girona; 2.00, 1.69 for
-   Iceland; 0.90 (portrait) for Portraits. The pixel dimensions below hit
-   those ratios exactly — they are placeholders, but not arbitrary ones. */
-function placeholders(slug: string, ratios: [number, number][]): Photo[] {
-  return ratios.map(([width, height], index) => ({
-    id: `${slug}-${index + 1}`,
-    alt: '',
-    width,
-    height,
-  }))
-}
-
 /* Four collections, in the order the phase 9 page draws them and
    collection-nav lists them. "Ongoing" is the standing exception — always
    open, for photos that don't belong to a named story yet — everything else
@@ -43,28 +37,72 @@ export const photoCollections: PhotoCollection[] = [
   {
     slug: 'ongoing',
     title: 'Ongoing',
-    description: "Whatever doesn't belong to a story yet.",
-    photos: placeholders('ongoing', [
-      [1600, 947],
-      [1600, 800],
-    ]),
+    description: "Fotos que m'agraden però no tenen on anar.",
+    photos: [
+      // {
+      //   id: 'ongoing-1',
+      //   src: '/photos/ongoing/FSCN0769.JPG',
+      //   alt: '',
+      //   width: 4320,
+      //   height: 3240,
+      // },
+    ],
   },
   {
     slug: 'altea-summer',
     title: 'Altea, estiu 2026',
-    description: 'A weekend that turned into a small project.',
-    photos: placeholders('altea-summer', [
-      [1600, 947],
-      [1500, 1000],
-    ]),
+    description: '',
+    photos: [
+      {
+        id: 'altea-summer-1',
+        src: '/photos/altea-summer/DSCN0969.JPG',
+        caption: 'no sabiem que el pàdel surf era tan divertit',
+        alt: '',
+        width: 4320,
+        height: 3240,
+      },
+      {
+        id: 'altea-summer-2',
+        src: '/photos/altea-summer/DSCN0970.JPG',
+        alt: '',
+        width: 4320,
+        height: 3240,
+      },
+    ],
   },
   {
     slug: 'amsterdam',
-    title: 'A few days visiting Amsterdam',
-    description: 'The trip that finally used the wide-angle.',
-    photos: placeholders('amsterdam', [
-      [1600, 800],
-      [1600, 947],
-    ]),
+    title: 'Amsterdam, setembre 2025',
+    description: '',
+    photos: [
+      {
+        id: 'amsterdam-1',
+        src: '/photos/amsterdam/DSCN0948.JPG',
+        alt: '',
+        width: 4320,
+        height: 3240,
+      },
+      {
+        id: 'amsterdam-2',
+        src: '/photos/amsterdam/DSCN0949.JPG',
+        alt: '',
+        width: 4320,
+        height: 3240,
+      },
+      {
+        id: 'amsterdam-3',
+        src: '/photos/amsterdam/DSCN0956.JPG',
+        alt: '',
+        width: 4320,
+        height: 3240,
+      },
+      {
+        id: 'amsterdam-4',
+        src: '/photos/amsterdam/DSCN0964.JPG',
+        alt: 'joan',
+        width: 4320,
+        height: 3240,
+      },
+    ],
   },
 ]

@@ -8,19 +8,25 @@
    it — 64/32/32 at lg-xl/md/sm-base — so adding a second inset would double
    it. */
 
-.navRow {
-  display: flex;
-  justify-content: center;
-  /* Measured, not guessed: content and the rail both start 48px below the
-     Nav block at every canvas (184 - 136), which is --space-2xl. */
-  margin-block-end: var(--space-2xl);
-}
+/* .navRow IS GONE — retired 2026-09-15. Nav is fixed globally now (see
+   app/layout.tsx and components/Nav/Nav.tsx), not locally on this one route,
+   so there is no page-owned wrapper left to position.
 
+   layout.module.css's `.content` already clears Nav's own 132px
+   (--nav-clearance) for every route. What's left here is only the EXTRA gap
+   Figma draws between the nav band and this page's content/rail row —
+   --space-2xl (48px) — on top of that global floor, so the page looks
+   identical at scroll position 0 to how it looked when Nav was in flow;
+   only scrolling now reveals the difference. CollectionNav's sticky offset
+   needs the full combined number instead (--nav-clearance-gap, in
+   tokens.css), because `position: sticky; top:` is measured from the
+   viewport, not from this grid's own padding. */
 .grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   column-gap: var(--space-md);
   row-gap: var(--space-2xl);
+  padding-block: var(--space-2xl);
 }
 
 .rail {
@@ -88,7 +94,7 @@
   }
 
   .content {
-    grid-column: 3 / span 9;
+    grid-column: 4 / span 6;
   }
 }
 
@@ -112,8 +118,8 @@
 
 /* Figma text style: body/base — 16/26.2 Regular. */
 .body {
-  font-size: var(--font-size-md);
-  line-height: var(--line-height-md);
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-lg);
   font-weight: var(--font-weight-regular);
   letter-spacing: var(--letter-spacing-normal);
   color: var(--color-text-primary);
@@ -147,8 +153,8 @@
 
 /* Figma text style: body/sm — 14/20 Regular, color/text/secondary. */
 .collectionDescription {
-  font-size: var(--font-size-sm);
-  line-height: var(--line-height-sm);
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-lg);
   font-weight: var(--font-weight-regular);
   letter-spacing: var(--letter-spacing-normal);
   color: var(--color-text-secondary);

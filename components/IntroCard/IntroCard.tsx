@@ -64,17 +64,29 @@ export default function IntroCard({
         .join(' ')}
     >
       {type === 'intro' && (
-        <p className={styles.tagline}>{siteConfig.tagline}</p>
+        <p className={styles.tagline} data-intro-step="tagline">
+          {siteConfig.tagline}
+        </p>
       )}
 
       {/* No `size` prop on purpose. The card switches the mark from sm to lg
           at 768, which is a fact about the card's layout and not about the
           mark, so the size is set in this component's stylesheet — where the
-          breakpoint that decides it already lives. */}
-      <Wordmark className={styles.wordmark} />
+          breakpoint that decides it already lives.
+
+          The wrapper exists only to carry the entrance step. It cannot go on
+          the <svg> itself: Wordmark's own paths are already running the tilt
+          loop, and both would be animating `transform` on the same element,
+          where the later rule simply wins. Wrapping separates them cleanly —
+          the wrapper rises once, the letterforms keep breathing inside it —
+          and it means the mark arrives already in motion rather than arriving
+          flat and then starting to move. */}
+      <div className={styles.wordmarkStep} data-intro-step="wordmark">
+        <Wordmark className={styles.wordmark} />
+      </div>
 
       {type === 'intro' && (
-        <div className={styles.status}>
+        <div className={styles.status} data-intro-step="status">
           <p className={styles.current}>{siteConfig.status.current}</p>
           <p className={styles.previous}>
             {siteConfig.status.previous}

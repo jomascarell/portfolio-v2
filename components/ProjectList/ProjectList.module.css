@@ -9,16 +9,54 @@
                 96. Left as the literal for the same reason the row's 10px and
                 the social row's 18px are: rounding a measured value to the
                 nearest token moves the design without saying so. */
-  padding-block: var(--space-xl);
   padding-inline: 0;
   margin: 0;
   list-style: none;
+
+  /* THE LOOP NEEDS THIS BOX, ported from the retired build's MenuOverlay.
+     Height and overflow-y are set here rather than left to PanelLayout's
+     .content (which only gives this component a bounded box to fill via
+     min-block-size: 0 — see PanelLayout.module.css) because the scroll
+     itself is this component's own concern, same as it was the retired
+     carousel's.
+
+     No padding-block, deliberately, unlike this list's pre-carousel version
+     — the retired build's own comment explains why: the loop wraps by
+     jumping a whole repeated "set" and relies on every seam between
+     projects being identical, including the one between the last real
+     project and the first clone of the next copy. Padding would only exist
+     at the very top and bottom of the whole (7-times-repeated) list, not at
+     that seam, so it would not break anything geometrically — but it would
+     shift where the FIRST scroll position centres relative to the visible
+     box, and the retired build's centring math already accounts for zero
+     padding. Simplest to match it exactly rather than carry the offset
+     through every measurement below. */
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* JS-ENHANCED ONLY. Before ProjectList.tsx mounts (or if it never does),
+   this list is a plain, natively-scrollable list — every project is
+   reachable by an ordinary scroll, same as any other content on the page.
+   Once the carousel takes over, `data-carousel="active"` hides the native
+   scrollbar look and hands scrolling to touch/wheel/keyboard handlers that
+   drive `scrollTop` themselves; `touch-action: none` stops the browser's
+   own touch scroll from consuming the gesture before those handlers see
+   it, matching the retired build's `.overlay`. */
+.list[data-carousel='active'] {
+  overflow: hidden;
+  touch-action: none;
 }
 
 /* Each row is a link that fills its list item, so the whole row is the target
    rather than the text inside it. */
 .list > li {
   display: flex;
+  /* Column-flex items shrink before they overflow by default; without this
+     a project would get squashed instead of scrolling past, which is what
+     lets the loop's "set height" measurement (ProjectList.tsx) stay a
+     constant, predictable pitch per project. */
+  flex-shrink: 0;
 }
 
 .list > li > * {
@@ -47,13 +85,40 @@
    so nothing flashes at its final position before animating in. The global
    reduced-motion rule already collapses animation-duration to near-zero; see
    its animation-delay override in globals.css for why rows do not still
-   visibly stagger under that query. */
-.list > li {
-  --row-distance: var(--space-2xl);
-  --row-stagger: 60ms;
+   visibly stagger under that query.
 
-  animation: row-in var(--duration-base) var(--ease-standard) backwards;
-  animation-delay: calc(var(--row-index, 0) * var(--row-stagger));
+   SCOPED TO `.entrance` SPECIFICALLY, NOT EVERY `<li>`, since the carousel
+   loop's clones (ProjectList.tsx) would otherwise all replay this on mount
+   too — harmless in that most sit off-screen at any given moment, but
+   pointless work for DOM nodes nobody is looking at, and one more thing to
+   rule out if the real rows' stagger ever looks wrong. Only the loop's real
+   copy gets the class. */
+/* TUNED 2026-09-16, which is the browser pass the note above asked for, and
+   all four numbers moved.
+
+   The stagger and duration now come from the landing sequence in globals.css
+   instead of being this component's own: three different staggers had grown up
+   across the site (40ms here in Nav, 60ms here, 290ms in the wordmark) for no
+   reason beyond having been written on different days, and a site with three
+   rhythms does not read as one site. One rhythm, --intro-stagger.
+
+   THE DELAY IS THE REAL CHANGE. Rows used to start at 0, which meant that
+   arriving from the landing they flew in WHILE the panel was still morphing
+   across — two large motions competing for the same moment. Starting them at
+   --duration-slow, the morph's own duration, lets the panel land and then
+   hands the eye to the list. It costs nothing on a cold load of /projects,
+   where it simply reads as the second beat after the surface.
+
+   Distance halved, 48px to 24px. 48 was a first guess never seen in a browser;
+   the reference moves its largest surface 34.76px and its text 9px, and a list
+   row is not larger than its largest surface. */
+.entrance {
+  --row-distance: var(--space-lg);
+
+  animation: row-in var(--intro-text-duration) var(--ease-entrance) backwards;
+  animation-delay: calc(
+    var(--duration-slow) + var(--row-index, 0) * var(--intro-stagger)
+  );
 }
 
 @keyframes row-in {

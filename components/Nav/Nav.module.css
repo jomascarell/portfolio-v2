@@ -1,127 +1,257 @@
-/* THE BAND IS THE SAME IN EVERY STATE, and that is the measurement the whole
-   morph rests on. Figma gives Nav's outer wrapper space/3xl above and space/xl
-   below in all ten variants, so the slot reserves identical space whether it
-   holds three pills or a breadcrumb — the intro panel below it does not move
-   between the landing and everywhere else. It is the same 64 as --nav-height,
-   which the design derives from the same band.
+/* THE NAV, SLOT MODEL — see components/Nav/Nav.tsx for why the structure is
+   what it is. In short: one <ol> of persistent slots, each clipping two
+   stacked copies of its own content (outgoing above, incoming below), so a
+   state change is a vertical roll inside a box whose width transitions
+   horizontally at the same time.
 
-   Both inner containers are already radius/lg too. Caleb's nav has to animate
-   radius, padding and a wrapper offset between its two states; ours has to
-   animate position and width, because the design had already settled
-   everything else. That is why the morph is a view-transition name and not a
-   measurement rig — see components/PanelLayout.
-
-   Not carried over: the Figma frame around the landing's pills has radius/lg
-   and no fill, so the corner paints nothing. Written down rather than copied —
-   an inert declaration in a stylesheet reads like an intention. */
+   THE CONTAINER NOW GENUINELY MORPHS, decided 2026-09-15 against the Figma
+   component rather than with it. Figma draws color/surface/subtle on the
+   "links"/"pill" container in ALL five states, at the same padding and the
+   same gap, with only corner radius differing — which is why the previous
+   build transitioned radius alone and nothing else. Reading calebwu.ca's
+   shipped nav showed the reference does the opposite and that this is where
+   half of its motion lives: its landing state has no container chrome at all
+   (bare row of links), and its interior state is a painted pill, with gap,
+   background-color, padding and border-radius all interpolating between the
+   two over 300ms. The user chose the reference over the Figma file here, so
+   landing is now transparent and unpadded and the Figma Nav component's
+   landing variant is out of date until it is updated to match. */
 
 .root {
-  padding-top: var(--space-3xl);
-}
-
-/* ---- State = landing ----------------------------------------------------
-
-   The list reset lives here rather than coming from a `role="list"` and the
-   global `ul[role='list']` rule. That role is the Safari workaround — removing
-   the bullets there also removes the list semantics — but the strict jsx-a11y
-   config in this project rejects it as a redundant role, and Phase 5 settled
-   the question the same way on SocialIcons. One convention, not two.
-
-   THE CONTAINER PAINTS NOTHING HERE. Each pill carries color/surface/subtle
-   and the container is transparent; on the interior states below it is the
-   other way round. That hand-off is what makes three pills read as merging
-   into one, and it is derived from the existing drawings rather than invented
-   for the animation. */
-
-.links {
   display: flex;
-  gap: var(--space-sm);
-  /* 2px of inline padding so a focus ring on the first or last pill is not
-     clipped by a parent that ever gains overflow. Figma draws it too. */
-  padding-inline: var(--space-2xs);
-  margin: 0;
-  list-style: none;
+  justify-content: center;
+  padding-inline: var(--container-inset);
+  padding-block: var(--space-3xl) var(--space-xl);
+
+  /* THE TUCK. The reference rests its whole nav wrapper at translateY(0) on
+     its landing and translateY(-3.5rem) on every interior route, so the pill
+     sits lower on the front page and rides up close to the top edge once you
+     are inside. Ours is the same idea in our own numbers: the band carries
+     --space-3xl (64px) of top padding, so tucking --space-2xl (48px) leaves
+     the pill 16px from the viewport top instead of 64.
+
+     This is a RESTING-STATE difference between routes, not the scroll-hiding
+     nav that was refused on 2026-09-11 — nothing here responds to scroll. */
+  transform: translateY(0);
+  transition: transform var(--duration-slow) var(--ease-entrance);
+  will-change: transform;
 }
 
-/* `row` IS RESPONSIVE, and the design is why. The landing is the only state
-   with a drawn stack, and below 640 it is the ONLY thing drawn: landing / 412
-   is the one Nav instance in the file with Layout=stack, and no frame anywhere
-   keeps the pills in a row at that width. So "row" names the layout from 640
-   up, and the narrow tier has one answer rather than a choice.
-
-   Figma, landing / 412: the nav block is 97 x 220 at x=157.5 in a 412 frame —
-   (412 - 97) / 2, so the block centres while the pills inside it stay left
-   aligned. 97 is the widest pill (93) plus this list's 2px inline padding on
-   each side. The 8px gap and the 64/32 band are identical in both directions,
-   which is why only two properties move. */
-
-.row {
-  flex-direction: column;
-  align-items: flex-start;
+.root[data-mode='interior'] {
+  transform: translateY(calc(-1 * var(--space-2xl)));
 }
 
-@media (min-width: 640px) {
-  .row {
-    flex-direction: row;
-    align-items: center;
-  }
-
-  .root {
-    padding-block: var(--space-3xl) var(--space-xl);
-  }
+/* The real, routed Nav only — NOT NavPreview, whose six specimens on /gallery
+   share .root for the band but must stay in flow or they would stack at the
+   same fixed position with only the last one paintable. */
+.fixed {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 50;
 }
-
-/* Unconditional. The prop still exists so /gallery can show the variant at any
-   width, and so a future screen can opt into stacking above 640 — the design
-   does not ask for that today. */
-.stack {
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-/* ---- State = projects | about | photos | project-detail -----------------
-
-   Identical at every breakpoint, which is what Figma's four interior x stack
-   variants record: they are intentional duplicates of their row counterparts,
-   kept only to complete the matrix. So there is no media query in this half of
-   the file, and `layout` is inert here.
-
-   This is the other side of the ground hand-off — the container takes
-   color/surface/subtle and the items inside it paint nothing. */
 
 .pill {
-  display: inline-flex;
+  /* Published here so a slot can cancel exactly this much with a negative
+     margin when it collapses — see Nav.tsx. The two must stay derived from
+     one value or the cancellation drifts. */
+  --nav-gap: var(--space-md);
+
+  /* The roll needs a known box height: the copies are positioned against the
+     slot and translate by ±100% OF IT, so "one slot" has to be a real number
+     rather than whatever the tallest child happens to be. 28/32 matches the
+     reference's 1.75rem/2rem, and it steps at the same 768 breakpoint our
+     landing label's font-size already steps at. */
+  --nav-slot-height: 28px;
+
+  display: flex;
   align-items: center;
-  /* 8px between every item. The caret-to-label gap is topped up to Figma's 16
-     on .current below, because pulling the caret out of the link split one
-     16px gap into two — see the note in Nav.tsx. */
-  gap: var(--space-sm);
-  padding: var(--space-sm) var(--space-md);
+  justify-content: center;
   margin: 0;
+  padding: 0;
   list-style: none;
-  border-radius: var(--radius-lg);
-  background-color: var(--color-surface-subtle);
+  gap: var(--nav-gap);
+  background-color: transparent;
   color: var(--color-text-primary);
+  border-radius: var(--radius-md);
+  transition:
+    gap var(--duration-slow) var(--ease-entrance),
+    background-color var(--duration-slow) var(--ease-entrance),
+    padding var(--duration-slow) var(--ease-entrance),
+    border-radius var(--duration-slow) var(--ease-entrance);
+}
+
+@media (min-width: 768px) {
+  .pill {
+    --nav-slot-height: 32px;
+  }
+}
+
+/* State = projects | about | photos | project-detail. The painted pill.
+   --radius-lg (16) rather than a literal 9999px: at this pill's height the
+   two are within about 2px of each other, and staying on the radius scale is
+   worth more than matching the reference's rounded-full exactly.
+
+   box-shadow is deliberately NOT transitioned — Figma draws none on landing
+   and a real one here, and a 0-layer-to-4-layer shadow cannot interpolate in
+   CSS regardless, so it snaps either way. */
+.pill[data-mode='interior'] {
+  --nav-gap: var(--space-sm);
+
+  padding: var(--space-sm) var(--space-lg);
+  background-color: var(--color-surface-subtle);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-xs);
 }
 
-/* BOTH list items hug their contents, and the second one is why this rule
-   exists. Measured in a browser: the pill was rendering 46px tall where Figma
-   draws 40. The crumb was fine at 24 — the caret's own box — but the item
-   holding the section label was a plain block, so it inherited the body's
-   18/30 and generated a 30px line box around a 20px span. 30 + 16 of padding
-   is the 46. Making both items flex collapses the second to its span and the
-   pill to max(24, 20) + 16 = 40, which is the drawn height.
+/* ONE SLOT. Fixed height and `overflow: hidden` are what make the roll a roll
+   rather than two copies sitting on top of each other, and they are also what
+   lets an explicit pixel width mean something — without the clip a shrinking
+   box would just reflow its own text.
 
-   A pre-existing gap rather than one the merge introduced — Breadcrumb had the
-   same structure — and invisible without measuring, since 6px of extra pill is
-   not something the eye flags. */
-.pill > li {
-  display: inline-flex;
-  align-items: center;
+   No transition by default: it is switched on via [data-enabled] only once
+   the morph's ENABLE tick has fired, 50ms before the widths actually change.
+   That separation is the whole reason the old build's transition was
+   engine-dependent. */
+.slot {
+  position: relative;
+  height: var(--nav-slot-height);
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
+.slot[data-enabled] {
+  transition:
+    width var(--duration-deck) var(--ease-entrance),
+    margin-left var(--duration-deck) var(--ease-entrance);
+}
+
+.slot[data-enabled] .rollerOut,
+.slot[data-enabled] .rollerIn {
+  transition: transform var(--duration-deck) var(--ease-entrance);
+}
+
+/* A focus ring would otherwise be sliced off by the slot's own clip. Lifting
+   the clip only while something inside actually has keyboard focus keeps the
+   roll clipped for the case that needs it (a morph) and the ring whole for
+   the case that needs THAT (a Tab press) — the two never happen at once in
+   practice. */
+.slot:has(:focus-visible) {
+  overflow: visible;
+}
+
+/* Measurement targets: always in the DOM, laid out (so scrollWidth is real),
+   painted never. `visibility: hidden` rather than `display: none` precisely
+   because a display:none box has no width to read. */
+.measure {
+  position: absolute;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* The outgoing copy is absolute so it does not contribute to the slot's
+   shrink-wrapped width... */
+.rollerOut {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* ...and the incoming copy is the one left in flow, so before any measurement
+   exists the slot still sizes itself correctly. That is what keeps the
+   server-rendered markup and the pre-hydration paint right; the reference
+   ships width:0 until its first frame lands and accepts the flash. */
+.rollerIn {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  white-space: nowrap;
+}
+
+/* PHASE 10 — the mount entrance, first route only. Every later state change is
+   a real morph with its own motion; this is only ever seen on a plain page
+   load or a hard refresh.
+
+   REWRITTEN 2026-09-16 to become step 5 of the landing sequence rather than a
+   thing of its own. It used to run 240ms on a 40ms stagger, finishing at 320ms
+   so it could hide behind the container morph's --duration-slow. That was
+   sound in isolation and wrong as choreography: it made the nav the FIRST
+   thing to finish, so the chrome announced itself and the content it belongs
+   to arrived afterwards. The user's read of it was "too fast", which is the
+   same observation from the other end. It is now last — the page assembles,
+   then the navigation settles onto it — and it moves at the same 450ms as
+   every other piece of text on the screen.
+
+   The numbers come from :root in globals.css, where the whole running order
+   lives; only the keyframes are local. Nav is mounted in the root layout and
+   so mounts once per document, which is why it does not carry the
+   [data-intro-step] gate the panel needs — there is no second mount to
+   suppress. */
+.mountSlot {
+  animation: nav-item-in var(--intro-text-duration) var(--ease-entrance)
+    backwards;
+  animation-delay: calc(
+    var(--intro-delay-nav) + var(--item-index, 0) * var(--intro-stagger)
+  );
+}
+
+@keyframes nav-item-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-sm));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Landing's three items — plain labels, NOT the standalone NavLink component.
+   NavLink paints its own color/surface/subtle pill, correct wherever NavLink
+   is used on its own (see the gallery), but here the row itself is the
+   surface on interior states and nothing at all on landing; using NavLink
+   would paint three more grey boxes on top. */
+.landingLabel {
+  /* Matched to calebwu.ca 2026-09-16, same measurement and same reasoning as
+     .home/.current above — his landing row and his breadcrumb are one
+     typographic style, not two, so this drops both the sm->md breakpoint
+     step and the medium weight Figma's landing variant drew, rather than
+     keeping a distinction his reference does not make. */
+  font-size: var(--font-size-md);
+  line-height: 24px;
+  font-weight: var(--font-weight-regular);
+  letter-spacing: 0.24px;
+  color: var(--color-text-primary);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.landingLabel:focus-visible {
+  outline: 2px solid var(--color-text-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+@media (hover: hover) {
+  .landingLabel:hover {
+    color: var(--color-text-accent);
+  }
+}
+
+/* The interior home-link group: icon + caret, matching Figma's own "home-link"
+   frame (fi-ss-home + icon-caret, 8px gap). "Joan" is a code-side addition
+   inside the icon+text link — Figma's frame carries no text here, only the two
+   icons; kept pending a separate content decision. */
 .crumb {
+  display: inline-flex;
+  align-items: center;
   gap: var(--space-sm);
 }
 
@@ -129,11 +259,17 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-sm);
-  /* Figma text style: body/sm — 14/20 Regular, tracking 0. */
-  font-size: var(--font-size-sm);
-  line-height: var(--line-height-sm);
+  /* NOT Figma's body/sm any more — 2026-09-16, at the user's request to match
+     calebwu.ca's own nav exactly, measured live off his shipped page rather
+     than read from his source: 16/24 Regular, tracking +0.24px. --font-size-md
+     is the token that happens to already be 16px; the 24px line-height and
+     0.24px tracking have no matching token (nothing else in the scale needed
+     either number), so they are written literally here, the same way
+     --nav-clearance is a literal measured pixel figure rather than a token. */
+  font-size: var(--font-size-md);
+  line-height: 24px;
   font-weight: var(--font-weight-regular);
-  letter-spacing: var(--letter-spacing-normal);
+  letter-spacing: 0.24px;
   color: var(--color-text-primary);
   text-decoration: none;
   transition: color var(--duration-fast) var(--ease-standard);
@@ -147,10 +283,7 @@
   border-radius: var(--radius-sm);
 }
 
-/* No hover is drawn for the breadcrumb's home link, but it is a link in a pill
-   that does not otherwise move, so it gets MailLink's designed treatment
-   rather than nothing at all. Inside the query, because on a touch device
-   :hover sticks after a tap. */
+/* Inside the query, because on a touch device :hover sticks after a tap. */
 @media (hover: hover) {
   .home:hover {
     color: var(--color-text-accent);
@@ -167,21 +300,34 @@
 }
 
 .caret {
-  inline-size: var(--size-icon-md);
-  block-size: var(--size-icon-md);
+  inline-size: var(--size-icon-sm);
+  block-size: var(--size-icon-sm);
   fill: var(--color-text-primary);
   flex-shrink: 0;
 }
 
 .current {
-  /* Figma text style: body/sm, in color/text/muted — the current page reads
-     back from the link that leads away from it, not forward. */
-  font-size: var(--font-size-sm);
-  line-height: var(--line-height-sm);
+  /* Same 2026-09-16 match to calebwu.ca as .home, above — color/text/muted is
+     the one thing that stays Figma's, since the current-page-reads-muted
+     idea isn't something to source from a reference that has no muted state
+     of its own (his label and his home group are both full-color). */
+  font-size: var(--font-size-md);
+  line-height: 24px;
   font-weight: var(--font-weight-regular);
-  letter-spacing: var(--letter-spacing-normal);
+  letter-spacing: 0.24px;
   color: var(--color-text-muted);
-  /* Tops the 8px flex gap up to the 16px Figma draws between the home group
-     and the section label. */
-  margin-inline-start: var(--space-sm);
+}
+
+/* Nav.tsx already short-circuits the whole staged sequence under this query —
+   it commits the new state in one step and never enables transitions. These
+   rules cover the declarative half: the band's tuck and the container morph,
+   which are plain CSS and would otherwise still animate. */
+@media (prefers-reduced-motion: reduce) {
+  .root,
+  .pill,
+  .slot,
+  .rollerOut,
+  .rollerIn {
+    transition-duration: 0.01ms !important;
+  }
 }

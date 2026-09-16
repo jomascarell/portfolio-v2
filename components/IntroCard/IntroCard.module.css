@@ -59,6 +59,14 @@
   min-block-size: auto;
 }
 
+/* Carries the wordmark's entrance step and nothing else — see IntroCard.tsx
+   for why that step cannot sit on the <svg> itself. flex so the box is exactly
+   the mark's, and so the tilted letterforms, which reach outside the viewBox,
+   are not measured into a line box. */
+.wordmarkStep {
+  display: flex;
+}
+
 .card .wordmark {
   --wordmark-height: 90px;
 }
@@ -75,7 +83,7 @@
 .tagline {
   font-size: var(--font-size-md);
   line-height: var(--line-height-md);
-  font-weight: var(--font-weight-regular);
+  font-weight: var(--font-weight-medium);
   letter-spacing: var(--letter-spacing-normal);
   color: var(--color-text-secondary);
   text-align: center;
@@ -103,8 +111,8 @@
    in this card that never changes, and phase 7 keeps it that way: 18/30 on
    landing / 412, / 640 and / 1448 alike. */
 .previous {
-  font-size: var(--font-size-lg);
-  line-height: var(--line-height-lg);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
   font-weight: var(--font-weight-regular);
   letter-spacing: var(--letter-spacing-normal);
   color: var(--color-text-secondary);
@@ -166,6 +174,11 @@
     font-size: var(--font-size-lg);
     line-height: var(--line-height-lg);
     font-weight: var(--font-weight-medium);
+  }
+
+  .previous {
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-lg);
   }
 
   /* ABOUT TAKES THE WIDE BOX AT 640 AND GIVES IT BACK AT 768, and that

@@ -3,9 +3,18 @@
    Sticky, not self-start: Figma has no sticky concept and draws the rail as a
    short fixed-height block beside a stream that can run past 5000px, but a
    scroll-spy rail that scrolls away with the first screen answers a question
-   nobody can see any more. --nav-height is reused here as the sticky offset
-   for exactly this, per its own token comment ("nav band height"). */
+   nobody can see any more.
 
+   THE STICKY OFFSET MUST CLEAR THE FIXED NAV, NOT JUST SIT NEAR THE TOP.
+   Nav is `position: fixed` on every route since 2026-09-15 (app/layout.tsx),
+   not just this one — before that, `--nav-height` (64px) was a comfortable
+   arbitrary offset with nothing behind it to collide with. Now the fixed bar
+   occupies the top 132px of the viewport permanently, and 64px would stick
+   the rail HALFWAY UNDER IT. `--nav-clearance-gap` (tokens.css) is the real
+   number — 132 (Nav's own height) + 48 (--space-2xl, the gap Figma draws) —
+   kept as a token now that Nav's fixed positioning is global rather than
+   published per page; `--nav-height` stays as the fallback for any other
+   consumer of this component that isn't sitting behind a fixed nav. */
 .nav {
   display: none;
 }
@@ -14,7 +23,7 @@
   .nav {
     display: block;
     position: sticky;
-    top: var(--nav-height);
+    top: var(--nav-clearance-gap, var(--nav-height));
   }
 }
 

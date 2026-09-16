@@ -108,11 +108,15 @@ a {
    one.
 
    320ms is --duration-slow, "large surfaces entering or leaving", and it is the
-   value the morph spec in Figma settled on for the container. --duration-deck
-   (700ms) is deliberately NOT used here: it exists for the measured-width morph
-   technique the reference needs because it has no view transitions, and that
-   technique is not what we ended up building. The token keeps its consumer in
-   the deck itself.
+   value the morph spec in Figma settled on for the panel. --duration-deck
+   (700ms) is deliberately NOT used HERE: this rule is the panel's own morph,
+   and the panel is not measured. The measured-width morph technique this
+   comment used to say "is not what we ended up building" WAS built after
+   all, just not in this file — Nav retired its ViewTransition pairing
+   2026-09-15 in favour of the real technique, live in
+   components/Nav/Nav.tsx, which does use --duration-deck. Two different
+   morphs, two different mechanisms, sharing this section only because the
+   panel's ViewTransition pairing is still the right tool for the panel.
 
    The reduced-motion block above already kills every view-transition animation,
    so these need no query of their own — the state still changes, it just
@@ -148,3 +152,181 @@ a {
    duration — are what make a morph read as one thing moving. They only need
    overriding when a pair is genuinely the same pixels, which is the case the
    Next guide's blur example is written for and is not this one. */
+
+/* ---- The entrance sequence ------------------------------------------------
+
+   Built 2026-09-16 from the Animations page's "Proposed sequence for our
+   landing" (Figma 598:2), specced 2026-09-08 and never built.
+
+   RESTRUCTURED THE SAME DAY, at the designer's direction, into three beats
+   rather than five:
+
+     Nav and wordmark enter together  ->  the wordmark settles from its 40deg
+     entry tilt to the 19deg it breathes at  ->  the tagline and status arrive
+     as it reaches rest.
+
+   The brief was that it should read as one continuous movement rather than
+   separate animations that happen to be adjacent, and the settle is what makes
+   it one: the tagline and status are not on a delay of their own, they are on
+   --intro-settle, the wordmark's. There is no number to keep in sync because
+   there is only one number.
+
+   WHAT THIS RETIRED, SO IT IS NOT LATER READ AS AN OVERSIGHT. The Figma spec
+   opened on a panel surface at 700ms and put the wordmark second, on the
+   reasoning that "the surface arrives first and the mark appears inside
+   something that is already there, which is what stops it reading as a logo
+   splash". The surface no longer has an entrance of its own. That rule was
+   written for a bounded card; ours is white on a white ground, so what it was
+   really protecting against — a mark alone on an empty screen — is now handled
+   by the nav arriving on the same frame. The mark is never the only thing
+   there.
+
+   The spec's other two rules survive intact, and one of them moved house:
+
+     The big surface is the slow one. A single duration across everything is
+     what makes most intros feel cheap. The slow gesture is now the wordmark's
+     700ms settle against 450ms for every piece of text.
+
+     Nothing travels far. Every entering element pairs opacity with a
+     transform, and the transform is small — 8 to 10px. Big movement plus fade
+     reads as a slideshow, not an interface. The wordmark's 40deg is a rotation
+     in place, not travel, which is why it does not breach this.
+
+   THE WHOLE SEQUENCE IS THIS ONE TABLE, on purpose. The spec asked for
+   "explicit delays rather than mount order, so the sequence is readable in one
+   place and testable", which is a deliberate deviation from the reference:
+   calebwu.ca's sequencing lives in React mount order, so reading his CSS tells
+   you nothing about what happens when. Ours should not have that property.
+
+   RE-MEASURED AGAINST THE REFERENCE 2026-09-16, and the Figma page is wrong
+   about one thing worth correcting there later: it records "every transition
+   sampled had a delay of 0 — the stagger comes from mount order". Reading
+   document.getAnimations() on a live load shows explicit delays throughout,
+   in two distinct rhythms — his three content cards are 700ms staggered 150ms
+   apart, and his seven nav pills are 500ms staggered 70ms apart. So he has one
+   rhythm for big surfaces and a tighter one for chrome. 70ms is where our
+   --intro-stagger comes from, and it replaces the two different entrance
+   staggers the codebase had grown — Nav's 40ms and ProjectList's 60ms — for no
+   reason beyond their having been written on different days.
+
+   The wordmark's 290ms per-letter offset is deliberately NOT folded into this.
+   It is not an entrance stagger at all: it is the phase offset of an ambient
+   loop that never starts or finishes, and it is a value the designer tuned by
+   eye. Different quantity, different source of truth, left alone.
+
+   Travel distances are his too: his card moves 34.76px with a scale, his text
+   moves 9px with none. Ours keeps the text figure and takes the surface down
+   to 12px, per the Figma proposal — his card is a bounded object with a
+   visible edge to move, and our panel is unbounded on a white ground, where
+   the same distance would read as the whole page sliding. */
+
+/* THE GATE. The sequence must run on a document load, and on a client-side
+   navigation ONLY when the destination is "/" — 2026-09-17, matching the
+   reference: calebwu.ca replays its own landing entrance every time you
+   arrive there, not just on a hard load, and the user asked ours to do the
+   same. Arriving at /projects still must not replay it: each route mounts its
+   own PageIntro, so an ungated sequence would re-introduce the panel every
+   time you moved between landing, projects and about — on top of the
+   view-transition morph that is already animating the same element. That is
+   precisely the "everything at once" this sequence exists to avoid; only the
+   destination changed, not the reason the gate exists.
+
+   IT IS WRITTEN THE WAY ROUND IT IS ON PURPOSE: animating is the default, and
+   components/IntroSequence marks the document done once the run is over. The
+   obvious inverse — mark the document "playing" on load, key the animation off
+   that — fails badly rather than safely, because anything that stops the mark
+   being applied stops the page ever appearing. This way the worst case is that
+   the sequence plays a second time.
+
+   A FIRST ATTEMPT USED AN ANIMATED CUSTOM PROPERTY AND IS WORTH NOT REPEATING.
+   The idea was a registered `--intro-live` flipped 1 -> 0 by a step-end
+   animation on <body>, with every duration and delay multiplied by it, so the
+   gate cost no JS at all. It does not work here, and the failure is silent:
+   `calc(var(--intro-duration) * 1)` resolves to 0.7s, but
+   `calc(var(--intro-duration) * var(--intro-live))` resolves to 0s even though
+   getPropertyValue reports --intro-live as "1" on the same element, and
+   registering the property by hand from JS does not change it. An animated
+   custom property is not dependable as a calc multiplier; measured in Chrome
+   2026-09-16, not assumed. */
+:root[data-intro='done'] [data-intro-step] {
+  animation-name: none;
+}
+
+/* The running order, as numbers. These sit on :root rather than inline in the
+   rules below because Nav is not one of the [data-intro-step] elements — it
+   lives in the root layout and mounts once per document, so it never needed
+   the gate and reads its two values straight from here. Keeping them in one
+   block is what makes the sequence tunable as a sequence. */
+:root {
+  /* One rhythm for every staggered run on the site. */
+  --intro-stagger: 70ms;
+  /* Everything that is text or chrome moves at this speed. Only the surface
+     is slower, and that difference is the whole idea. */
+  --intro-text-duration: 450ms;
+
+  /* How long the wordmark takes to fall from its 40deg entry tilt to the 19deg
+     it breathes at. It is also the beat the tagline and status wait for, which
+     is the point — they are not on a delay of their own, they are on the
+     wordmark's. Written once so the two cannot drift apart. */
+  --intro-settle: var(--duration-deck);
+
+  /* Beat one: the navigation and the wordmark, together. */
+  --intro-delay-nav: 0ms;
+  --intro-delay-wordmark: 0ms;
+
+  /* Beat two: the moment the mark reaches rest. */
+  --intro-delay-tagline: var(--intro-settle);
+  --intro-delay-status: var(--intro-settle);
+}
+
+@keyframes intro-rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--intro-rise, 8px));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* fill-mode backwards holds each element at its 0% state through its delay, so
+   nothing flashes at its final position before its turn. Note that opacity 0
+   does NOT remove an element from the page: every link here is clickable and
+   focusable from the first frame, which is the spec's other standing rule —
+   the sequence sits on top of a page that already works, it is never a gate in
+   front of one. */
+[data-intro-step] {
+  animation-name: intro-rise;
+  animation-timing-function: var(--ease-entrance);
+  animation-fill-mode: backwards;
+  animation-duration: var(--intro-duration);
+  animation-delay: calc(
+    var(--intro-delay) + var(--intro-index, 0) * var(--intro-stagger)
+  );
+}
+
+[data-intro-step='wordmark'] {
+  --intro-duration: var(--intro-text-duration);
+  --intro-delay: var(--intro-delay-wordmark);
+  --intro-rise: 10px;
+}
+
+[data-intro-step='tagline'] {
+  --intro-duration: var(--intro-text-duration);
+  --intro-delay: var(--intro-delay-tagline);
+}
+
+[data-intro-step='status'] {
+  --intro-duration: var(--intro-text-duration);
+  --intro-delay: var(--intro-delay-status);
+}
+
+/* The reduced-motion blanket above already zeroes every duration and delay,
+   which lands the whole sequence on its finished state instantly. The Figma
+   spec asks for something slightly softer — "every step becomes opacity only,
+   every delay becomes 0; the sequence still happens, it just stops moving" —
+   but the blanket's !important wins, and fighting it here to reintroduce a
+   fade would mean opting this one sequence out of the site-wide rule. Not
+   worth it: instant is a correct answer to reduce, and a consistent one. */

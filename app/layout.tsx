@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import { Figtree } from 'next/font/google'
+import IntroSequence from '@/components/IntroSequence/IntroSequence'
+import Nav from '@/components/Nav/Nav'
 import SkipLink, { SKIP_TARGET_ID } from '@/components/SkipLink/SkipLink'
 import shell from './layout.module.css'
 import './tokens.css'
@@ -55,7 +57,14 @@ const figtree = Figtree({
 
    Phase 5 added the persistent frame and the skip-link target. It also put the
    footer here; Phase 7 moved it to app/page.tsx — see the note at the bottom of
-   the tree, and components/FooterReveal for the mechanic it now implements. */
+   the tree, and components/FooterReveal for the mechanic it now implements.
+
+   Nav joined the shell 2026-09-15, for the same reason the frame and the
+   footer are here rather than per-page: it has to survive a navigation to be
+   the ONE persistent element the morph in components/Nav/Nav.tsx animates.
+   It renders outside <main> — it is chrome, not content, and the skip link's
+   "jump to main" should not land a keyboard user inside the nav it just
+   passed over. */
 
 export const metadata: Metadata = {
   // The retired build shipped "Jan Mascarell" here for months. It is Joan.
@@ -68,7 +77,11 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
     <html lang="en" className={figtree.variable}>
       <body>
         <div className={shell.shell}>
+          {/* Renders nothing. Closes the entrance sequence's door once it has
+              run — see the component, and the running order in globals.css. */}
+          <IntroSequence />
           <SkipLink />
+          <Nav />
           {/* The layout owns the document's ONE <main>, so pages must not
               render their own — they return a fragment. Every route did render
               its own until this was caught: the scaffold in Phase 2 gave each

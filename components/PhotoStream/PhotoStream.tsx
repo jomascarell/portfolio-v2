@@ -7,28 +7,39 @@ import styles from './PhotoStream.module.css'
  * retired build's Pinterest-style multicolumn masonry. That masonry was
  * never in Figma either (its own comment said so); this design draws one
  * column and kyusuf.com, the reference for the IA decision, does the same —
- * no captions, no cropping, natural aspect ratio throughout. */
+ * no cropping, natural aspect ratio throughout.
+ *
+ * CAPTIONS are a later, deliberate reversal of that same IA decision's
+ * original "no captions" call (see the Photo type in lib/photos.ts) —
+ * per-photo, optional, so a caption-less photo renders exactly as before. */
 export default function PhotoStream({ photos }: { photos: Photo[] }) {
   return (
     <ul className={styles.stream}>
       {photos.map((photo) => (
         <li key={photo.id}>
-          {photo.src ? (
-            <Image
-              className={styles.image}
-              src={photo.src}
-              alt={photo.alt}
-              width={photo.width}
-              height={photo.height}
-              sizes="(max-width: 639px) 100vw, (max-width: 767px) 428px, (max-width: 1023px) 434px, 986px"
-            />
-          ) : (
-            <div
-              className={`${styles.image} ${styles.placeholder}`}
-              style={{ aspectRatio: `${photo.width} / ${photo.height}` }}
-              aria-hidden="true"
-            />
-          )}
+          <figure className={styles.figure}>
+            {photo.src ? (
+              <Image
+                className={styles.image}
+                src={photo.src}
+                alt={photo.alt}
+                width={photo.width}
+                height={photo.height}
+                sizes="(max-width: 639px) 100vw, (max-width: 767px) 428px, (max-width: 1023px) 434px, 986px"
+              />
+            ) : (
+              <div
+                className={`${styles.image} ${styles.placeholder}`}
+                style={{ aspectRatio: `${photo.width} / ${photo.height}` }}
+                aria-hidden="true"
+              />
+            )}
+            {photo.caption ? (
+              <figcaption className={styles.caption}>
+                {photo.caption}
+              </figcaption>
+            ) : null}
+          </figure>
         </li>
       ))}
     </ul>
