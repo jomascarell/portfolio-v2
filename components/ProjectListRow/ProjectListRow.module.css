@@ -35,6 +35,33 @@
   --row-ink: var(--color-text-primary);
 }
 
+/* THE DECK'S POSITION INDICATOR — ported from the retired build's
+   MenuOverlay carousel, where the centred card scaled up 1.04x on top of
+   the same colour change `hover` already gives here. Its own `transition`
+   overrides `.row`'s: the retired build read this curve off
+   hochburg.digital specifically for its menu, and it is slower and rounder
+   than `--ease-standard` on purpose — a card settling into the centre of a
+   scroll reads differently from a pointer arriving on a static row, which
+   is why `hover`'s snappy --duration-fast stays untouched for that case.
+   --duration-deck (700ms) already matches the reference's own number, not
+   by coincidence — see Nav's width morph for the other place this project
+   reuses it. */
+.current {
+  --row-ink: var(--color-text-primary);
+  transform: scale(1.04);
+  transform-origin: left center;
+  transition:
+    color var(--duration-deck) cubic-bezier(0.19, 1, 0.22, 1),
+    transform var(--duration-deck) cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .current {
+    transform: none;
+    transition: none;
+  }
+}
+
 .row:focus-visible {
   --row-ink: var(--color-text-primary);
   outline: 2px solid var(--color-text-accent);
@@ -42,11 +69,13 @@
   border-radius: var(--radius-sm);
 }
 
-@media (hover: hover) {
-  .row:hover {
-    --row-ink: var(--color-text-primary);
-  }
-}
+/* NO :hover, DELIBERATELY — same call the retired build's own CSS comment
+   makes about its `.isActive`: "no hay :hover: el puntero no participa.
+   Antes sí, y encendía la tarjeta que pasaba por debajo del ratón quieto
+   mientras la lista se movía, peleándose con el estado del scroll." A
+   stationary mouse sitting over whatever row the carousel scrolls past
+   would light up and fight the scroll-driven `current` state for the same
+   row — removed here for the same reason, not just to match precedent. */
 
 .text {
   display: flex;

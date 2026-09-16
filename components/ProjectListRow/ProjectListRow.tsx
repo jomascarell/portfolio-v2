@@ -26,28 +26,42 @@ import styles from './ProjectListRow.module.css'
  * is settled once across all six screens rather than per component — the usual
  * shape is <h2><Link>…</Link></h2> per row, which moves the link inside.
  *
- * PHASE 8 OWNS THE OTHER OPEN QUESTION: the deck has no position indicator.
- * If an accent state belongs anywhere in this system it belongs on this row —
- * a `current` state — because these rows are named projects rather than the
- * faceless cards the reference paginates. Not built on a guess. */
+ * PHASE 10 ANSWERS THE OPEN QUESTION ABOVE. `current` exists now: the deck's
+ * position indicator, ported from the retired build's MenuOverlay carousel
+ * (which called the same idea `.isActive`) and driven by ProjectList's own
+ * scroll-position tracking rather than the pointer — see ProjectList.tsx.
+ * The colour change is identical to `hover`'s; the scale is new, matching
+ * the retired build's `transform: scale(1.04)` on its active card.
+ *
+ * :hover ITSELF IS GONE, also ported from the retired build rather than
+ * kept — its own comment on removing it is why: a mouse resting on a row
+ * the carousel scrolls past would light that row up and fight `current` for
+ * the same visual state. `hover` survives only as a forced state (below),
+ * for the gallery's standalone specimen, which never runs the carousel. */
 
 const STATES = {
   default: styles.default,
   hover: styles.hover,
+  current: styles.current,
 } as const
 
 type ProjectListRowProps = {
   project: Project
-  /* Forces the hover colours on. For the gallery and for Phase 8, which will
-     need to light a row that the pointer is not over. Leave it unset in real
-     use — :hover and :focus-visible do the work. */
+  /* Forces the hover colours on (the gallery's standalone specimen only —
+     there is no real :hover to fall back to, see the note above), or lights
+     the row as the carousel's current project. Leave it unset for a plain,
+     unlit row. */
   state?: keyof typeof STATES
+  /* -1 for the carousel's off-screen loop clones, so they never enter tab
+     order — see ProjectList.tsx. Unset for a real, reachable row. */
+  tabIndex?: number
   className?: string
 }
 
 export default function ProjectListRow({
   project,
   state = 'default',
+  tabIndex,
   className,
 }: ProjectListRowProps) {
   return (
@@ -56,6 +70,7 @@ export default function ProjectListRow({
         .filter(Boolean)
         .join(' ')}
       href={`/projects/${project.slug}`}
+      tabIndex={tabIndex}
     >
       <span className={styles.text}>
         <span className={styles.category}>{project.category}</span>

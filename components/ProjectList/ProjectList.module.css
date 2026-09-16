@@ -9,16 +9,54 @@
                 96. Left as the literal for the same reason the row's 10px and
                 the social row's 18px are: rounding a measured value to the
                 nearest token moves the design without saying so. */
-  padding-block: var(--space-xl);
   padding-inline: 0;
   margin: 0;
   list-style: none;
+
+  /* THE LOOP NEEDS THIS BOX, ported from the retired build's MenuOverlay.
+     Height and overflow-y are set here rather than left to PanelLayout's
+     .content (which only gives this component a bounded box to fill via
+     min-block-size: 0 — see PanelLayout.module.css) because the scroll
+     itself is this component's own concern, same as it was the retired
+     carousel's.
+
+     No padding-block, deliberately, unlike this list's pre-carousel version
+     — the retired build's own comment explains why: the loop wraps by
+     jumping a whole repeated "set" and relies on every seam between
+     projects being identical, including the one between the last real
+     project and the first clone of the next copy. Padding would only exist
+     at the very top and bottom of the whole (7-times-repeated) list, not at
+     that seam, so it would not break anything geometrically — but it would
+     shift where the FIRST scroll position centres relative to the visible
+     box, and the retired build's centring math already accounts for zero
+     padding. Simplest to match it exactly rather than carry the offset
+     through every measurement below. */
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* JS-ENHANCED ONLY. Before ProjectList.tsx mounts (or if it never does),
+   this list is a plain, natively-scrollable list — every project is
+   reachable by an ordinary scroll, same as any other content on the page.
+   Once the carousel takes over, `data-carousel="active"` hides the native
+   scrollbar look and hands scrolling to touch/wheel/keyboard handlers that
+   drive `scrollTop` themselves; `touch-action: none` stops the browser's
+   own touch scroll from consuming the gesture before those handlers see
+   it, matching the retired build's `.overlay`. */
+.list[data-carousel='active'] {
+  overflow: hidden;
+  touch-action: none;
 }
 
 /* Each row is a link that fills its list item, so the whole row is the target
    rather than the text inside it. */
 .list > li {
   display: flex;
+  /* Column-flex items shrink before they overflow by default; without this
+     a project would get squashed instead of scrolling past, which is what
+     lets the loop's "set height" measurement (ProjectList.tsx) stay a
+     constant, predictable pitch per project. */
+  flex-shrink: 0;
 }
 
 .list > li > * {
@@ -47,8 +85,15 @@
    so nothing flashes at its final position before animating in. The global
    reduced-motion rule already collapses animation-duration to near-zero; see
    its animation-delay override in globals.css for why rows do not still
-   visibly stagger under that query. */
-.list > li {
+   visibly stagger under that query.
+
+   SCOPED TO `.entrance` SPECIFICALLY, NOT EVERY `<li>`, since the carousel
+   loop's clones (ProjectList.tsx) would otherwise all replay this on mount
+   too — harmless in that most sit off-screen at any given moment, but
+   pointless work for DOM nodes nobody is looking at, and one more thing to
+   rule out if the real rows' stagger ever looks wrong. Only the loop's real
+   copy gets the class. */
+.entrance {
   --row-distance: var(--space-2xl);
   --row-stagger: 60ms;
 
