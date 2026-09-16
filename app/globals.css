@@ -220,12 +220,16 @@ a {
    visible edge to move, and our panel is unbounded on a white ground, where
    the same distance would read as the whole page sliding. */
 
-/* THE GATE. The sequence must run on a document load and NEVER on a
-   client-side navigation: each route mounts its own PageIntro, so without a
-   gate the panel would re-introduce itself every time you moved between
-   landing, projects and about — on top of the view-transition morph that is
-   already animating the same element. That is precisely the "everything at
-   once" this sequence exists to avoid.
+/* THE GATE. The sequence must run on a document load, and on a client-side
+   navigation ONLY when the destination is "/" — 2026-09-17, matching the
+   reference: calebwu.ca replays its own landing entrance every time you
+   arrive there, not just on a hard load, and the user asked ours to do the
+   same. Arriving at /projects still must not replay it: each route mounts its
+   own PageIntro, so an ungated sequence would re-introduce the panel every
+   time you moved between landing, projects and about — on top of the
+   view-transition morph that is already animating the same element. That is
+   precisely the "everything at once" this sequence exists to avoid; only the
+   destination changed, not the reason the gate exists.
 
    IT IS WRITTEN THE WAY ROUND IT IS ON PURPOSE: animating is the default, and
    components/IntroSequence marks the document done once the run is over. The
