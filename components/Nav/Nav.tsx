@@ -173,7 +173,14 @@ const ENABLE_MS = 80
 const FLIP_MS = 130
 const STAGGER_MS = 100
 const DURATION_MS = 700
-const COMMIT_MS = FLIP_MS + DURATION_MS
+/* COMMIT has to outlast the LAST slot, not the first. It used to be
+   FLIP + DURATION — correct for slot 0, but slot n is still settling behind
+   n * STAGGER of delay. That did not matter while the pixel widths were worn
+   forever, because a slot that stopped animating simply kept its final number.
+   Now that `active` is also what releases the width back to auto, ending early
+   would snap the later slots the last few pixels of their travel. */
+const commitDelay = (slotCount: number) =>
+  FLIP_MS + Math.max(0, slotCount - 1) * STAGGER_MS + DURATION_MS
 
 type Pair = { old: Item | null; new: Item | null }
 type Width = { old: number; new: number }
@@ -217,12 +224,21 @@ type Clones = Map<number, { old: HTMLElement | null; new: HTMLElement | null }>
    manually memoized closure over component state is rejected outright
    ("existing memoization could not be preserved"), and there is nothing here
    that needs to close over anything. */
+/* getBoundingClientRect().width, not scrollWidth: scrollWidth is an integer and
+   every engine rounds it its own way. Measured in Chrome, the home crumb is
+   83.569px wide and scrollWidth reports 84 — rounded UP, so the slot gets half
+   a pixel of slack and nothing shows. An engine that truncates instead reports
+   83 and the slot is a fraction too narrow. Ceiling a real fractional
+   measurement is the same answer everywhere, and it is never short. */
 function readWidths(clones: Clones, count: number): Width[] {
+  const measure = (el: HTMLElement | null | undefined) =>
+    el ? Math.ceil(el.getBoundingClientRect().width) : 0
+
   return Array.from({ length: count }, (_, index) => {
     const refs = clones.get(index)
     return {
-      old: refs?.old?.scrollWidth ?? 0,
-      new: refs?.new?.scrollWidth ?? 0,
+      old: measure(refs?.old),
+      new: measure(refs?.new),
     }
   })
 }
@@ -352,15 +368,18 @@ export default function Nav({ className }: { className?: string }) {
     )
     const commit = setTimeout(
       () => setMorph((current) => ({ ...current, active: false, enabled: false })),
-      COMMIT_MS,
+      commitDelay(slotCount),
     )
 
     return () => {
       clearTimeout(enable)
       clearTimeout(flip)
       clearTimeout(commit)
+      /* slotCount only ever changes together with morph.key — a different
+         route is what adds or removes a slot — so listing it cannot restart
+         a morph that is already running. */
     }
-  }, [morph.key, morph.active])
+  }, [morph.key, morph.active, slotCount])
 
   return (
     <nav
@@ -376,12 +395,31 @@ export default function Nav({ className }: { className?: string }) {
           const width = widthFor(pair, widths[index], flipped)
           const delay = enabled ? `${index * STAGGER_MS}ms` : '0ms'
 
+          /* THE PIXEL WIDTH IS ONLY WORN WHILE THE MORPH RUNS, and that is the
+             fix for the caret crowding "Joan" on Gecko and WebKit (reported
+             from a real iPhone and from Firefox, 2026-09-17).
+
+             It used to be applied whenever a measurement existed, which meant
+             the resting nav permanently wore a number produced by one reading
+             of a hidden span. Every previous attempt at this bug — the
+             fonts.ready callback, the fixed-delay safety net, the
+             ResizeObserver — tried to win the race to make that number right
+             before Figtree swapped in. They all still lose somewhere: the
+             measurement lands against the fallback metrics, the slot is too
+             narrow for the real text, and `overflow: hidden` eats the gap
+             before the caret.
+
+             A morph needs two explicit widths to animate between; a slot at
+             rest does not need one at all. Dropped, the slot shrink-wraps
+             .rollerIn, which is the real content in the real font — no
+             measurement, no race, and no engine left to disagree. The widths
+             come back for the ~830ms a navigation is actually animating. */
           const style: CSSProperties = {
             transitionDelay: delay,
-            ...(measured ? { width: `${width}px` } : null),
+            ...(measured && active ? { width: `${width}px` } : null),
             /* Only between slots: a collapsed first slot has no preceding gap
                to cancel. */
-            ...(measured && index > 0 && width === 0
+            ...(measured && active && index > 0 && width === 0
               ? { marginLeft: 'calc(-1 * var(--nav-gap))' }
               : null),
           }
