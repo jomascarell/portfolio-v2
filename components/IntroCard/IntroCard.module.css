@@ -103,8 +103,8 @@
    in this card that never changes, and phase 7 keeps it that way: 18/30 on
    landing / 412, / 640 and / 1448 alike. */
 .previous {
-  font-size: var(--font-size-lg);
-  line-height: var(--line-height-lg);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
   font-weight: var(--font-weight-regular);
   letter-spacing: var(--letter-spacing-normal);
   color: var(--color-text-secondary);
@@ -166,6 +166,11 @@
     font-size: var(--font-size-lg);
     line-height: var(--line-height-lg);
     font-weight: var(--font-weight-medium);
+  }
+
+  .previous {
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-lg);
   }
 
   /* ABOUT TAKES THE WIDE BOX AT 640 AND GIVES IT BACK AT 768, and that
