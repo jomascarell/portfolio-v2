@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { ViewTransition } from 'react'
 import CollectionNav from '@/components/CollectionNav/CollectionNav'
-import Nav from '@/components/Nav/Nav'
 import PhotoStream from '@/components/PhotoStream/PhotoStream'
 import { collectionAnchorId, photoCollections } from '@/lib/photos'
 import styles from './page.module.css'
@@ -10,30 +9,29 @@ import styles from './page.module.css'
  * 2026-09-15 before this was written — see [[photos-page-ia-decision]].
  *
  * NO PageIntro, same as project-detail: this screen is content plus its own
- * scroll-spy rail plus a standalone Nav in its breadcrumb state, not a panel.
- * None of the panel-family components land here.
+ * scroll-spy rail, not a panel. None of the panel-family components land
+ * here.
+ *
+ * NO NAV HERE EITHER, any more — retired 2026-09-15 alongside the
+ * persistent-Nav rewrite. This page used to render its own
+ * `<Nav state="photos" />`, fixed-positioned locally because this is the one
+ * route that genuinely scrolls. Nav is now mounted once in the root layout,
+ * fixed on every route, and reads `/photos` from the URL itself — see
+ * components/Nav/Nav.tsx. That is also why `site-nav` is gone from this file:
+ * there is only one Nav element in the whole app now, so there is nothing
+ * left for a ViewTransition to pair across a navigation.
  *
  * Collections, not years — the IA decision this page implements. "Ongoing"
  * is the standing exception; everything else is a trip, a season, or a
  * thread that keeps going.
  *
- * TWO SHARED-ELEMENT NAMES, MATCHING THE PANEL FAMILY'S OWN — decided
+ * `page-intro` IS STILL HERE, unrelated to the nav change above — decided
  * 2026-09-15, after studying calebwu.ca's case pages (documented on the
- * Reference page, "The motion dance"). `site-nav` is what every other route
- * already wraps its Nav in (see PanelLayout.tsx); without it here, arriving
- * at /photos from /projects would hard-swap the breadcrumb pill while every
- * other pair of routes morphs it — an inconsistency this page shipped with
- * and nobody had caught.
- *
- * `page-intro` is new here by decision, not by precedent: CollectionNav takes
- * the name the panel-family's PageIntro carries, so navigating from a panel
- * screen morphs the outgoing panel into the incoming rail as one reshaping
- * object — narrowing from card-width to rail-width — rather than the panel
- * vanishing and the rail fading in on its own. The two names are independent
- * regions (as they already are inside PanelLayout, where `site-nav` nests
- * inside `page-intro`), so pairing CollectionNav with `page-intro` costs
- * nothing structurally even though photos lays Nav and the rail out as
- * siblings rather than nesting one inside the other. */
+ * Reference page, "The motion dance"). CollectionNav takes the name the
+ * panel-family's PageIntro carries, so navigating from a panel screen morphs
+ * the outgoing panel into the incoming rail as one reshaping object —
+ * narrowing from card-width to rail-width — rather than the panel vanishing
+ * and the rail fading in on its own. */
 
 export const metadata: Metadata = {
   title: 'Photos — Joan Mascarell',
@@ -47,12 +45,6 @@ export default function PhotosPage() {
 
   return (
     <>
-      <div className={styles.navRow}>
-        <ViewTransition name="site-nav" share="morph" default="none">
-          <Nav state="photos" />
-        </ViewTransition>
-      </div>
-
       <div className={styles.grid}>
         <ViewTransition name="page-intro" share="morph" default="none">
           <CollectionNav
@@ -64,10 +56,12 @@ export default function PhotosPage() {
 
         <div className={styles.content}>
           <header className={styles.intro}>
-            <h1 className={styles.heading}>Photos.</h1>
+            <h1 className={styles.heading}>Joangram.</h1>
             <p className={styles.body}>
-              A loose set of photos, kept in whatever grouping actually fits
-              them — a trip, a season, a thread that keeps going.
+              Bé, no m’agrada en què s’ha convertit Instagram, però la seua idea
+              inicial —compartir fotos sense altres pretensions i funcionar
+              simplement com un blog amb imatges i peus de foto— és el que vull
+              aconseguir amb esta pàgina. Benvinguts😁.
             </p>
           </header>
 

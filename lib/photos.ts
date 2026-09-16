@@ -43,7 +43,7 @@ export const photoCollections: PhotoCollection[] = [
   {
     slug: 'ongoing',
     title: 'Ongoing',
-    description: "Whatever doesn't belong to a story yet.",
+    description: "Fotos que m'agraden però no tenen on anar.",
     photos: placeholders('ongoing', [
       [1600, 947],
       [1600, 800],
@@ -52,7 +52,7 @@ export const photoCollections: PhotoCollection[] = [
   {
     slug: 'altea-summer',
     title: 'Altea, estiu 2026',
-    description: 'A weekend that turned into a small project.',
+    description: '',
     photos: placeholders('altea-summer', [
       [1600, 947],
       [1500, 1000],
@@ -60,8 +60,8 @@ export const photoCollections: PhotoCollection[] = [
   },
   {
     slug: 'amsterdam',
-    title: 'A few days visiting Amsterdam',
-    description: 'The trip that finally used the wide-angle.',
+    title: 'Amsterdam, setembre 2025',
+    description: '',
     photos: placeholders('amsterdam', [
       [1600, 800],
       [1600, 947],

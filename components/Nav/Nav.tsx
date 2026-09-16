@@ -3,6 +3,7 @@
 import { type CSSProperties, type ReactNode, useLayoutEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { IoMdArrowDropright } from 'react-icons/io'
 import { RiHomeLine } from 'react-icons/ri'
 import { getProject } from '@/lib/projects'
 import { siteConfig } from '@/lib/site-config'
@@ -74,12 +75,14 @@ export type NavState = 'landing' | SectionState | 'project-detail'
    their own pick, an outline house rather than a match for Flaticon's filled
    original. The caret stays hand-drawn. */
 
+/* THE CARET MOVED TO react-icons TOO, 2026-09-16 AT THE USER'S REQUEST —
+   first as a diagnostic swap (testing whether the hand-drawn inline SVG was
+   behind a Firefox tab crash; it was not — the crash survived the swap to
+   BiSolidRightArrowCircle), then settled on `IoMdArrowDropright` as the
+   user's own pick once the SVG was ruled out. Same exception as the house
+   icon above: a specific library glyph the user chose, not a redrawn path. */
 function CaretIcon() {
-  return (
-    <svg className={styles.caret} viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M9.00001 15.3896V8.61043C8.99925 8.48989 9.03752 8.37186 9.10994 8.27141C9.18236 8.17095 9.28565 8.09262 9.40664 8.04639C9.52763 8.00017 9.66085 7.98815 9.78929 8.01186C9.91774 8.03557 10.0356 8.09394 10.1279 8.17953L13.8082 11.5721C13.931 11.6858 14 11.8397 14 12C14 12.1603 13.931 12.3142 13.8082 12.4279L10.1279 15.8205C10.0356 15.9061 9.91774 15.9644 9.78929 15.9881C9.66085 16.0119 9.52763 15.9998 9.40664 15.9536C9.28565 15.9074 9.18236 15.829 9.10994 15.7286C9.03752 15.6281 8.99925 15.5101 9.00001 15.3896Z" />
-    </svg>
-  )
+  return <IoMdArrowDropright className={styles.caret} aria-hidden="true" />
 }
 
 type NavProps = {
@@ -289,42 +292,39 @@ export default function Nav({ className }: { className?: string }) {
   const pairs = active ? pairSlots(outgoing, items) : pairSlots(items, items)
   const slotCount = pairs.length
 
-  /* Measured on every pairing change and again once Figtree has actually
-     swapped in — measuring a label against the fallback metrics bakes in the
-     wrong width, and at these sizes the difference is real pixels. Both reads
-     are inside a frame callback rather than the effect body: the widths are
-     only needed by the flip at 130ms, and a synchronous setState here would
-     cascade a render for no gain.
+  /* Measured on every pairing change and again whenever Figtree actually
+     swaps in — measuring a label against the fallback metrics bakes in the
+     wrong width, and at these sizes the difference is real pixels.
 
-     A SINGLE fonts.ready callback was not enough, confirmed against a real
-     cold-cache load: Turbopack ships no metric-matched fallback for Figtree
-     (layout.tsx's own note on that tradeoff — webpack gets one via
-     `adjustFontFallback`, Turbopack does not), so the crumb's first
-     measurement can land against `system-ui`'s width a frame or two before
-     the swap actually paints, baking in a too-narrow clip that reads as the
-     caret crowding "Joan". A page freshly cached (no swap in flight) never
-     hit this. Rather than chase exactly why the fonts.ready-triggered
-     remeasure did not always win that race, this adds a fixed-schedule
-     safety net that does not depend on the Font Loading API's timing being
-     trustworthy — it just bounds how long a wrong width can survive. Cheap
-     even when it does nothing: remeasuring settled content just writes back
-     the same widths. */
+     Turbopack ships no metric-matched fallback for Figtree (layout.tsx's own
+     note on that tradeoff — webpack gets one via `adjustFontFallback`,
+     Turbopack does not), so the first measurement can land against
+     `system-ui`'s width before the swap actually paints, baking in a
+     too-narrow clip that reads as the caret crowding "Joan".
+
+     FIRST TRIED A fonts.ready CALLBACK, THEN A FIXED-DELAY SAFETY NET ON TOP
+     OF IT — confirmed live against a real cold-cache load that neither was
+     enough: the dev server's own font preload can miss its own "used within
+     a few seconds" window, so a guessed delay is still a guess, just a
+     bigger one. A ResizeObserver on the measurement spans has no delay to
+     guess: it fires exactly when a span's rendered box actually changes
+     size, which is exactly what a font swap does to text whose content
+     never changes. Whether that lands in one frame or several seconds, this
+     reacts to it instead of racing it. */
   useLayoutEffect(() => {
     const commit = () => {
       setWidths(readWidths(cloneRefs.current, slotCount))
       setMeasured(true)
     }
-    const frames: number[] = []
-    const schedule = () => frames.push(requestAnimationFrame(commit))
+    commit()
 
-    schedule()
-    document.fonts?.ready?.then(schedule)
-    const safetyNet = [500, 1500].map((delay) => setTimeout(schedule, delay))
-
-    return () => {
-      frames.forEach(cancelAnimationFrame)
-      safetyNet.forEach(clearTimeout)
+    const observer = new ResizeObserver(commit)
+    for (const refs of cloneRefs.current.values()) {
+      if (refs.old) observer.observe(refs.old)
+      if (refs.new) observer.observe(refs.new)
     }
+
+    return () => observer.disconnect()
   }, [slotCount, morph.key, morph.active])
 
   useLayoutEffect(() => {

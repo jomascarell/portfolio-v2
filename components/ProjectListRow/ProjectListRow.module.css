@@ -105,7 +105,7 @@
 .category {
   font-size: var(--font-size-lg);
   line-height: var(--line-height-lg);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-regular);
   letter-spacing: var(--letter-spacing-normal);
 }
 
@@ -126,4 +126,21 @@
   line-height: var(--line-height-xl);
   font-weight: var(--font-weight-light);
   letter-spacing: var(--letter-spacing-tight);
+}
+
+@media (max-width: 640px) {
+  .category {
+    font-size: var(--font-size-md);
+    line-height: var(--line-height-md);
+  }
+
+  .title {
+    font-size: var(--font-size-xl);
+    line-height: var(--line-height-xl);
+  }
+
+  .year {
+    font-size: var(--font-size-xl);
+    line-height: var(--line-height-xl);
+  }
 }
