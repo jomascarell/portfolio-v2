@@ -93,12 +93,32 @@
    pointless work for DOM nodes nobody is looking at, and one more thing to
    rule out if the real rows' stagger ever looks wrong. Only the loop's real
    copy gets the class. */
-.entrance {
-  --row-distance: var(--space-2xl);
-  --row-stagger: 60ms;
+/* TUNED 2026-09-16, which is the browser pass the note above asked for, and
+   all four numbers moved.
 
-  animation: row-in var(--duration-base) var(--ease-standard) backwards;
-  animation-delay: calc(var(--row-index, 0) * var(--row-stagger));
+   The stagger and duration now come from the landing sequence in globals.css
+   instead of being this component's own: three different staggers had grown up
+   across the site (40ms here in Nav, 60ms here, 290ms in the wordmark) for no
+   reason beyond having been written on different days, and a site with three
+   rhythms does not read as one site. One rhythm, --intro-stagger.
+
+   THE DELAY IS THE REAL CHANGE. Rows used to start at 0, which meant that
+   arriving from the landing they flew in WHILE the panel was still morphing
+   across — two large motions competing for the same moment. Starting them at
+   --duration-slow, the morph's own duration, lets the panel land and then
+   hands the eye to the list. It costs nothing on a cold load of /projects,
+   where it simply reads as the second beat after the surface.
+
+   Distance halved, 48px to 24px. 48 was a first guess never seen in a browser;
+   the reference moves its largest surface 34.76px and its text 9px, and a list
+   row is not larger than its largest surface. */
+.entrance {
+  --row-distance: var(--space-lg);
+
+  animation: row-in var(--intro-text-duration) var(--ease-entrance) backwards;
+  animation-delay: calc(
+    var(--duration-slow) + var(--row-index, 0) * var(--intro-stagger)
+  );
 }
 
 @keyframes row-in {

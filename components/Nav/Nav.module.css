@@ -176,12 +176,29 @@
 
 /* PHASE 10 — the mount entrance, first route only. Every later state change is
    a real morph with its own motion; this is only ever seen on a plain page
-   load or a hard refresh. 240ms with a 40ms-per-slot stagger puts the third
-   slot's finish at 320ms, the same --duration-slow the container morph runs
-   on, so a mount that coincides with a first navigation does not fight it. */
+   load or a hard refresh.
+
+   REWRITTEN 2026-09-16 to become step 5 of the landing sequence rather than a
+   thing of its own. It used to run 240ms on a 40ms stagger, finishing at 320ms
+   so it could hide behind the container morph's --duration-slow. That was
+   sound in isolation and wrong as choreography: it made the nav the FIRST
+   thing to finish, so the chrome announced itself and the content it belongs
+   to arrived afterwards. The user's read of it was "too fast", which is the
+   same observation from the other end. It is now last — the page assembles,
+   then the navigation settles onto it — and it moves at the same 450ms as
+   every other piece of text on the screen.
+
+   The numbers come from :root in globals.css, where the whole running order
+   lives; only the keyframes are local. Nav is mounted in the root layout and
+   so mounts once per document, which is why it does not carry the
+   [data-intro-step] gate the panel needs — there is no second mount to
+   suppress. */
 .mountSlot {
-  animation: nav-item-in var(--duration-base) var(--ease-standard) backwards;
-  animation-delay: calc(var(--item-index, 0) * 40ms);
+  animation: nav-item-in var(--intro-text-duration) var(--ease-entrance)
+    backwards;
+  animation-delay: calc(
+    var(--intro-delay-nav) + var(--item-index, 0) * var(--intro-stagger)
+  );
 }
 
 @keyframes nav-item-in {
@@ -202,19 +219,18 @@
    surface on interior states and nothing at all on landing; using NavLink
    would paint three more grey boxes on top. */
 .landingLabel {
-  font-size: var(--font-size-sm);
-  line-height: var(--line-height-md);
-  font-weight: var(--font-weight-medium);
-  letter-spacing: var(--letter-spacing-normal);
+  /* Matched to calebwu.ca 2026-09-16, same measurement and same reasoning as
+     .home/.current above — his landing row and his breadcrumb are one
+     typographic style, not two, so this drops both the sm->md breakpoint
+     step and the medium weight Figma's landing variant drew, rather than
+     keeping a distinction his reference does not make. */
+  font-size: var(--font-size-md);
+  line-height: 24px;
+  font-weight: var(--font-weight-regular);
+  letter-spacing: 0.24px;
   color: var(--color-text-primary);
   text-decoration: none;
   transition: color var(--duration-fast) var(--ease-standard);
-}
-
-@media (min-width: 768px) {
-  .landingLabel {
-    font-size: var(--font-size-md);
-  }
 }
 
 .landingLabel:focus-visible {
@@ -243,11 +259,17 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-sm);
-  /* Figma text style: body/sm — 14/20 Regular, tracking 0. */
-  font-size: var(--font-size-sm);
-  line-height: var(--line-height-sm);
+  /* NOT Figma's body/sm any more — 2026-09-16, at the user's request to match
+     calebwu.ca's own nav exactly, measured live off his shipped page rather
+     than read from his source: 16/24 Regular, tracking +0.24px. --font-size-md
+     is the token that happens to already be 16px; the 24px line-height and
+     0.24px tracking have no matching token (nothing else in the scale needed
+     either number), so they are written literally here, the same way
+     --nav-clearance is a literal measured pixel figure rather than a token. */
+  font-size: var(--font-size-md);
+  line-height: 24px;
   font-weight: var(--font-weight-regular);
-  letter-spacing: var(--letter-spacing-normal);
+  letter-spacing: 0.24px;
   color: var(--color-text-primary);
   text-decoration: none;
   transition: color var(--duration-fast) var(--ease-standard);
@@ -278,19 +300,21 @@
 }
 
 .caret {
-  inline-size: var(--size-icon-md);
-  block-size: var(--size-icon-md);
+  inline-size: var(--size-icon-sm);
+  block-size: var(--size-icon-sm);
   fill: var(--color-text-primary);
   flex-shrink: 0;
 }
 
 .current {
-  /* Figma text style: body/sm, in color/text/muted — the current page reads
-     back from the link that leads away from it, not forward. */
-  font-size: var(--font-size-sm);
-  line-height: var(--line-height-sm);
+  /* Same 2026-09-16 match to calebwu.ca as .home, above — color/text/muted is
+     the one thing that stays Figma's, since the current-page-reads-muted
+     idea isn't something to source from a reference that has no muted state
+     of its own (his label and his home group are both full-color). */
+  font-size: var(--font-size-md);
+  line-height: 24px;
   font-weight: var(--font-weight-regular);
-  letter-spacing: var(--letter-spacing-normal);
+  letter-spacing: 0.24px;
   color: var(--color-text-muted);
 }
 

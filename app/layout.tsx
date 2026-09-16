@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Figtree } from 'next/font/google'
+import IntroSequence from '@/components/IntroSequence/IntroSequence'
 import Nav from '@/components/Nav/Nav'
 import SkipLink, { SKIP_TARGET_ID } from '@/components/SkipLink/SkipLink'
 import shell from './layout.module.css'
@@ -76,6 +77,9 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
     <html lang="en" className={figtree.variable}>
       <body>
         <div className={shell.shell}>
+          {/* Renders nothing. Closes the entrance sequence's door once it has
+              run — see the component, and the running order in globals.css. */}
+          <IntroSequence />
           <SkipLink />
           <Nav />
           {/* The layout owns the document's ONE <main>, so pages must not

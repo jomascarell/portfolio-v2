@@ -19,6 +19,78 @@
      held outside the token system for v1, and the v2 component is bound to the
      semantic role instead. That token now has no consumer. */
   fill: var(--color-text-primary);
+  /* A tilted letterform reaches past the viewBox it was drawn inside, and an
+     SVG clips to its viewport by default. Without this the loop below shears
+     the j and the n against the edges. */
+  overflow: visible;
+}
+
+/* ---- The settle ----------------------------------------------------------
+
+   The mark arrives tilted hard over and falls to the angle it breathes at.
+   Asked for 2026-09-16: "starts with a maximum tilt of 40deg and gradually
+   settles to 19deg, which is its default state", and it is the hinge of the
+   whole landing entrance — the tagline and status are timed off the moment it
+   lands, so the page reads as one movement instead of three.
+
+   WHY THIS SITS ON THE <svg> AND NOT ON THE PATHS. The obvious reading of
+   "40deg settling to 19deg" is that the breathing loop's own amplitude decays.
+   That cannot be built the obvious way: the amplitude lives in
+   --wordmark-tilt, and animating a custom property is exactly the thing proven
+   not to work here (see the gate note in app/globals.css). Chaining a second
+   animation onto the paths does not work either, for a better reason — the
+   loop is staggered, so each letter is at a different phase, and an amplitude
+   envelope has to run on document time for all four at once. Two different
+   time bases cannot share one element's transform.
+
+   So the envelope is a rotation on the parent that decays to nothing, and the
+   letters keep breathing at 19deg underneath it. Over 700ms the loop advances
+   only 49deg of its 5100ms cycle — it is nearly still while this runs — so
+   what the eye actually reads during the settle is this rotation, and the
+   difference between decaying the amplitude and decaying an offset is not
+   available to it. The combined figure is the real one: at rest the extreme
+   letter shows 19deg, and on the first frame it shows 40.
+
+   The two ends are written as the tilt values rather than as the difference,
+   so the 40 and the 19 in the brief are both literally in the code. */
+.wordmark {
+  /* Both angles live here, on the <svg>, and the paths inherit --wordmark-tilt
+     for the loop. One declaration of 19deg, read by the thing that rests at it
+     and by the thing that falls to it. */
+  --wordmark-tilt: 19deg;
+  --wordmark-tilt-entry: 40deg;
+
+  /* --ease-standard, not --ease-entrance, and this is the one place on the site
+     that reads against the token's own note ("entrances use ease/entrance").
+     The reason is the handoff. --ease-entrance is front-loaded: measured here,
+     it is 92% settled at 350ms of a 700ms run, so the mark visibly lands less
+     than halfway through and the tagline — which is timed off the END of this
+     animation — would arrive into a gap where nothing had moved for 350ms.
+     That is the opposite of the "one continuous movement" this is for.
+     --ease-standard is symmetric: it holds near 40deg for a moment, falls, and
+     decelerates into rest right at the end, so "the mark lands" and "the text
+     arrives" are the same instant rather than two. */
+  animation: wordmark-settle var(--intro-settle) var(--ease-standard) backwards;
+  transform-origin: 50% 50%;
+}
+
+@keyframes wordmark-settle {
+  from {
+    transform: perspective(420px)
+      rotateX(calc(var(--wordmark-tilt-entry) - var(--wordmark-tilt)))
+      rotateY(calc((var(--wordmark-tilt-entry) - var(--wordmark-tilt)) * 1.15));
+  }
+
+  to {
+    transform: perspective(420px) rotateX(0deg) rotateY(0deg);
+  }
+}
+
+/* The settle is part of the landing entrance, so it obeys the same gate: it
+   runs on a document load and not on a client-side navigation, where the panel
+   is morphing between routes and a mark re-tilting itself would fight it. */
+:root[data-intro='done'] .wordmark {
+  animation-name: none;
 }
 
 .lg {
@@ -27,4 +99,118 @@
 
 .sm {
   --wordmark-height: 90px;
+}
+
+/* ---- Tilt breathing ------------------------------------------------------
+
+   Each letterform tilts in 3D on its own delay, so the mark reads as one slow
+   wave rather than four things moving at once. Ported from the tuned prototype
+   at claude.ai/artifact/2YA13R9fmdm5StRTJdb8Za, which adapts Michelle Barker's
+   variable-font "Breathing" pen onto rotation instead of weight — Tilt Warp,
+   the mark's source face, has no weight axis at all; its only variable axes
+   are rotation in X and Y, drawn to mimic storefront lettering seen at an
+   angle. Rotating the paths is the same gesture the typeface was built for.
+
+   The prototype drove this from requestAnimationFrame, sampling
+   rotateX = sin(t) and rotateY = 1.15 * cos(t) every frame. Here it is
+   keyframes, so Wordmark stays a Server Component — a rAF loop would make the
+   mark a fourth 'use client' island to carry an ornament.
+
+   The eight stops are that same circle sampled every 45 degrees, joined by
+   linear timing. MEASURED against the prototype's own numbers, that runs up to
+   1.5deg shy of a true sine — and the error sits at the PEAKS, not the
+   midpoints, because that is where a sinusoid's curvature is highest and a
+   chord cuts furthest inside it. Left as is deliberately: 1.5deg off a 21.9deg
+   rotateY changes a letterform's projected width by cos(20.8) vs cos(19.3),
+   which is 0.9%, under a pixel at either size. More stops would buy nothing
+   the eye can collect.
+
+   The three numbers are the ones tuned on the prototype's sliders, and they
+   are deliberately NOT tokens. Every duration in System / Motion is the length
+   of a one-shot transition, 160-700ms; this is the period of an ambient loop,
+   which the scale was never written to hold. Adding it there would also drift
+   tokens.css away from the 103 Figma variables it is generated from. */
+
+.wordmark path {
+  /* Letters lead in reading order, j first, as the prototype has it. */
+  --wordmark-lead: 0;
+
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: wordmark-tilt 5100ms linear infinite;
+  /* Negative, so every letter is already mid-cycle on the first frame. A
+     positive stagger would hold three of the four flat at 0deg and then snap
+     them to the 21.9deg the loop opens on. */
+  animation-delay: calc(var(--wordmark-lead) * -290ms);
+}
+
+/* :nth-of-type rather than an inline --wordmark-lead: unlike ProjectList's
+   rows, these four paths are written out in this component and cannot be
+   filtered or reordered, so there is no array for an index to come from. */
+.wordmark path:nth-of-type(1) {
+  --wordmark-lead: 3;
+}
+
+.wordmark path:nth-of-type(2) {
+  --wordmark-lead: 2;
+}
+
+.wordmark path:nth-of-type(3) {
+  --wordmark-lead: 1;
+}
+
+@keyframes wordmark-tilt {
+  0% {
+    transform: perspective(420px) rotateX(0deg)
+      rotateY(calc(var(--wordmark-tilt) * 1.15));
+  }
+
+  12.5% {
+    transform: perspective(420px) rotateX(calc(var(--wordmark-tilt) * 0.707))
+      rotateY(calc(var(--wordmark-tilt) * 0.813));
+  }
+
+  25% {
+    transform: perspective(420px) rotateX(var(--wordmark-tilt)) rotateY(0deg);
+  }
+
+  37.5% {
+    transform: perspective(420px) rotateX(calc(var(--wordmark-tilt) * 0.707))
+      rotateY(calc(var(--wordmark-tilt) * -0.813));
+  }
+
+  50% {
+    transform: perspective(420px) rotateX(0deg)
+      rotateY(calc(var(--wordmark-tilt) * -1.15));
+  }
+
+  62.5% {
+    transform: perspective(420px) rotateX(calc(var(--wordmark-tilt) * -0.707))
+      rotateY(calc(var(--wordmark-tilt) * -0.813));
+  }
+
+  75% {
+    transform: perspective(420px) rotateX(calc(var(--wordmark-tilt) * -1))
+      rotateY(0deg);
+  }
+
+  87.5% {
+    transform: perspective(420px) rotateX(calc(var(--wordmark-tilt) * -0.707))
+      rotateY(calc(var(--wordmark-tilt) * 0.813));
+  }
+
+  100% {
+    transform: perspective(420px) rotateX(0deg)
+      rotateY(calc(var(--wordmark-tilt) * 1.15));
+  }
+}
+
+/* The global reduced-motion blanket in globals.css zeroes durations and
+   iteration counts, which is the right answer for an entrance but leaves an
+   infinite loop resolving to a single 0.01ms pass. Killing the name instead
+   states the intent: at rest the mark is simply flat. */
+@media (prefers-reduced-motion: reduce) {
+  .wordmark path {
+    animation: none;
+  }
 }
