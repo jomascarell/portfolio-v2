@@ -56,12 +56,23 @@
 
   align-content: center;
 
-  /* THE BUDGET. The landing claims the viewport minus the bar minus the gap,
-     so a revealed footer lands on empty space rather than on content.
-     --footer-band is the bar's measured height, published by FooterReveal only
-     while the bar is a fixed overlay; unset it falls back to 0 and this is a
-     plain 100svh, which is the `static` state, the no-JS state, and every route
-     that is not this one.
+  /* THE BUDGET. The landing claims the viewport minus the bar minus the gap
+     minus Nav, so a revealed footer lands on empty space rather than on
+     content. --footer-band is the bar's measured height, published by
+     FooterReveal only while the bar is a fixed overlay; unset it falls back
+     to 0 and this is a plain 100svh minus Nav, which is the `static` state,
+     the no-JS state, and every route that is not this one.
+
+     `- var(--nav-clearance)` is new as of 2026-09-15's persistent-Nav
+     rewrite. Nav used to be rendered INSIDE this grid (inside .panel, inside
+     PageIntro), so its height was already spent before this budget was ever
+     computed — the grid simply had less room to fill, for free. Nav is now
+     position: fixed, outside <main> entirely, and app/layout.module.css's
+     .content spends --nav-clearance as padding-top before this grid even
+     starts. Without subtracting it again here, this budget still claims the
+     FULL 100svh on top of that padding, and the page overflows by exactly
+     Nav's height — which is the bug a screenshot caught the same session
+     this rewrite landed.
 
      min-block-size and not block-size: a minimum cannot clip. If something ever
      grows taller than the budget the page scrolls and the wheel guard hands the
@@ -71,15 +82,19 @@
      A percentage height here would do nothing — measured at 711px on a 760, an
      800 and a 900 viewport alike, because a percentage does not resolve against
      a parent sized by min-height plus flex:1. svh resolves unconditionally. */
-  min-block-size: calc(100svh - var(--footer-band, 0px) - var(--reveal-gap));
+  min-block-size: calc(
+    100svh - var(--nav-clearance) - var(--footer-band, 0px) - var(--reveal-gap)
+  );
 
   margin-inline: calc(var(--container-inset) * -1);
 
   /* The gap between the end of the content and the top of the footer — 40px at
      1448/1280/1024, 48px at 640/768. Since the footer became a fixed overlay
      this reserves nothing; it is what puts the panel's bottom edge exactly on
-     the bar's top edge at the height Figma draws. At an 804px viewport,
-     48 + nav 132 + card 468 = 648, and the bar's top is 804 - 156 = 648.
+     the bar's top edge at the height Figma draws. At an 804px viewport, Nav's
+     132 is already spent by .content's own padding before this grid starts,
+     so within the grid: 48 + card 468 = 516, and the bar's top is
+     (804 - 132) - 156 = 516.
 
      A reserved-space version of this was tried and removed: it lifted the
      content off the bottom of the screen by the height of a bar that is not
@@ -92,20 +107,27 @@
 .landing .panel {
   /* THE CARD IS THE THING THAT YIELDS, and only on this screen. IntroCard's
      drawn height is 468 everywhere; here it is capped at whatever the budget
-     leaves after the landing's own chrome. 228px is that chrome — 96 of
-     padding-block plus the 132 the nav block occupies — and it is the one
-     literal in the expression because it is the only part that does not vary.
+     leaves after the landing's own chrome. --nav-clearance plus 96 (the
+     padding-block above and below) is that chrome, split into two terms
+     because one of them is spent outside this grid entirely now (Nav, via
+     .content's own padding-top) and one is spent inside it (padding-block) —
+     they used to be a single 228px literal (96 + the 132 nav occupied) back
+     when Nav rendered inside .panel and both were spent in the same place.
 
-     At 1440 the budget is 100svh - 175 - 16 and the chrome is 228, so the card
-     gets 100svh - 419. At a 900 viewport that is 481, so min() keeps the drawn
-     468 and nothing changes. At 760 it is 341, and 341 + 228 + 175 + 16 = 760
-     exactly — the bar sits on the gap with the content whole above it.
+     At 1440 the budget is 100svh - 132 - 175 - 16 and the chrome is 96, so
+     the card gets 100svh - 419 — the same total this always resolved to,
+     just counted in two places instead of one. At a 900 viewport that is
+     481, so min() keeps the drawn 468 and nothing changes. At 760 it is 341,
+     and 132 + 341 + 96 + 175 + 16 = 760 exactly.
 
      Set on the panel rather than inside IntroCard so /projects and /gallery,
      which have no footer revealing over them, keep the full 468. */
   --intro-min-block: min(
     468px,
-    calc(100svh - var(--footer-band, 0px) - var(--reveal-gap) - 228px)
+    calc(
+      100svh - var(--nav-clearance) - var(--footer-band, 0px) - var(--reveal-gap) -
+        96px
+    )
   );
 }
 
@@ -119,10 +141,35 @@
 
    `display: none` via a custom property rather than a rule on IntroCard: the
    screen declares it, the component reads it, and the file you open to ask what
-   this screen does at 412 is the file that answers. */
+   this screen does at 412 is the file that answers.
 
+   FIXED-PAGE-SIZE, ADDED 2026-09-15 AT THE USER'S REQUEST — "same as landing
+   and about", but a genuinely different budget from either of them: landing
+   and about use min-block-size, a FLOOR that lets the page grow past one
+   screen if their content ever needs more (about's bio already does at some
+   widths). Projects uses block-size, a CEILING — the page must never scroll,
+   because the requirement is specifically that ONLY the list scrolls inside
+   it. `grid-template-rows: auto 1fr` at this tier gives the (collapsed, card-
+   less) panel row whatever it naturally needs and hands the content row
+   everything else; overridden to a single `1fr` row at 768 below, where panel
+   and content share one row instead of stacking two. */
 .projects {
   --intro-card-display: none;
+  block-size: calc(100svh - var(--nav-clearance));
+  grid-template-rows: auto 1fr;
+}
+
+/* min-block-size: 0 overrides the grid item's default auto minimum (which
+   resolves to the list's full content height and would force this row —
+   and so the whole fixed grid — taller than the budget above allows,
+   overflowing exactly the way .landing's own note describes for Nav).
+   With it at 0, this cell is free to be exactly as tall as the grid row and
+   no taller, which is what gives ProjectList's own `<ul>` (its `height:
+   100%`, in ProjectList.module.css) a real, bounded box to fill and scroll
+   within — the scrolling itself is that component's own concern, not this
+   layout's, so it is not repeated here. */
+.projects .content {
+  min-block-size: 0;
 }
 
 /* ---- The about state ----------------------------------------------------
@@ -145,29 +192,56 @@
    shorter. min-block-size centres the content while there is room and gets out of
    the way when there is not, which is the same call the landing's budget makes.
 
+   `- var(--nav-clearance)`, added 2026-09-15 alongside the persistent-Nav
+   rewrite for the same reason the landing's budget needed it: Nav used to
+   render inside this grid, spending part of the 100svh on its own before
+   About ever saw it; now it is fixed outside <main> and .content's own
+   padding-top spends --nav-clearance before this grid starts, so a flat
+   100svh here claims that space a second time and the page overflows by
+   Nav's height.
+
    `align-content` centres the grid's rows inside that box; `align-items` (set at
    768 below) centres the panel against the content inside the row. Both are
    needed and they do different jobs — dropping either one leaves the composition
-   anchored to an edge. */
+   anchored to an edge.
+
+   NO PANEL ANY MORE, 2026-09-15 — the designer no longer wants the wordmark
+   on this screen (a direct instruction, no updated frame behind it; see
+   PanelLayout.tsx). .content is this state's only grid item now, at every
+   tier — the span rules that used to split the row with .panel are gone
+   from the media queries below, and `justify-self: center` here replaces
+   them: the item sizes to its own content (AboutBio's `.bio` already caps
+   at 652px) and centres in the full-width row, matching the screenshot that
+   is this decision's only spec. `align-items: center` (768 below) still
+   does real work: it centres that content vertically within the row
+   whenever the row is taller than the bio, which min-block-size/
+   align-content above can make true at a tall viewport. */
 .about {
-  min-block-size: 100svh;
+  min-block-size: calc(100svh - var(--nav-clearance));
   align-content: center;
+}
+
+.about .content {
+  justify-self: center;
 }
 
 /* ---- sm: >= 640 ---------------------------------------------------------
 
    Still four columns and still stacked — what changes is that the content cell
    stops running full width and is centred instead. Read off projects / 640,
-   where the list is 428 wide at x=106 in a 640 frame ((640 - 428) / 2 = 106),
-   and about / 640, where the bio is the same 428 at the same x.
+   where the list is 428 wide at x=106 in a 640 frame ((640 - 428) / 2 = 106).
 
-   The panel stays full width at this tier on both screens; on projects it is
-   the nav band alone, which the drawing centres by hugging rather than by any
-   rule here. */
+   About is NOT part of this rule any more, 2026-09-15 — 428px was calibrated
+   for sharing the row with a panel, and about has none left to share with.
+   `.about .content`'s own `justify-self: center` (above) centres it at every
+   tier already, capped by AboutBio's own 652px rather than this screen's old
+   428.
+
+   The panel stays full width at this tier on projects; it is the nav band
+   alone, which the drawing centres by hugging rather than by any rule here. */
 
 @media (min-width: 640px) {
-  .projects .content,
-  .about .content {
+  .projects .content {
     max-inline-size: 428px;
     margin-inline: auto;
   }
@@ -175,10 +249,11 @@
 
 /* ---- md: >= 768 ---------------------------------------------------------
 
-   Eight columns, and the tier where projects and about finally agree: both are
-   4 + 4, adjacent, filling the row. Measured on projects / 768 — panel 344 at
-   x=32, list 344 at x=392, inside 704 of content width where a column is 74 —
-   and about / 768 is identical.
+   Eight columns, and the tier where projects and about used to agree on a
+   4 + 4 panel/content split. Measured on projects / 768 — panel 344 at
+   x=32, list 344 at x=392, inside 704 of content width where a column is 74.
+   About no longer has a panel to split the row with (2026-09-15), so it is
+   out of this tier's span rules — see the note on `.about .content` above.
 
    THE OLD 5 + 3 IS GONE. It was read off the Design page and it is the reason
    this screen had an open wrapping bug: at 3 of 8 the list cell was 248, and
@@ -199,41 +274,56 @@
     --intro-card-display: flex;
   }
 
-  .projects .content,
-  .about .content {
+  .projects .content {
     max-inline-size: none;
     margin-inline: 0;
   }
 
-  /* THE PANEL AND THE CONTENT ARE CENTRED ON EACH OTHER, and the phase 7 page
-     is exact about it: at every canvas from 768 up, on both screens, the
-     panel's midpoint and the frame's midpoint are the same number to two
-     decimal places. projects / 1448 puts a 604-tall panel at y=159 in a 922
-     frame (461 and 461); about / 1448 a 372-tall panel at y=219.67 in 811.33
-     (405.67 and 405.67). Six more frames agree.
+  /* PROJECTS: THE PANEL AND THE CONTENT ARE CENTRED ON EACH OTHER, and the
+     phase 7 page is exact about it: at every canvas from 768 up, the panel's
+     midpoint and the frame's midpoint are the same number to two decimal
+     places — projects / 1448 puts a 604-tall panel at y=159 in a 922 frame
+     (461 and 461). `align-items` on the container rather than `align-self`
+     on the panel, which is what this was until 2026-09-12: centring only the
+     panel is correct exactly while the content is the taller cell, but it
+     encodes an assumption about which one wins rather than the relationship
+     the design states. Centring both makes whichever is shorter centre
+     against the other, which is what "vertically aligned" actually means.
 
-     `align-items` on the container rather than `align-self` on the panel,
-     which is what this was until 2026-09-12. Centring only the panel is
-     correct exactly while the content is the taller cell — true today on both
-     screens, and true by a wide margin once About gets its contact block — but
-     it encodes an assumption about which one wins rather than the relationship
-     the design states. If the content were ever the shorter of the two the
-     panel's rule would become a no-op and the content would stretch and sit at
-     the top, which is the one arrangement the drawings never show. Centring
-     both makes whichever is shorter centre against the other, which is what
-     "vertically aligned" actually means here. */
+     ABOUT: NO PANEL TO CENTRE AGAINST ANY MORE (2026-09-15), but this still
+     does real work — it centres .content vertically within its row whenever
+     that row is taller than the bio, which the fixed-page-size budget above
+     can make true. Kept for that reason, not out of habit. */
   .projects,
   .about {
     align-items: center;
   }
 
-  .projects .panel,
-  .about .panel {
+  /* Panel and content stop stacking at this tier — both sit in the SAME row,
+     side by side via the column spans below — so the two-row `auto 1fr`
+     from the base tier would leave a phantom empty second row eating the
+     fixed budget. One row, filling the full block-size.
+
+     `.projects .content` overrides the `align-items: center` above, which
+     .about genuinely wants (it has no internal scroll to set up) but would
+     otherwise leave .content only as tall as the list's own content,
+     centred in the row instead of bounded by it — exactly the "nothing for
+     overflow: auto to measure against" problem the base-tier note warns
+     about, just reintroduced by this rule instead of by a missing
+     min-block-size. */
+  .projects {
+    grid-template-rows: 1fr;
+  }
+
+  .projects .content {
+    align-self: stretch;
+  }
+
+  .projects .panel {
     grid-column: span 4;
   }
 
-  .projects .content,
-  .about .content {
+  .projects .content {
     grid-column: span 4;
   }
 
@@ -266,25 +356,24 @@
 
 /* ---- lg: >= 1024 --------------------------------------------------------
 
-   Twelve columns, and all three states place their panel differently.
+   Twelve columns. Landing and projects still place a panel; about no longer
+   has one to place (2026-09-15) and is out of this tier's span rules —
+   `.about .content`'s `justify-self: center`, set once at the base rule
+   above, already centres it at every tier, so there is nothing lg-specific
+   left to say about that screen.
 
    landing   the middle eight, two empty columns each side. Checked at both
              canvases: 1448 puts an 875-wide panel at x=287 and 1024 a 592-wide
              panel at x=216, and both work out to columns 3 through 10.
 
-   about     panel 1-5, content 7-12, with column 6 left empty. Consistent
-             across all three lg canvases — 1024, 1280 and 1448 all put the bio
-             at exactly column 7.
-
-   projects  panel 1-7, content 9-12, one empty column between them, which is
-             the same shape as about. THE THREE CANVASES DISAGREE HERE and this
-             follows 1280. At 1280 the list starts at column 9 and runs to 12;
-             at 1448 it starts at 8 and stops at 11, leaving the last column
-             empty; at 1024 it starts at 8 and runs to 12, five columns wide.
-             The panel is 1-7 on all three, so only the content cell is
-             unstable. 1280 is taken because it is the one that leaves no orphan
-             column and matches about's structure. Raised with the user rather
-             than averaged. */
+   projects  panel 1-7, content 9-12, one empty column between them. THE
+             THREE CANVASES DISAGREE HERE and this follows 1280. At 1280 the
+             list starts at column 9 and runs to 12; at 1448 it starts at 8
+             and stops at 11, leaving the last column empty; at 1024 it
+             starts at 8 and runs to 12, five columns wide. The panel is 1-7
+             on all three, so only the content cell is unstable. 1280 is
+             taken because it is the one that leaves no orphan column.
+             Raised with the user rather than averaged. */
 
 @media (min-width: 1024px) {
   .grid {
@@ -315,13 +404,5 @@
      canvases, so nothing about the panel is a guess. */
   .projects .content {
     grid-column: 8 / -1;
-  }
-
-  .about .panel {
-    grid-column: 1 / span 5;
-  }
-
-  .about .content {
-    grid-column: 7 / span 6;
   }
 }

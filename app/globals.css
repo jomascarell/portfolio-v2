@@ -108,11 +108,15 @@ a {
    one.
 
    320ms is --duration-slow, "large surfaces entering or leaving", and it is the
-   value the morph spec in Figma settled on for the container. --duration-deck
-   (700ms) is deliberately NOT used here: it exists for the measured-width morph
-   technique the reference needs because it has no view transitions, and that
-   technique is not what we ended up building. The token keeps its consumer in
-   the deck itself.
+   value the morph spec in Figma settled on for the panel. --duration-deck
+   (700ms) is deliberately NOT used HERE: this rule is the panel's own morph,
+   and the panel is not measured. The measured-width morph technique this
+   comment used to say "is not what we ended up building" WAS built after
+   all, just not in this file — Nav retired its ViewTransition pairing
+   2026-09-15 in favour of the real technique, live in
+   components/Nav/Nav.tsx, which does use --duration-deck. Two different
+   morphs, two different mechanisms, sharing this section only because the
+   panel's ViewTransition pairing is still the right tool for the panel.
 
    The reduced-motion block above already kills every view-transition animation,
    so these need no query of their own — the state still changes, it just

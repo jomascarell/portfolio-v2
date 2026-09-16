@@ -348,6 +348,24 @@
      reserves. One value for all three, which is why anchors land correctly. */
   --nav-height: var(--space-3xl);
 
+  /* Nav's REAL total rendered box height, not just its top padding — 64
+     (--nav-height) + 32 (its bottom padding) + one line of content,
+     measured at 132px live in Chrome 2026-09-15 (matching
+     PanelLayout.module.css's own pre-existing "132 the nav block occupies"
+     figure — an older note elsewhere said 136, which this live measurement
+     supersedes). Needed as its own token from 2026-09-15: Nav moved into the
+     persistent shell as position: fixed on every route, not just the
+     scrolling ones, so every route's content now has to clear it rather
+     than relying on Nav's own in-flow padding to push things down. */
+  --nav-clearance: 132px;
+
+  /* --nav-clearance plus the extra space/2xl gap Figma draws between the nav
+     band and whatever sits below it (CollectionNav's rail, photos' grid).
+     Sticky positioning needs this as one number because `top` on a sticky
+     element is measured from the viewport, not from a parent's padding — see
+     CollectionNav.module.css. */
+  --nav-clearance-gap: calc(var(--nav-clearance) + var(--space-2xl));
+
   /* ---- System / Motion ----------------------------------------------------
 
      Durations and curves. The first three and ease/standard are ours; the rest
@@ -365,10 +383,13 @@
      --duration-slow was written for. */
   --duration-reveal: 500ms;
 
-  /* 700ms. A card entering or changing in the project deck. The slowest value
-     in the system, and deliberately slower than the text inside the card
-     (450ms): the eye follows the surface, and the content should be settled by
-     the time it arrives. */
+  /* 700ms. A card entering or changing in the project deck, or a nav item's
+     width morph (widened 2026-09-15, per the Animations page spec — reusing
+     this value rather than adding a duplicate 700ms token, since it is the
+     value that produces Caleb's own result, not a coincidence). The slowest
+     value in the system, and deliberately slower than the text inside the
+     card (450ms): the eye follows the surface, and the content should be
+     settled by the time it arrives. */
   --duration-deck: 700ms;
 
   /* The system curve. Everything that moves uses this unless it is

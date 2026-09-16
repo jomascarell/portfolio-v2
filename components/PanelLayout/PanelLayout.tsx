@@ -1,5 +1,4 @@
 import { ViewTransition, type ReactNode } from 'react'
-import Nav from '@/components/Nav/Nav'
 import PageIntro from '@/components/PageIntro/PageIntro'
 import styles from './PanelLayout.module.css'
 
@@ -23,26 +22,32 @@ import styles from './PanelLayout.module.css'
  * stay addressable, deep-linkable and back-button-correct, and what changes is
  * that they render the same composition rather than a different one.
  *
- * HOW THE PANEL MOVES. Each route renders its own panel, and both the panel and
- * the nav are wrapped in <ViewTransition> under stable names. The browser
- * snapshots the old and new positions across the navigation and animates
- * between them, so the panel slides from centre to left without any of the
- * three routes owning a "from" and a "to". This is the documented shared-element
- * morph, and it is why the panel does NOT have to be hoisted into a layout and
- * kept mounted: a named pair morphs across separate route trees.
+ * HOW THE PANEL MOVES. Each route renders its own panel, and the panel is
+ * wrapped in <ViewTransition> under a stable name. The browser snapshots the
+ * old and new positions across the navigation and animates between them, so
+ * the panel slides from centre to left without any of the three routes
+ * owning a "from" and a "to". This is the documented shared-element morph,
+ * and it is why the panel does NOT have to be hoisted into a layout and kept
+ * mounted: a named pair morphs across separate route trees.
  *
- * That also settles the nav morph the cheap way. The Figma spec describes
- * Caleb's technique — measure both labels' scrollWidth, animate width with a
- * per-item delay — because he has no view transitions to lean on. We want his
- * RESULT, which the user confirmed, and a named ViewTransition gives it without
- * the measurement rig or the staging timers.
+ * THE NAV IS NOT HERE ANY MORE — retired 2026-09-15, reversing the call this
+ * comment used to make. It used to say the ViewTransition crossfade gave
+ * Caleb's RESULT "without the measurement rig or the staging timers" — true,
+ * but it was the wrong trade: a crossfade of two bitmaps is not what he
+ * actually built, it is an approximation of it, and the approximation is
+ * what got reopened. Nav is now mounted once in the root layout, reads the
+ * route itself, and runs the real measured width morph — see
+ * components/Nav/Nav.tsx. This file has nothing nav-related left to render.
  *
- * The nav is now ONE component in five states rather than two components
- * swapped by route — NavLinks and Breadcrumb were merged into `Nav` to match
- * the Figma set, so this file hands it a state and stops there. It used to
- * choose between two imports on the page's behalf; there is nothing left to
- * choose. PanelLayout's own state names are Nav's state names on purpose, so
- * the mapping is an identity rather than a lookup that can drift. */
+ * ABOUT LOSES ITS PANEL TOO, ALSO 2026-09-15 — a direct instruction from the
+ * designer relayed by the user, not a Figma change: "no longer want the
+ * Joan wordmark [on About], it is irrelevant." There is no updated frame for
+ * this; the screenshot the user shared (bio alone, centred, no wordmark) is
+ * the only spec that exists for it. About is no longer really a member of
+ * this "panel family" at all — it has no panel any more, same as photos and
+ * project-detail — but it still shares this component's grid, min-block-size
+ * budget and fixed-page-size handling rather than moving to its own
+ * stylesheet, since none of that was ever about the panel specifically. */
 
 type PanelState = 'landing' | 'projects' | 'about'
 
@@ -65,28 +70,26 @@ export default function PanelLayout({
   children,
   className,
 }: PanelLayoutProps) {
-  const isLanding = state === 'landing'
+  const hasPanel = state !== 'about'
 
   /* `share="morph"` and `default="none"` travel together. The share prop puts
      the pair in a class the stylesheet can target; default="none" stops these
      named elements from running a crossfade on every unrelated transition.
      Setting default="none" WITHOUT an explicit share silently stops the morph
-     altogether, which is a quiet enough failure to be worth naming here. */
-  const nav = (
-    <ViewTransition name="site-nav" share="morph" default="none">
-      <Nav state={state} />
-    </ViewTransition>
-  )
+     altogether, which is a quiet enough failure to be worth naming here.
 
+     About no longer renders this pair at all. Navigating in from a route
+     that still has one (landing, projects) leaves that outgoing panel with
+     no partner to morph into — the browser's default is to fade it out on
+     its own, which reads fine here: the wordmark is meant to stop existing
+     on this screen, not to arrive somewhere else on it. */
   return (
     <div className={[styles.grid, STATES[state], className].filter(Boolean).join(' ')}>
-      <ViewTransition name="page-intro" share="morph" default="none">
-        <PageIntro
-          className={styles.panel}
-          nav={nav}
-          type={isLanding ? 'intro' : state === 'about' ? 'about' : 'intro'}
-        />
-      </ViewTransition>
+      {hasPanel && (
+        <ViewTransition name="page-intro" share="morph" default="none">
+          <PageIntro className={styles.panel} type="intro" />
+        </ViewTransition>
+      )}
 
       {children ? <div className={styles.content}>{children}</div> : null}
     </div>

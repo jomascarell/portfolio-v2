@@ -4,7 +4,7 @@ import ContactBio from '@/components/ContactBio/ContactBio'
 import IntroCard from '@/components/IntroCard/IntroCard'
 import MailLink from '@/components/MailLink/MailLink'
 import NavLink from '@/components/NavLink/NavLink'
-import Nav from '@/components/Nav/Nav'
+import { NavPreview } from '@/components/Nav/Nav'
 import PageIntro from '@/components/PageIntro/PageIntro'
 import ProjectList from '@/components/ProjectList/ProjectList'
 import ProjectListRow from '@/components/ProjectListRow/ProjectListRow'
@@ -120,25 +120,22 @@ export default function GalleryPage() {
       <Section
         title="Nav"
         node="829:233"
-        note="One component, five states x two layouts. NavLinks and Breadcrumb were merged into this set; the four interior x stack variants are intentional duplicates, so layout is inert on them. Watch the ground hand off: on landing the pills paint and the container does not, and inside it is the other way round."
+        note="One component, five states, mounted once in the root layout and self-routed from usePathname() there — this page shows NavPreview instead, a static, non-animated stand-in that can render six states side by side, which the real singleton never could. Layout=stack was retired 2026-09-15: Nav never stacks at any width now, matching calebwu.ca confirmed down to 275px. Watch the ground hand off: on landing the pills paint and the container does not, and inside it is the other way round."
       >
-        <Specimen label="State = landing, Layout = row">
-          <Nav state="landing" layout="row" />
-        </Specimen>
-        <Specimen label="State = landing, Layout = stack">
-          <Nav state="landing" layout="stack" />
+        <Specimen label="State = landing">
+          <NavPreview state="landing" />
         </Specimen>
         <Specimen label="State = projects">
-          <Nav state="projects" />
+          <NavPreview state="projects" />
         </Specimen>
         <Specimen label="State = about">
-          <Nav state="about" />
+          <NavPreview state="about" />
         </Specimen>
         <Specimen label="State = photos">
-          <Nav state="photos" />
+          <NavPreview state="photos" />
         </Specimen>
         <Specimen label="State = project-detail">
-          <Nav state="project-detail" label="Emotional UX in e-commerce" />
+          <NavPreview state="project-detail" label="Emotional UX in e-commerce" />
         </Specimen>
       </Section>
 
@@ -158,16 +155,13 @@ export default function GalleryPage() {
       <Section
         title="PageIntro"
         node="556:3103"
-        note="A nav slot above the card. The slot takes any Nav state, which is what lets the landing and the interior screens share one panel."
+        note="The panel: IntroCard alone. No nav slot any more — retired 2026-09-15 alongside the persistent-Nav rewrite, since Nav no longer travels with whichever page renders it."
       >
-        <Specimen label="Layout = row">
-          <PageIntro nav={<Nav state="landing" layout="row" />} />
+        <Specimen label="Type = intro">
+          <PageIntro />
         </Specimen>
-        <Specimen label="Layout = stack">
-          <PageIntro nav={<Nav state="landing" layout="stack" />} />
-        </Specimen>
-        <Specimen label="Nav state = about in the slot, Type = about">
-          <PageIntro nav={<Nav state="about" />} type="about" />
+        <Specimen label="Type = about">
+          <PageIntro type="about" />
         </Specimen>
       </Section>
 

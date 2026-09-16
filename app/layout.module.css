@@ -22,10 +22,19 @@
 }
 
 /* The inset applies to page content only. The footer is full-bleed and carries
-   its own inset internally, which is why it sits outside this. */
+   its own inset internally, which is why it sits outside this.
+
+   padding-top: var(--nav-clearance), added 2026-09-15. Nav is now
+   position: fixed on every route (it used to be in-flow on the panel family
+   and fixed only on photos), so it reserves no space of its own any more —
+   every route's content has to clear its real rendered height itself.
+   A route that wants MORE breathing room than this (photos' extra
+   --space-2xl gap before its grid) adds its own on top; this is the floor
+   every route needs just to not render under the nav. */
 .content {
   flex: 1;
   padding-inline: var(--container-inset);
+  padding-top: var(--nav-clearance);
 }
 
 /* The skip link's target. Focusing a container that is not natively focusable
