@@ -89,9 +89,3 @@
   outline-offset: 2px;
   border-radius: var(--radius-sm);
 }
-
-@media (hover: hover) {
-  .current:hover {
-    text-decoration-line: underline;
-  }
-}

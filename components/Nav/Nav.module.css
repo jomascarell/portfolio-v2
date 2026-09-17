@@ -68,10 +68,11 @@
   align-items: center;
   justify-content: center;
   margin: 0;
-  padding: 0;
+  padding-inline: var(--space-lg);
+  padding-block: var(--space-sm);
   list-style: none;
   gap: var(--nav-gap);
-  background-color: transparent;
+  background-color: var(--color-surface-subtle);
   color: var(--color-text-primary);
   border-radius: var(--radius-md);
   transition:
@@ -283,19 +284,18 @@
   border-radius: var(--radius-sm);
 }
 
-/* Inside the query, because on a touch device :hover sticks after a tap. */
-@media (hover: hover) {
-  .home:hover {
-    color: var(--color-text-accent);
-  }
-}
+/* Both icons take their box from the size scale.
 
-/* Both icons take their box from the size scale and their colour from the text
-   around them, so an icon can never disagree with its label. */
+   Colour no longer follows the label. The house carries --color-text-accent
+   permanently: with .home's hover removed, the link needs a standing mark that
+   it is a link, and a glyph that is always accent says so without waiting for
+   a cursor — which a touch user never provides anyway. The caret stays
+   --color-text-primary; it is punctuation between two labels, not part of the
+   link's affordance, and colouring it would read as a second link. */
 .houseIcon {
   inline-size: var(--size-icon-sm);
   block-size: var(--size-icon-sm);
-  fill: currentColor;
+  fill: var(--color-text-accent);
   flex-shrink: 0;
 }
 
