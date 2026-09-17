@@ -55,9 +55,30 @@
     transform var(--duration-deck) cubic-bezier(0.19, 1, 0.22, 1);
 }
 
+/* The one exception to the row's single ink, and the reason `.category` and
+   `.year` declare a colour at all: lit, the two supporting lines drop back to
+   secondary so the title carries the row alone. Descendant selectors, not
+   :has() — both sit inside `.current`, and :has() is for the other direction.
+
+   Their transitions mirror the row's own asymmetry rather than restating the
+   deck curve once: `.current` declares the slow curve, so it only governs
+   the way in — on the way out the class is gone and `.row`'s fast transition
+   takes over. Both halves are spelled out on each line because transition is
+   not an inherited property. */
+.current .category,
+.current .year {
+  color: var(--color-text-primary);
+  transition: color var(--duration-deck) cubic-bezier(0.19, 1, 0.22, 1);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .current {
     transform: none;
+  }
+
+  .current,
+  .current .category,
+  .current .year {
     transition: none;
   }
 }
@@ -107,12 +128,17 @@
   line-height: var(--line-height-lg);
   font-weight: var(--font-weight-regular);
   letter-spacing: var(--letter-spacing-normal);
+
+  /* Follows the row's ink like the title, but declared rather than inherited
+     so `.current` has something to override — see above. */
+  color: var(--row-ink);
+  transition: color var(--duration-fast) var(--ease-standard);
 }
 
 /* Figma text style: heading/h1 — 46/52 Medium, tracking tight. */
 .title {
-  font-size: var(--font-size-2xl);
-  line-height: var(--line-height-2xl);
+  font-size: var(--font-size-xl);
+  line-height: var(--line-height-xl);
   font-weight: var(--font-weight-medium);
   letter-spacing: var(--letter-spacing-tight);
 }
@@ -126,9 +152,13 @@
   line-height: var(--line-height-xl);
   font-weight: var(--font-weight-light);
   letter-spacing: var(--letter-spacing-tight);
+
+  /* Declared for the same reason as `.category`'s — see above. */
+  color: var(--row-ink);
+  transition: color var(--duration-fast) var(--ease-standard);
 }
 
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   .category {
     font-size: var(--font-size-md);
     line-height: var(--line-height-md);
