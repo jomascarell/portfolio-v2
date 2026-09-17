@@ -77,9 +77,13 @@
    :nth-child, so the stagger still works if the list is ever built from a
    filtered or reordered array.
 
-   --ease-standard is Figtree's own cubic-bezier(0.4, 0, 0.6, 1) — the same
-   curve lib/menu-motion.ts specifies, so Option B keeps that much of the old
-   spec even though its distance and shape do not carry over.
+   --ease-standard is Figtree's own cubic-bezier(0.4, 0, 0.6, 1), which is the
+   curve Option B was first written against. TWO CORRECTIONS, 2026-09-16: the
+   rule below has used --ease-entrance since the tune further down, not
+   --ease-standard; and the file this paragraph used to cite as the source of
+   that curve, lib/menu-motion.ts, no longer exists — it went with the retired
+   menu, and nothing replaced it. The curve now comes from app/tokens.css like
+   every other timing on the site.
 
    fill-mode backwards holds each row at its 0% state until its delay elapses,
    so nothing flashes at its final position before animating in. The global
@@ -88,11 +92,14 @@
    visibly stagger under that query.
 
    SCOPED TO `.entrance` SPECIFICALLY, NOT EVERY `<li>`, since the carousel
-   loop's clones (ProjectList.tsx) would otherwise all replay this on mount
-   too — harmless in that most sit off-screen at any given moment, but
-   pointless work for DOM nodes nobody is looking at, and one more thing to
-   rule out if the real rows' stagger ever looks wrong. Only the loop's real
-   copy gets the class. */
+   loop repeats the projects 7 times and animating all 28 nodes is work
+   nobody sees. WHICH rows get the class is decided in ProjectList.tsx, and
+   it is a positional window around the centred project rather than "the real
+   copy" — see ENTRANCE_WINDOW there. The identity-based version was a bug:
+   the list opens centred, so the rows visible above the centred project are
+   always clones, and they sat motionless while everything below them flew
+   in. `--row-index` is the row's place in that window, counted from the top,
+   not its index in lib/projects.ts. */
 /* TUNED 2026-09-16, which is the browser pass the note above asked for, and
    all four numbers moved.
 
@@ -112,23 +119,68 @@
    Distance halved, 48px to 24px. 48 was a first guess never seen in a browser;
    the reference moves its largest surface 34.76px and its text 9px, and a list
    row is not larger than its largest surface. */
+/* AXIS AND SPEED CHANGED 2026-09-16, LATER THE SAME DAY as the tune
+   above, after watching four candidates side by side at quarter speed.
+
+   THE ROWS NOW ENTER ON Y, NOT X. X had two arguments behind it: it is the
+   axis the panel morph travels, and Y is the axis the carousel itself steps
+   on, so a Y entrance risked reading as the list jumping rather than
+   arriving. Watched slowed down, it does not read that way, and the entrance
+   is over before any stepping is plausible, so the two motions never share a
+   moment. Y is also what a vertical list conventionally does, which means
+   this is no longer an outlier that needs a comment defending it.
+
+   AND IT RUNS SLOWED, settled after trying a quarter. --row-speed multiplies
+   all three clocks at once rather than restating them as literals, so the
+   list stays DERIVED from the site's single rhythm instead of forking a
+   second set of numbers off it — retune --intro-stagger,
+   --intro-text-duration or --duration-slow and this follows.
+
+   A QUARTER WAS TRIED FIRST AND REVERTED, recorded so it is not re-proposed
+   from scratch. At 4x the list was not readable for the first four seconds
+   of a cold load, over a carousel that stays steerable throughout — so a
+   wheel notch during the entrance landed on rows still flying in. The slowed
+   reading that made Y work survives well below that.
+
+   SPEED RETUNED 2026-09-17, 2 -> 1.5, reported as running slow in use.
+
+   Part of why it had drifted slow was not this number. The paragraph here
+   used to claim "the last of the nine settling at 2660ms", which stopped
+   being true when ENTRANCE_WINDOW moved to projects.length in
+   ProjectList.tsx: rows enter while entranceIndex <= ENTRANCE_WINDOW * 2, so
+   the window is THIRTEEN rows (--row-index 0..12), not nine. Four more rows
+   of stagger had quietly added ~560ms of tail that nobody retuned for.
+
+   At 1.5 the real figures are 675ms per row, 105ms apart, the first row
+   starting at 480ms and the thirteenth settling at 2415ms. Quote the row
+   count from ENTRANCE_WINDOW when re-deriving these; do not trust a number
+   written in a comment, including this one.
+
+   ONE NUMBER TO TURN — for the SPEED. If it still runs long, --row-speed is
+   the only value in this rule to change. But the tail is 12 staggers wide
+   now, so shortening ENTRANCE_WINDOW is the other lever, and it is the one
+   that touches what the eye actually sees: rows outside the window get no
+   class and simply exist. That is a design call, not a tuning one. */
 .entrance {
   --row-distance: var(--space-lg);
+  --row-speed: 1.5;
 
-  animation: row-in var(--intro-text-duration) var(--ease-entrance) backwards;
+  animation: row-in calc(var(--intro-text-duration) * var(--row-speed))
+    var(--ease-entrance) backwards;
   animation-delay: calc(
-    var(--duration-slow) + var(--row-index, 0) * var(--intro-stagger)
+    (var(--duration-slow) + var(--row-index, 0) * var(--intro-stagger)) *
+      var(--row-speed)
   );
 }
 
 @keyframes row-in {
   from {
     opacity: 0;
-    transform: translateX(var(--row-distance));
+    transform: translateY(var(--row-distance));
   }
 
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
   }
 }

@@ -82,6 +82,24 @@ const SWIPE_STEP_THRESHOLD = 40
    ~400ms. */
 const EASE_K = 9
 
+/* How far either side of the centred project the entrance reaches, in rows.
+
+   FIXES THE BUG THE ORIGINAL SCOPING CREATED. The entrance used to be given
+   to the real copy and withheld from every clone, on the reasoning that
+   clones "mostly sit off-screen" and animating them is work nobody sees.
+   That reasoning is right about 25 of the 28 and wrong about the ones that
+   matter: the list opens CENTRED on items[REAL_START], so every row visible
+   ABOVE the centred project is a clone by definition. They arrived fully
+   formed while everything below them flew in — visible as a dead band at the
+   top of the list.
+
+   So the window is positional, not identity-based: a row animates if it is
+   near the centre, whether or not it is a clone. One full set either side is
+   ~830px of rows at the measured ~208px pitch, which clears the top and
+   bottom of the list box at every breakpoint while leaving the far clones
+   alone — the part of the original reasoning that was sound. */
+const ENTRANCE_WINDOW = projects.length
+
 type ProjectListProps = {
   className?: string
 }
@@ -409,13 +427,25 @@ export default function ProjectList({ className }: ProjectListProps) {
         projects.map((project, index) => {
           const isClone = copy !== REAL_COPY
           const position = copy * projects.length + index
+          /* Counted from the topmost animated row rather than from the
+             project's index in its copy, so the stagger runs down the
+             screen in the order the eye reads it. Using the project index
+             here would make the clone directly above the centred row the
+             LAST to arrive despite being the first one seen. */
+          const entranceIndex = position - (REAL_START - ENTRANCE_WINDOW)
+          const entering =
+            entranceIndex >= 0 && entranceIndex <= ENTRANCE_WINDOW * 2
           return (
             <li
               key={`${copy}-${project.slug}`}
               data-position={position}
               aria-hidden={isClone || undefined}
-              className={isClone ? undefined : styles.entrance}
-              style={{ '--row-index': index } as CSSProperties}
+              className={entering ? styles.entrance : undefined}
+              style={
+                entering
+                  ? ({ '--row-index': entranceIndex } as CSSProperties)
+                  : undefined
+              }
               ref={(node) => {
                 itemsRef.current[position] = node
               }}
