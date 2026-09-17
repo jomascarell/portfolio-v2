@@ -1,6 +1,36 @@
 /* The list reset is here rather than on a `role="list"` — see the note in
    NavLinks.module.css for why this project writes it this way. */
 
+/* The list and its position indicator, side by side. Figma: the composed
+   ProjectList (1073:3527) is a horizontal auto-layout, gap 16, counter-axis
+   CENTER.
+
+   THE COUNTER-AXIS IS DELIBERATELY NOT align-items: center. Figma's CENTER
+   is reproduced by centring the RAIL with align-self, and this wrapper stays
+   on the default stretch. That is load-bearing, not a preference: .list is
+   the carousel's scroll box (height: 100%, overflow-y: auto) and setup()
+   decides canLoop from list.clientHeight against list.scrollHeight.
+   align-items: center would stop the <ul> stretching, collapse clientHeight
+   onto its content, and flip canLoop to false — the carousel would quietly
+   stop looping and clamp at the ends, at whichever breakpoints crossed the
+   threshold. Centring the rail instead draws the same picture, because the
+   rail is the shorter item either way.
+
+   height and min-block-size restate what PanelLayout's .content already
+   gives the list. This wrapper is new ground between the two, so it has to
+   pass the bounded box through — otherwise the <ul>'s height: 100% resolves
+   against an auto-height parent and the scroll box collapses. */
+.deck {
+  display: flex;
+  gap: var(--space-md);
+  height: 100%;
+  min-block-size: 0;
+}
+
+.pagination {
+  align-self: center;
+}
+
 .list {
   display: flex;
   flex-direction: column;
@@ -12,6 +42,13 @@
   padding-inline: 0;
   margin: 0;
   list-style: none;
+
+  /* A flex item of .deck now, rather than the only thing in .content. With
+     no basis it would size to the widest row's max-content and shove the
+     rail out of the box; min-inline-size undoes the automatic minimum that
+     would otherwise stop it shrinking back below that same width. */
+  flex: 1;
+  min-inline-size: 0;
 
   /* THE LOOP NEEDS THIS BOX, ported from the retired build's MenuOverlay.
      Height and overflow-y are set here rather than left to PanelLayout's
@@ -143,24 +180,17 @@
    reading that made Y work survives well below that.
 
    SPEED RETUNED 2026-09-17, 2 -> 1.5, reported as running slow in use.
+   At 1.5: 675ms per row, 105ms apart, the first row starting at 480ms and
+   the ninth settling at 1995ms.
 
-   Part of why it had drifted slow was not this number. The paragraph here
-   used to claim "the last of the nine settling at 2660ms", which stopped
-   being true when ENTRANCE_WINDOW moved to projects.length in
-   ProjectList.tsx: rows enter while entranceIndex <= ENTRANCE_WINDOW * 2, so
-   the window is THIRTEEN rows (--row-index 0..12), not nine. Four more rows
-   of stagger had quietly added ~560ms of tail that nobody retuned for.
+   The window is NINE rows, --row-index 0..8. Derive that rather than
+   trusting it written down: ENTRANCE_WINDOW is projects.length (4) and a row
+   enters while entranceIndex <= ENTRANCE_WINDOW * 2, so adding a project
+   widens the window by two rows at both ends and lengthens the tail. The
+   28-node figure in the note above is the same arithmetic — 7 copies x 4.
 
-   At 1.5 the real figures are 675ms per row, 105ms apart, the first row
-   starting at 480ms and the thirteenth settling at 2415ms. Quote the row
-   count from ENTRANCE_WINDOW when re-deriving these; do not trust a number
-   written in a comment, including this one.
-
-   ONE NUMBER TO TURN — for the SPEED. If it still runs long, --row-speed is
-   the only value in this rule to change. But the tail is 12 staggers wide
-   now, so shortening ENTRANCE_WINDOW is the other lever, and it is the one
-   that touches what the eye actually sees: rows outside the window get no
-   class and simply exist. That is a design call, not a tuning one. */
+   ONE NUMBER TO TURN. If this still runs long in use, --row-speed is the
+   only value to change; nothing else in this rule depends on it. */
 .entrance {
   --row-distance: var(--space-lg);
   --row-speed: 1.5;

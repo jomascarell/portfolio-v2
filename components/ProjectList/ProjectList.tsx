@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import ProjectListPagination from '@/components/ProjectListPagination/ProjectListPagination'
 import ProjectListRow from '@/components/ProjectListRow/ProjectListRow'
 import { projects } from '@/lib/projects'
 import styles from './ProjectList.module.css'
@@ -117,7 +118,9 @@ export default function ProjectList({ className }: ProjectListProps) {
     const list = listRef.current
     if (!list) return
 
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const reduceMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)',
+    ).matches
 
     const setup = () => {
       const items = itemsRef.current.filter(
@@ -236,7 +239,9 @@ export default function ProjectList({ className }: ProjectListProps) {
       }
 
       const goTo = (next: number) => {
-        index = canLoop ? next : Math.min(Math.max(next, 0), projects.length - 1)
+        index = canLoop
+          ? next
+          : Math.min(Math.max(next, 0), projects.length - 1)
         indexRef.current = index
         target = index * pitch
         animate()
@@ -267,7 +272,11 @@ export default function ProjectList({ className }: ProjectListProps) {
         event.preventDefault()
         const now = performance.now()
         const unit =
-          event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? list.clientHeight : 1
+          event.deltaMode === 1
+            ? 16
+            : event.deltaMode === 2
+              ? list.clientHeight
+              : 1
         const delta = event.deltaY * unit
         const size = Math.abs(delta)
 
@@ -338,7 +347,8 @@ export default function ProjectList({ className }: ProjectListProps) {
         if (!li?.dataset.position) return
         const position = Number(li.dataset.position)
         const wanted = position - REAL_START
-        const current = ((index % projects.length) + projects.length) % projects.length
+        const current =
+          ((index % projects.length) + projects.length) % projects.length
         let delta = wanted - current
         if (canLoop) {
           if (delta > projects.length / 2) delta -= projects.length
@@ -417,48 +427,68 @@ export default function ProjectList({ className }: ProjectListProps) {
     }
   }, [])
 
+  /* The dots index PROJECTS; activePosition indexes the 28-slot loop. It also
+     goes NEGATIVE — paint() sets it to REAL_START + Math.round(offset /
+     pitch) and offset is signed, so scrolling up past the start takes it
+     below zero and a bare % would return a negative index. Same double
+     modulo band() uses above, for the same reason. */
+  const activeProject =
+    ((activePosition % projects.length) + projects.length) % projects.length
+
+  /* `className` now lands on the wrapper rather than the <ul>: the wrapper is
+     this component's outer box now that the rail is a sibling of the list.
+     Neither caller passes one today (/projects and /gallery both render
+     <ProjectList />), so nothing moves — but a future caller styling "the
+     project list" means the pair, not the scroll box inside it. */
   return (
-    <ul
-      className={[styles.list, className].filter(Boolean).join(' ')}
-      ref={listRef}
-      data-carousel={carouselActive ? 'active' : undefined}
-    >
-      {Array.from({ length: LOOP_COPIES }, (_, copy) =>
-        projects.map((project, index) => {
-          const isClone = copy !== REAL_COPY
-          const position = copy * projects.length + index
-          /* Counted from the topmost animated row rather than from the
+    <div className={[styles.deck, className].filter(Boolean).join(' ')}>
+      <ul
+        className={styles.list}
+        ref={listRef}
+        data-carousel={carouselActive ? 'active' : undefined}
+      >
+        {Array.from({ length: LOOP_COPIES }, (_, copy) =>
+          projects.map((project, index) => {
+            const isClone = copy !== REAL_COPY
+            const position = copy * projects.length + index
+            /* Counted from the topmost animated row rather than from the
              project's index in its copy, so the stagger runs down the
              screen in the order the eye reads it. Using the project index
              here would make the clone directly above the centred row the
              LAST to arrive despite being the first one seen. */
-          const entranceIndex = position - (REAL_START - ENTRANCE_WINDOW)
-          const entering =
-            entranceIndex >= 0 && entranceIndex <= ENTRANCE_WINDOW * 2
-          return (
-            <li
-              key={`${copy}-${project.slug}`}
-              data-position={position}
-              aria-hidden={isClone || undefined}
-              className={entering ? styles.entrance : undefined}
-              style={
-                entering
-                  ? ({ '--row-index': entranceIndex } as CSSProperties)
-                  : undefined
-              }
-              ref={(node) => {
-                itemsRef.current[position] = node
-              }}
-            >
-              <ProjectListRow
-                project={project}
-                state={position === activePosition ? 'current' : 'default'}
-                tabIndex={isClone ? -1 : undefined}
-              />
-            </li>
-          )
-        }),
-      )}
-    </ul>
+            const entranceIndex = position - (REAL_START - ENTRANCE_WINDOW)
+            const entering =
+              entranceIndex >= 0 && entranceIndex <= ENTRANCE_WINDOW * 2
+            return (
+              <li
+                key={`${copy}-${project.slug}`}
+                data-position={position}
+                aria-hidden={isClone || undefined}
+                className={entering ? styles.entrance : undefined}
+                style={
+                  entering
+                    ? ({ '--row-index': entranceIndex } as CSSProperties)
+                    : undefined
+                }
+                ref={(node) => {
+                  itemsRef.current[position] = node
+                }}
+              >
+                <ProjectListRow
+                  project={project}
+                  state={position === activePosition ? 'current' : 'default'}
+                  tabIndex={isClone ? -1 : undefined}
+                />
+              </li>
+            )
+          }),
+        )}
+      </ul>
+      <ProjectListPagination
+        className={styles.pagination}
+        count={projects.length}
+        active={activeProject}
+      />
+    </div>
   )
 }
