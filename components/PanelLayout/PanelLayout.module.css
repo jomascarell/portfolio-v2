@@ -125,8 +125,8 @@
   --intro-min-block: min(
     468px,
     calc(
-      100svh - var(--nav-clearance) - var(--footer-band, 0px) - var(--reveal-gap) -
-        96px
+      100svh - var(--nav-clearance) - var(--footer-band, 0px) -
+        var(--reveal-gap) - 96px
     )
   );
 }
@@ -324,7 +324,7 @@
   }
 
   .projects .content {
-    grid-column: span 4;
+    grid-column: 6 / span 3;
   }
 
   /* The landing's panel takes all eight: landing / 768 draws PageIntro at 704,
@@ -385,7 +385,7 @@
   }
 
   .projects .panel {
-    grid-column: 1 / span 7;
+    grid-column: 1 / span 6;
   }
 
   /* CORRECTED 2026-09-12 BY MEASUREMENT, not by re-reading the drawings. This
@@ -403,6 +403,6 @@
      room only reduces wrapping. The panel is columns 1-7 at all three
      canvases, so nothing about the panel is a guess. */
   .projects .content {
-    grid-column: 8 / -1;
+    grid-column: 8 / span 5;
   }
 }
