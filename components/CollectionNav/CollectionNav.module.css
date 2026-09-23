@@ -1,20 +1,25 @@
-/* Figma: collection-nav (879:2473). Hidden below 768 — decided 2026-09-15,
-   640 does not get a smaller version of this, it goes indexless like 412.
+/* The scroll-spy rail, in two variants.
+
+   collection — /photos.        Figma: collection-nav (879:2473). From 768 up.
+   section    — project-detail. Figma: SectionNav (1152:2792). From 1024 up.
+
+   Hidden below its own breakpoint in both cases: 640 does not get a smaller
+   version, it goes indexless like 412. For project-detail the pre-dev audit
+   asked what replaces the rail at md/sm and the answer, settled 2026-09-23, is
+   nothing — which is what its frames draw.
+
    Sticky, not self-start: Figma has no sticky concept and draws the rail as a
-   short fixed-height block beside a stream that can run past 5000px, but a
+   short fixed-height block beside content that runs past 7000px, but a
    scroll-spy rail that scrolls away with the first screen answers a question
    nobody can see any more.
 
    THE STICKY OFFSET MUST CLEAR THE FIXED NAV, NOT JUST SIT NEAR THE TOP.
-   Nav is `position: fixed` on every route since 2026-09-15 (app/layout.tsx),
-   not just this one — before that, `--nav-height` (64px) was a comfortable
-   arbitrary offset with nothing behind it to collide with. Now the fixed bar
-   occupies the top 132px of the viewport permanently, and 64px would stick
-   the rail HALFWAY UNDER IT. `--nav-clearance-gap` (tokens.css) is the real
-   number — 132 (Nav's own height) + 48 (--space-2xl, the gap Figma draws) —
-   kept as a token now that Nav's fixed positioning is global rather than
-   published per page; `--nav-height` stays as the fallback for any other
-   consumer of this component that isn't sitting behind a fixed nav. */
+   Nav is `position: fixed` on every route since 2026-09-15 (app/layout.tsx).
+   `--nav-clearance-gap` is the real number — 132 (Nav's own height) + 48
+   (--space-2xl, the gap Figma draws); `--nav-height` stays as the fallback for
+   any consumer that isn't sitting behind a fixed nav. The component's JS no
+   longer reads either one — it measures this element — so the two can no
+   longer disagree. */
 .nav {
   display: none;
 }
@@ -24,6 +29,21 @@
     display: block;
     position: sticky;
     top: var(--nav-clearance-gap, var(--nav-height));
+  }
+}
+
+/* The section rail starts one tier later than the collection rail. This rule
+   sits AFTER the block above on purpose: at 768-1023 both selectors match the
+   same element and the later one has to win. */
+.sectionVariant {
+  display: none;
+  /* SectionNav (1152:2792) carries 64px of padding above its links. */
+  padding-block-start: var(--space-3xl);
+}
+
+@media (min-width: 1024px) {
+  .sectionVariant {
+    display: block;
   }
 }
 
@@ -39,13 +59,22 @@
   padding: 0;
 }
 
+/* `section-nav-links` has NO gap: the entries sit flush and the rhythm comes
+   from each item's own 1px of block padding, which is what keeps the 29px line
+   box the rail was drawn with. 168px is the drawn cap on the link column at
+   1448; at 1024 the rail is 136 and the cap never binds. */
+.sectionVariant .list {
+  gap: 0;
+  max-inline-size: 168px;
+}
+
 /* Figma text style: body/base — 16/26.2 Regular, color/text/accent. Inactive
    is the accent colour and CURRENT is the one styled as ink — backwards from
    the usual "accent means interactive," but it is what all four entries in
-   the file show, and NavLink's own sidebar precedent (SectionNav in the
-   retired build) frames the same inversion as deliberate rather than a
-   design slip. */
+   the file show, and both rail components document the inversion as
+   deliberate. */
 .item {
+  display: inline-block;
   font-size: var(--font-size-md);
   line-height: var(--line-height-md);
   font-weight: var(--font-weight-regular);
@@ -69,23 +98,47 @@
 }
 
 /* Figma text style: 16/28 SemiBold, color/text/primary — font-size-md with
-   line-height-md-loose, not line-height-md. The two active/inactive entries
-   share a font size and differ in weight, colour AND line-height; not
+   line-height-md-loose, not line-height-md. On the COLLECTION rail the two
+   states share a font size and differ in weight, colour AND line-height; not
    rounding the current entry onto the inactive one's 26.2. Primary ink has no
    "-hover" companion token the way accent does, so the affordance on hover is
-   an underline rather than a colour deepen — a real difference in mechanism,
-   not an inconsistency. */
+   an underline rather than a colour deepen.
+
+   This class is COMPOSED onto .item rather than replacing it, so the colour
+   transition declared above applies in both directions. It must stay after
+   .item in this file: the two selectors tie on specificity. */
 .current {
-  font-size: var(--font-size-md);
   line-height: var(--line-height-md-loose);
   font-weight: var(--font-weight-semibold);
-  letter-spacing: var(--letter-spacing-normal);
   color: var(--color-text-primary);
-  text-decoration-line: none;
 }
 
 .current:focus-visible {
   outline: 2px solid var(--color-text-accent);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
+}
+
+/* ---- section variant type --------------------------------------------------
+   ui/nav-label — Figtree Regular 16/24, +0.24px tracking. The 0.24 is a
+   measured literal, not --letter-spacing-wide: that token is 0.014em, which
+   resolves to 0.224px at 16px, and the file says 0.24. Same standing rule as
+   the 12px gap above. */
+
+.sectionVariant .item {
+  padding-block: 1px;
+  font-size: var(--font-size-md);
+  line-height: 24px;
+  font-weight: var(--font-weight-regular);
+  letter-spacing: 0.24px;
+}
+
+/* COLOUR ONLY. SectionNav's own description is explicit that the current entry
+   keeps the same size, weight and line-height, because a marker that changes
+   any of them re-flows the rail as you scroll — which is the exact defect the
+   calebwu.ca teardown found in the photos rail. Do not bold this. */
+.sectionVariant .current {
+  line-height: 24px;
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-primary);
 }

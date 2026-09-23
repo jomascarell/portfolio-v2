@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styles from './CollectionNav.module.css'
 
 export type CollectionNavItem = {
@@ -8,33 +8,44 @@ export type CollectionNavItem = {
   label: string
 }
 
-/* The photos page's scroll-spy rail. Figma: collection-nav (879:2473) — a
- * single fixed component, not a variant set: the current/inactive look is a
- * manual per-instance text override there, so it is a prop here, not
- * something read off a component state.
+/* The scroll-spy rail. Serves TWO screens, which is why it takes a variant:
  *
- * VISIBLE FROM 768 UP ONLY — decided 2026-09-15, matching the project's
- * "no mobile index for now" call. 640 does not get a smaller version of this;
- * it drops the rail entirely, same as 412. See CollectionNav.module.css.
+ *   variant="collection"  /photos       Figma: collection-nav (879:2473)
+ *   variant="section"     project-detail Figma: SectionNav (1152:2792)
  *
- * Mechanics ported from the retired build's SectionNav (git show
- * 08d3ea7:components/SectionNav.tsx), which served both photos-by-year there
- * and will serve project-detail's own section rail later — the logic doesn't
- * care what a label means. Recomputed from actual element positions rather
- * than trusted from IntersectionObserver entries, so the result doesn't
- * depend on which sections happened to cross the threshold on a given tick:
- * current = the last section whose top has already passed under the sticky
- * rail's own offset, or the first section if none has yet. */
+ * Both are a sticky in-page index whose current entry is computed from scroll
+ * position, so the mechanics are shared and only the type and the breakpoint
+ * differ. The project-detail rail was NOT built as a second component — its
+ * Figma counterpart is composed of SectionNavItem instances, but the behaviour
+ * is identical and a second copy of this logic would be a second place for the
+ * scroll-spy to drift.
+ *
+ * The two differ in exactly three ways, all in CSS: collection appears at 768
+ * and section at 1024; collection's type is body/base 16/26.2 and section's is
+ * ui/nav-label 16/24 with 0.24px tracking; and collection's current entry
+ * changes weight and line-height while section's changes COLOUR ONLY.
+ *
+ * THE COLOUR ASSIGNMENT IS INVERTED IN BOTH, ON PURPOSE: inactive entries are
+ * color/text/accent and the CURRENT entry is color/text/primary. Both Figma
+ * components document this as deliberate. It is not a slip to "fix".
+ *
+ * Current = the last section whose top has already passed under the rail's own
+ * offset, or the first section if none has. Recomputed from element positions
+ * rather than trusted from IntersectionObserver entries, so the result does not
+ * depend on which sections happened to cross the threshold on a given tick. */
 export default function CollectionNav({
   items,
   label,
   className,
+  variant = 'collection',
 }: {
   items: CollectionNavItem[]
   label: string
   className?: string
+  variant?: 'collection' | 'section'
 }) {
   const [currentId, setCurrentId] = useState(items[0]?.id ?? '')
+  const navRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     const sections = items
@@ -43,25 +54,32 @@ export default function CollectionNav({
 
     if (sections.length === 0) return
 
-    const railOffset =
-      Number.parseFloat(
-        getComputedStyle(document.documentElement).getPropertyValue(
-          '--nav-height',
-        ),
-      ) || 0
+    /* THE OFFSET IS MEASURED OFF THE RAIL ITSELF, not read from a token.
+       This used to read --nav-height (64) while the stylesheet stuck the rail
+       at --nav-clearance-gap (180), so a section was marked current 116px
+       before it reached the rail. Reading the token here would only move the
+       bug: --nav-clearance-gap is a calc(), and getComputedStyle returns it
+       unresolved on the custom property, so parseFloat yields NaN.
+
+       Measuring the element cannot disagree with the CSS that positions it,
+       whatever either side changes to later. */
+    const railTop = () => navRef.current?.getBoundingClientRect().top ?? 0
 
     const syncCurrent = () => {
+      const offset = railTop()
       let current = sections[0]
       for (const section of sections) {
-        if (section.getBoundingClientRect().top - railOffset <= 1) {
+        if (section.getBoundingClientRect().top - offset <= 1) {
           current = section
         }
       }
       setCurrentId(current.id)
     }
 
+    syncCurrent()
+
     const observer = new IntersectionObserver(syncCurrent, {
-      rootMargin: `-${railOffset}px 0px 0px 0px`,
+      rootMargin: `-${Math.max(0, Math.round(railTop()))}px 0px 0px 0px`,
       threshold: [0, 1],
     })
     sections.forEach((section) => observer.observe(section))
@@ -71,7 +89,14 @@ export default function CollectionNav({
 
   return (
     <nav
-      className={[styles.nav, className].filter(Boolean).join(' ')}
+      ref={navRef}
+      className={[
+        styles.nav,
+        variant === 'section' ? styles.sectionVariant : null,
+        className,
+      ]
+        .filter(Boolean)
+        .join(' ')}
       aria-label={label}
     >
       <ul className={styles.list}>
@@ -81,7 +106,13 @@ export default function CollectionNav({
             <li key={item.id}>
               <a
                 href={`#${item.id}`}
-                className={isCurrent ? styles.current : styles.item}
+                /* COMPOSED, not swapped. Swapping the classes meant `.item`
+                   carried the colour transition and `.current` carried none,
+                   so the marker animated on the way out and snapped on the way
+                   in. Composing gives both directions the same transition. */
+                className={[styles.item, isCurrent ? styles.current : null]
+                  .filter(Boolean)
+                  .join(' ')}
                 /* "location" rather than "page" or a bare boolean — every
                    entry links within the same page, so the ARIA value that
                    actually matches is the one for a same-page position. */
