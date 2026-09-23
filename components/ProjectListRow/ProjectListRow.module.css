@@ -137,8 +137,8 @@
 
 /* Figma text style: heading/h1 — 46/52 Medium, tracking tight. */
 .title {
-  font-size: var(--font-size-xl);
-  line-height: var(--line-height-xl);
+  font-size: var(--font-size-2xl);
+  line-height: var(--line-height-2xl);
   font-weight: var(--font-weight-medium);
   letter-spacing: var(--letter-spacing-tight);
 }
@@ -148,8 +148,8 @@
    the old system because styles were named for how they looked rather than
    what they were for. This is the only thing that uses it. */
 .year {
-  font-size: var(--font-size-xl);
-  line-height: var(--line-height-xl);
+  font-size: var(--font-size-2xl);
+  line-height: var(--line-height-2xl);
   font-weight: var(--font-weight-light);
   letter-spacing: var(--letter-spacing-tight);
 
@@ -165,12 +165,12 @@
   }
 
   .title {
-    font-size: var(--font-size-xl);
-    line-height: var(--line-height-xl);
+    font-size: var(--font-size-2xl);
+    line-height: var(--line-height-2xl);
   }
 
   .year {
-    font-size: var(--font-size-xl);
-    line-height: var(--line-height-xl);
+    font-size: var(--font-size-2xl);
+    line-height: var(--line-height-2xl);
   }
 }

@@ -97,16 +97,32 @@
      Rebuilt on whole pixels by the audit. The old scale's trap is gone: it
      named 16px "text-base" and 18px "text", so "base" was SMALLER than the
      unqualified name. Here md is 16 and lg is 18, and lg is the default body
-     size. Old values in parentheses, kept so an old screen can be traced. */
+     size. Old values in parentheses, kept so an old screen can be traced.
+
+     RENUMBERED 2026-09-23, on the user's decision. Two new sizes (22 and 36)
+     had to land between lg 18 and the old xl 28 for the two-tier case-page
+     hierarchy, and a t-shirt ramp cannot absorb an insert without shifting
+     every name above it: xl 28 -> 2xl, 2xl 46 -> 4xl, 3xl 74 -> 5xl,
+     4xl 120 -> 6xl.
+
+     THE TRAP, for anyone reading an older branch: the old names all still
+     resolve. --font-size-xl was 28 and is now 22. Nothing errors, it just
+     renders small. Every usage site moved in this same pass -- 7 font-size
+     and 7 line-height references across gallery, photos and ProjectListRow.
+     The Figma side renames the same four variables; bindings there survive a
+     rename because they bind by id, so the two halves can land apart without
+     breaking, but they should not be left apart for long. */
 
   --font-size-xs: 12px; /* Tooltips and the smallest UI labels. */
   --font-size-sm: 14px; /* UI labels, meta rows, captions. */
   --font-size-md: 16px; /* Secondary body copy. (was 16, "text-base") */
   --font-size-lg: 18px; /* Default body copy. (was 18, "text") */
-  --font-size-xl: 28px; /* Card and section titles. (was 28.48) */
-  --font-size-2xl: 46px; /* Page headings and the wordmark. (was 46.08) */
-  --font-size-3xl: 74px; /* Display. Defined, not currently used. (was 74.56) */
-  --font-size-4xl: 120px; /* Display XL. Defined, not currently used. (was 120.64) */
+  --font-size-xl: 22px; /* Section headings at md+ on case pages. NEW 2026-09-23. */
+  --font-size-2xl: 28px; /* Card and section titles. (was 28.48; was --font-size-xl) */
+  --font-size-3xl: 36px; /* Case-study titles at md+. NEW 2026-09-23. */
+  --font-size-4xl: 46px; /* Page headings and the wordmark. (was 46.08; was --font-size-2xl) */
+  --font-size-5xl: 74px; /* Display. Defined, not currently used. (was 74.56; was --font-size-3xl) */
+  --font-size-6xl: 120px; /* Display XL. Defined, not currently used. (was 120.64; was --font-size-4xl) */
 
   /* ---- Primitives / Type — line height -----------------------------------
 
@@ -146,10 +162,19 @@
   --line-height-md-loose: 28px;
 
   --line-height-lg: 30px; /* with font-size-lg (18px) — 1.67 */
-  --line-height-xl: 36px; /* with font-size-xl (28px) — 1.29 */
-  --line-height-2xl: 52px; /* with font-size-2xl (46px) — 1.13 */
-  --line-height-3xl: 80px; /* with font-size-3xl (74px) — 1.08 */
-  --line-height-4xl: 128px; /* with font-size-4xl (120px) — 1.07 */
+
+  /* 30px again, with font-size-xl (22px) — 1.36. Deliberately the same value
+     as lg, carried under its own name so the pairing rule above still holds:
+     every font-size step has a line-height step of the matching name. 22/30 is
+     what the case-page section heading asks for, and if the 18 and 22 tiers
+     ever want different leading, this is the token that moves. */
+  --line-height-xl: 30px;
+
+  --line-height-2xl: 36px; /* with font-size-2xl (28px) — 1.29 (was --line-height-xl) */
+  --line-height-3xl: 44px; /* with font-size-3xl (36px) — 1.22. Case-study title at md+. NEW 2026-09-23. */
+  --line-height-4xl: 52px; /* with font-size-4xl (46px) — 1.13 (was --line-height-2xl) */
+  --line-height-5xl: 80px; /* with font-size-5xl (74px) — 1.08 (was --line-height-3xl) */
+  --line-height-6xl: 128px; /* with font-size-6xl (120px) — 1.07 (was --line-height-4xl) */
 
   /* ---- Primitives / Type — letter spacing --------------------------------
 
@@ -175,7 +200,7 @@
      h1 and every year stamp in the drawings, which is expected — the drawings
      are currently the thing that is wrong. */
 
-  --letter-spacing-tight: -0.02em; /* -2%. Display sizes (xl and up), where default tracking reads loose. */
+  --letter-spacing-tight: -0.02em; /* -2%. Display sizes (2xl and up), where default tracking reads loose. */
   --letter-spacing-normal: 0em; /* 0%. Body and UI text. The default. */
   --letter-spacing-wide: 0.014em; /* +1.4%. Small uppercase labels only. */
 
