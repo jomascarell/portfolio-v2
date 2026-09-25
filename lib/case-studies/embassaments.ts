@@ -31,6 +31,12 @@
  * is final, it is what Figma shipped, and the chart table below has five rows.
  */
 
+import type { StaticImageData } from 'next/image'
+import statusImage from '@/public/case-studies/embassaments/status.png'
+import sketchImage from '@/public/case-studies/embassaments/process-sketch.png'
+
+export type CaseImage = { src: StaticImageData; alt: string }
+
 export type CaseBlock =
   | { kind: 'prose'; text: string }
   /* The copy doc marks exactly one of these and asks for it to be set as a
@@ -40,8 +46,18 @@ export type CaseBlock =
   /* A slot, not an asset. `slot` is the copy doc's own placement instruction,
      kept so whoever fills it knows what belongs there; `caption` is real
      reader-facing copy where the doc supplies one. The cover deliberately has
-     no caption — the doc calls it the hero. */
-  | { kind: 'media'; slot: string; caption: string | null }
+     no caption — the doc calls it the hero.
+
+     `image` fills the slot, in the cover's own MediaFigure frame. A static
+     import, so the intrinsic size comes from the file and cannot drift from a
+     typed number. Absent means the slot is still waiting on a component
+     (video, dashboard) and renders as a placeholder. */
+  | {
+      kind: 'media'
+      slot: string
+      caption: string | null
+      image?: CaseImage
+    }
   /* Two different components, not one table with a flag off. ReferenceTable
      has NO header row and sets its first column SemiBold; ChartComparisonTable
      has a header row in ui/label-strong and sets its first column Regular.
@@ -142,6 +158,10 @@ export const embassaments: CaseStudy = {
           slot: 'Current-status screenshot',
           caption:
             'The current-status view. Every reservoir reduced to one number: percentage of capacity filled.',
+          image: {
+            src: statusImage,
+            alt: 'The current-status view: a map of Catalonia with each reservoir as a circle coloured by how full it is, beside a bar of total stored volume against capacity.',
+          },
         },
         {
           kind: 'prose',
@@ -201,22 +221,21 @@ export const embassaments: CaseStudy = {
           text: 'Sketches in Procreate → wireframes in Figma → build in D3.js, published through Observable Framework.',
         },
         {
+          /* Was a three-up strip (sketch, wireframe, shipped chart); cut to the
+             sketch alone by the user's decision, 2026-09-25. Its caption,
+             "Same view, three stages.", described the strip, so it went with
+             it — new copy is owed. */
           kind: 'media',
-          slot: 'Three-up process strip — Procreate sketch, Figma wireframe, shipped chart',
-          caption: 'Same view, three stages.',
+          slot: 'Procreate sketch',
+          caption: null,
+          image: {
+            src: sketchImage,
+            alt: 'Hand-drawn Procreate sketch planning the views: a capacity bar, each reservoir’s share of stored volume, a line chart over time, a column chart per reservoir, a heatmap and a bubble map.',
+          },
         },
         {
           kind: 'prose',
           text: 'The first instinct was to mirror the ACA tool’s “drop” visual — reservoirs shown as filled circles. It was dropped: human perception of area isn’t linear, so a circle at 25% capacity can visually read as more or less full than it actually is.',
-        },
-        {
-          /* The copy doc calls this the highest-value image on the page. Figma
-             already built it: the `Design Decisions before/after` node holds
-             the original drop visual beside a recreated stacked bar. */
-          kind: 'media',
-          slot: 'Before/after pair — discarded drop visual next to the stacked bar',
-          caption:
-            'Left: area-based, where 25% doesn’t look like 25%. Right: bar length, which maps directly to value.',
         },
         {
           kind: 'prose',

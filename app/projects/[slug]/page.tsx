@@ -74,12 +74,23 @@ function CaseBlockView({ block }: { block: CaseBlock }) {
         </blockquote>
       )
 
+    /* An image sits in the cover's MediaFigure frame — 360 tall,
+       object-contain on surface/subtle — so any aspect ratio fits one box. */
     case 'media':
       return (
         <figure className={styles.figure}>
-          <div className={styles.mediaSlot} role="presentation">
-            {block.slot}
-          </div>
+          {block.image ? (
+            <Image
+              className={styles.mediaImage}
+              src={block.image.src}
+              alt={block.image.alt}
+              sizes="(max-width: 1023px) calc(100vw - 112px), 939px"
+            />
+          ) : (
+            <div className={styles.mediaSlot} role="presentation">
+              {block.slot}
+            </div>
+          )}
           {block.caption ? (
             <figcaption className={styles.caption}>{block.caption}</figcaption>
           ) : null}

@@ -363,6 +363,17 @@
   inline-size: 100%;
 }
 
+/* The cover's frame (1176:1164), reused for every image slot: 360 tall at
+   every width, radius/md, surface/subtle behind an object-contain image. */
+.mediaImage {
+  display: block;
+  inline-size: 100%;
+  block-size: 360px;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-subtle);
+}
+
 /* NOT FROM THE FILE. The frames hold real images in these slots; no asset has
    been supplied yet, so this stands in. The dashed edge should disappear the
    moment the assets land. */
