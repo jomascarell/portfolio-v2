@@ -32,6 +32,7 @@
  */
 
 import type { StaticImageData } from 'next/image'
+import type { MediaVideoSource } from '@/components/MediaVideo/MediaVideo'
 import statusImage from '@/public/case-studies/embassaments/status.png'
 import sketchImage from '@/public/case-studies/embassaments/process-sketch.png'
 
@@ -50,13 +51,16 @@ export type CaseBlock =
 
      `image` fills the slot, in the cover's own MediaFigure frame. A static
      import, so the intrinsic size comes from the file and cannot drift from a
-     typed number. Absent means the slot is still waiting on a component
-     (video, dashboard) and renders as a placeholder. */
+     typed number. `video` fills it with MediaVideo instead, and `dashboard`
+     with LiveDashboard, the notebook's embed.
+     With none of them, the slot renders as a placeholder. */
   | {
       kind: 'media'
       slot: string
       caption: string | null
       image?: CaseImage
+      video?: MediaVideoSource
+      dashboard?: { embedUrl: string; title: string }
     }
   /* Two different components, not one table with a flag off. ReferenceTable
      has NO header row and sets its first column SemiBold; ChartComparisonTable
@@ -269,14 +273,22 @@ export const embassaments: CaseStudy = {
           ],
         },
         {
-          /* Muted and looping. The copy asks for it to be labelled visually as
-             muted so nobody hunts for audio — that label is `ScrimLabel` in
-             Figma, a text chip rather than an icon, because no mute icon
-             exists anywhere in the file. */
+          /* Muted and looping. The copy asked for a visible "muted" label
+             (ScrimLabel in Figma); the user dropped it, 2026-09-25 — the clip
+             has no audio track to hunt for. */
           kind: 'media',
-          slot: 'Video loop, ~6s, muted, looping — the search tool in use',
+          slot: 'Video loop, muted, looping — the search tool in use',
           caption:
             'The historical search tool. Twenty years of daily records, queried by reservoir and date range.',
+          /* 12s, not the copy doc's ~6s — the user's call, 2026-09-25. WebM
+             first (445 KB); the MP4 (1.3 MB) is for Safari. */
+          video: {
+            webm: '/case-studies/embassaments/search-tool-loop.webm',
+            mp4: '/case-studies/embassaments/search-tool-loop.mp4',
+            poster: '/case-studies/embassaments/search-tool-loop-poster.jpg',
+            width: 1200,
+            height: 676,
+          },
         },
         {
           kind: 'prose',
@@ -329,12 +341,22 @@ export const embassaments: CaseStudy = {
           ],
         },
         {
-          /* Click-to-load, not a raw iframe: a static poster plus a button, so
-             the Observable cells land in our own DOM and respect our tokens.
-             The caption's "two sections up" points at Trade-off. */
+          /* The notebook's own embed, loaded with the page — see LiveDashboard
+             for why an iframe, and why no click. The copy doc's caption,
+             "Loaded on click — for the reasons two sections up.", went with
+             the click; new copy is owed. */
           kind: 'media',
-          slot: 'Live dashboard embed — click-to-load',
-          caption: 'Loaded on click — for the reasons two sections up.',
+          slot: 'Live dashboard embed',
+          caption: null,
+          dashboard: {
+            /* Unpinned, so an edit to the published notebook (the English
+               translation, for one) shows up here with no rebuild. It
+               redirects to old.observablehq.com, where Observable now serves
+               classic notebooks. */
+            embedUrl:
+              'https://observablehq.com/embed/@jmj11/tendencies-estacionals?cells=TendenciesEstacionals',
+            title: 'Live dashboard: monthly reserve level of each reservoir',
+          },
         },
       ],
     },

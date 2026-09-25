@@ -3,6 +3,8 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { Fragment } from 'react'
 import CollectionNav from '@/components/CollectionNav/CollectionNav'
+import LiveDashboard from '@/components/LiveDashboard/LiveDashboard'
+import MediaVideo from '@/components/MediaVideo/MediaVideo'
 import {
   CASE_INTRO_ID,
   caseNavItems,
@@ -77,6 +79,14 @@ function CaseBlockView({ block }: { block: CaseBlock }) {
     /* An image sits in the cover's MediaFigure frame — 360 tall,
        object-contain on surface/subtle — so any aspect ratio fits one box. */
     case 'media':
+      if (block.dashboard)
+        return (
+          <LiveDashboard
+            embedUrl={block.dashboard.embedUrl}
+            title={block.dashboard.title}
+            caption={block.caption}
+          />
+        )
       return (
         <figure className={styles.figure}>
           {block.image ? (
@@ -86,6 +96,8 @@ function CaseBlockView({ block }: { block: CaseBlock }) {
               alt={block.image.alt}
               sizes="(max-width: 1023px) calc(100vw - 112px), 939px"
             />
+          ) : block.video ? (
+            <MediaVideo video={block.video} />
           ) : (
             <div className={styles.mediaSlot} role="presentation">
               {block.slot}

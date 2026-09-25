@@ -1,0 +1,97 @@
+/* MediaVideo (1161:142). 400 tall at every width, space/xl padding on all
+   sides, radius/lg, surface/subtle.
+
+   ONE DEPARTURE FROM THE FRAME, and it is deliberate: the frame draws the
+   video as a fixed 320 square. That square is the calebwu.ca placeholder
+   the component was ported from, and our clip is 16:9 — in a 320 square it
+   would letterbox to 320x180. The description's own rule is "object-contain,
+   scale with container", so the video takes the panel's whole padded box
+   and contains itself in it: 596x336 at the 1448 frame. */
+.panel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  block-size: 400px;
+  padding: var(--space-xl);
+  overflow: clip;
+  border-radius: var(--radius-lg);
+  background-color: var(--color-surface-subtle);
+}
+
+.video {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: contain;
+}
+
+/* ---- ScrimControl (1300:662) ----------------------------------------------
+   36x36, 12px inset top-right, black 40% deepening to 60% on hover, radius 10
+   — off the radius ramp (8/16), read off the node. No backdrop-filter: a flat
+   translucent chip, not glass. */
+.control {
+  position: absolute;
+  inset-block-start: 12px;
+  inset-inline-end: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 36px;
+  block-size: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background-color: rgb(0 0 0 / 0.4);
+  color: var(--color-text-inverse);
+  cursor: pointer;
+  transition:
+    opacity var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard);
+}
+
+.control:focus-visible {
+  outline: 2px solid var(--color-text-accent);
+  outline-offset: 2px;
+}
+
+/* Playing: hidden until the PANEL is hovered or the control is focused.
+   Paused: pinned, which is the default above. */
+@media (hover: hover) {
+  .panel[data-playing='true'] .control {
+    opacity: 0;
+  }
+
+  .panel[data-playing='true']:hover .control,
+  .panel[data-playing='true'] .control:focus-visible {
+    opacity: 1;
+  }
+
+  .control:hover {
+    background-color: rgb(0 0 0 / 0.6);
+  }
+}
+
+/* Icon=pause: two 5x16 bars, radius 1, 4 apart. */
+.pause {
+  display: flex;
+  gap: 4px;
+}
+
+.pause span {
+  inline-size: 5px;
+  block-size: 16px;
+  border-radius: 1px;
+  background-color: currentColor;
+}
+
+/* Icon=play: the triangle from the node's path, 12 wide by 12.12 tall, whose
+   box sits 2px right of centre in the chip (x 14-26 of 36) — optical
+   centring, kept. */
+.play {
+  inline-size: 12px;
+  block-size: 12.12px;
+  margin-inline-start: 4px;
+  background-color: currentColor;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
