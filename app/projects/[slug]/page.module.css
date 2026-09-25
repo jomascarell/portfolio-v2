@@ -147,7 +147,7 @@
   font-weight: var(--font-weight-regular);
   letter-spacing: var(--letter-spacing-normal);
   color: inherit;
-  text-decoration: none;
+  text-decoration: underline;
   transition: color var(--duration-fast) var(--ease-standard);
 }
 
@@ -218,26 +218,29 @@
 .metaEntry {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: var(--space-sm);
 }
 
 /* Stack variant: 14/20, and the label is MEDIUM where the value is Regular —
    the one variant where the pair separates by weight as well as colour. */
 .metaLabel {
-  font-size: var(--font-size-sm);
-  line-height: var(--line-height-sm);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
   font-weight: var(--font-weight-medium);
   letter-spacing: var(--letter-spacing-normal);
   color: var(--color-text-primary);
 }
 
 .metaValue {
-  font-size: var(--font-size-sm);
-  line-height: var(--line-height-sm);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
   font-weight: var(--font-weight-regular);
   letter-spacing: var(--letter-spacing-normal);
   color: var(--color-text-secondary);
+  margin: 0;
+  text-align: center;
+  /* max-width: 11.25rem; */
 }
 
 @media (min-width: 640px) {
@@ -258,6 +261,15 @@
 @media (min-width: 1280px) {
   .meta {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .metaEntry {
+    align-items: start;
+  }
+
+  .metaLabel,
+  .metaValue {
+    text-align: start;
   }
 }
 
@@ -443,7 +455,7 @@
 /* ReferenceTable sets its term SemiBold; ChartComparisonTable sets its
    Regular. That is the one way their rows differ. */
 .referenceTable .tableTerm {
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-regular);
 }
 
 .chartTable .tableTerm {
@@ -530,15 +542,15 @@
 }
 
 .stat {
+  height: 30vh;
   display: flex;
   /* dt is the label and dd is the figure, which is the way round the pair
      reads. The figure is drawn above its label, so the visual order is
      restored here rather than by inverting the semantics. */
   flex-direction: column-reverse;
   align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding-block-start: var(--space-3xl);
+  justify-content: space-around;
+  padding-block-start: var(--space-lg);
   padding-block-end: var(--space-lg);
   padding-inline: var(--space-lg);
   border-radius: var(--radius-md);
