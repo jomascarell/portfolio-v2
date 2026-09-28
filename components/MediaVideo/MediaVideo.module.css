@@ -47,7 +47,11 @@
   padding-inline: var(--space-md);
   border: 0;
   border-radius: var(--radius-lg);
-  background-color: color-mix(in srgb, var(--color-neutral-950) 80%, transparent);
+  background-color: color-mix(
+    in srgb,
+    var(--color-neutral-950) 80%,
+    transparent
+  );
   color: var(--color-neutral-0);
   cursor: pointer;
   transition:

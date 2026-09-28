@@ -28,9 +28,10 @@
 
 /* ui/caption — 12/18, text/secondary, left-aligned as the component draws it. */
 .caption {
-  font-size: var(--font-size-xs);
-  line-height: var(--line-height-xs);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
   font-weight: var(--font-weight-regular);
   letter-spacing: var(--letter-spacing-normal);
   color: var(--color-text-secondary);
+  text-align: center;
 }

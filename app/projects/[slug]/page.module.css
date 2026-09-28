@@ -202,6 +202,8 @@
   object-fit: contain;
   border-radius: var(--radius-md);
   background-color: var(--color-surface-subtle);
+  /* box-shadow: var(--shadow-xs); */
+  border: 0.5px solid var(--color-neutral-200);
 }
 
 /* ---- CaseMetaRow (1143:277) ------------------------------------------------
@@ -425,8 +427,8 @@
 /* ui/caption — 12/18, text/secondary, centred. */
 .caption {
   margin-block-start: var(--space-sm);
-  font-size: var(--font-size-xs);
-  line-height: var(--line-height-xs);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
   font-weight: var(--font-weight-regular);
   letter-spacing: var(--letter-spacing-normal);
   color: var(--color-text-secondary);

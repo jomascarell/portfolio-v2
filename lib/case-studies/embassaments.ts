@@ -241,7 +241,7 @@ export const embassaments: CaseStudy = {
              it — new copy is owed. */
           kind: 'media',
           slot: 'Procreate sketch',
-          caption: null,
+          caption: 'First bash of sketches.',
           image: {
             src: sketchImage,
             alt: 'Hand-drawn Procreate sketch planning the views: a capacity bar, each reservoir’s share of stored volume, a line chart over time, a column chart per reservoir, a heatmap and a bubble map.',
