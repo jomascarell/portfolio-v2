@@ -19,14 +19,17 @@ export default function LiveDashboard({
   embedUrl,
   title,
   caption,
+  className,
 }: {
+  /* Width from the page — the case page breaks figures out past its prose. */
+  className?: string
   embedUrl: string
   /* The iframe's accessible name. */
   title: string
   caption: string | null
 }) {
   return (
-    <figure className={styles.root}>
+    <figure className={[styles.root, className].filter(Boolean).join(' ')}>
       <div className={styles.media}>
         <iframe
           className={styles.frame}

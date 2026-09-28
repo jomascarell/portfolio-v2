@@ -35,12 +35,24 @@
 
    TWO MEASURES. Prose is 640 and figures are the full inner width — but the
    prose cap only binds from 1024 up: at 344/640/768 the drawn prose nodes fill
-   the column. */
+   the column.
+
+   FIGURES BREAK OUT TO COLUMN 12, 2026-09-28. The content column stays 3-10,
+   but from 1024 every image, the video and the dashboard run 3-12: 744 at
+   1024, 1097 at 1448 — the latter within 11px of Figma's measure/figure-max
+   (1108). calebwu.ca does the same thing with a figure measure wider than his
+   text measure; at 8 columns and a 360 cap our media read as crushed next to
+   his. --figure-w is that width, derived from the article's own box because a
+   percentage inside .content can only see 8 columns:
+     10 cols + 9 gaps = (10 x article - 2 x gap) / 12,
+   less the --space-lg inset every figure (and the cover's .headerRow) sits
+   in, so the right edge lands on column 12's. */
 
 .article {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   column-gap: var(--space-md);
+  container-type: inline-size;
 }
 
 .rail {
@@ -58,10 +70,12 @@
      of `goal` frames after it. Measured across all seven; no exception. */
   gap: var(--space-2xl);
   padding-block-end: var(--space-4xl);
+  --figure-w: 100%;
 }
 
 @media (min-width: 1024px) {
   .content {
+    --figure-w: calc(100cqi * 10 / 12 - var(--space-md) / 6 - var(--space-lg));
     grid-column: 3 / span 8;
   }
 }
@@ -184,17 +198,17 @@
 }
 
 /* MediaFigure (1176:1164) — the cover, Caption=No. radius/md, surface/subtle
-   behind an object-contain image. Height is min(360, width ÷ the image's
-   ratio): see .mediaImage below, which is the same box. */
+   behind an object-contain image. Same box and same width as every figure
+   below — see --figure-w on .content. */
 .cover {
-  inline-size: 100%;
+  inline-size: var(--figure-w);
 }
 
 .cover img {
   display: block;
   inline-size: 100%;
   block-size: auto;
-  max-block-size: 360px;
+  max-block-size: 80svh;
   object-fit: contain;
   border-radius: var(--radius-md);
   background-color: var(--color-surface-subtle);
@@ -375,24 +389,28 @@
    MediaFigure (1161:138): radius/md, space/sm to the caption, ui/caption in
    text/secondary, centred. */
 
-.figure {
-  inline-size: 100%;
+/* Two classes so it outranks LiveDashboard's own `inline-size: 100%` whatever
+   order the two stylesheets load in. */
+.content .figure {
+  inline-size: var(--figure-w);
 }
 
 /* The cover's frame (1176:1164), reused for every image slot: radius/md,
    surface/subtle behind an object-contain image.
 
-   HEIGHT IS min(360, width ÷ the image's ratio), since 2026-09-28. `auto`
-   takes the ratio from the width/height attributes next/image writes, and the
-   cap keeps wide columns exactly as before — letterboxed at 360. The old fixed
-   360 at every width left 63% of the box empty on a 344 screen. Figma draws
-   the same rule as MediaFigure's Height=capped|fluid: fluid below 640, where
-   16:9 reaches 360. */
+   HEIGHT IS THE IMAGE'S OWN, width ÷ its ratio, since the later 2026-09-28
+   pass. `auto` takes the ratio from the width/height attributes next/image
+   writes, so the box is the image's shape and nothing letterboxes. The 360
+   cap that came before it shrank a 16:9 screenshot to 633 wide inside an 817
+   box at 1448 — the "crushed" look. 80svh remains only so a portrait image
+   cannot outgrow the screen; calebwu.ca caps his one tall slot at 60vh.
+   REVERSES MediaFigure's Height=capped variant in Figma, which still draws
+   the 360. */
 .mediaImage {
   display: block;
   inline-size: 100%;
   block-size: auto;
-  max-block-size: 360px;
+  max-block-size: 80svh;
   object-fit: contain;
   border-radius: var(--radius-md);
   background-color: var(--color-surface-subtle);
