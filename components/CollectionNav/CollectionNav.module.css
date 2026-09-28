@@ -47,6 +47,26 @@
   }
 }
 
+/* The reveal. Opacity carries the fade; visibility is what takes a hidden
+   rail out of the tab order and the pointer's reach — the reference fades
+   opacity alone, and its invisible rail stays focusable and clickable. On the
+   way out the visibility flip waits for the fade to finish; on the way in it
+   flips at once, so the fade is seen. 700ms on --ease-entrance, measured off
+   the reference. */
+.sectionVariant {
+  transition:
+    opacity var(--duration-deck) var(--ease-entrance),
+    visibility 0s linear 0s;
+}
+
+.sectionVariant[data-hidden] {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--duration-deck) var(--ease-entrance),
+    visibility 0s linear var(--duration-deck);
+}
+
 .list {
   display: flex;
   flex-direction: column;

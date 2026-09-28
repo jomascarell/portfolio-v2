@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { useTopZone } from '@/lib/use-top-zone'
 import styles from './CollectionNav.module.css'
 
 export type CollectionNavItem = {
@@ -47,6 +48,41 @@ export default function CollectionNav({
   const [currentId, setCurrentId] = useState(items[0]?.id ?? '')
   const navRef = useRef<HTMLElement>(null)
 
+  /* THE SECTION RAIL WAITS FOR THE READER, 2026-09-28. At the top of a case
+     page the header is the orientation and the rail would only compete with
+     the title; it fades in once reading starts, on the same top zone that
+     tucks the pill, so the two hand off together. Hidden until the first
+     scroll read as well, so a top-of-page load never flashes it. The photos
+     rail is untouched. */
+  const zone = useTopZone()
+  const hidden = variant === 'section' && (!zone.measured || zone.atTop)
+
+  /* A RAIL JUMP LOCKS THE MARKER ON ITS TARGET. The scroll itself is CSS
+     smooth scrolling, so the anchor stays a plain link (hash, focus start and
+     all). Without the lock the marker walks through every section the scroll
+     passes — the reference does exactly that, blank gaps included. It is
+     released after 120ms without a scroll event, the idle window the
+     reference's own carousel uses. */
+  const lockRef = useRef<string | null>(null)
+  const syncRef = useRef<() => void>(() => {})
+  const idleRef = useRef(0)
+
+  function jump(id: string) {
+    lockRef.current = id
+    setCurrentId(id)
+
+    const release = () => {
+      window.clearTimeout(idleRef.current)
+      idleRef.current = window.setTimeout(() => {
+        lockRef.current = null
+        window.removeEventListener('scroll', release)
+        syncRef.current()
+      }, 120)
+    }
+    window.addEventListener('scroll', release, { passive: true })
+    release()
+  }
+
   useEffect(() => {
     const sections = items
       .map((item) => document.getElementById(item.id))
@@ -66,6 +102,7 @@ export default function CollectionNav({
     const railTop = () => navRef.current?.getBoundingClientRect().top ?? 0
 
     const syncCurrent = () => {
+      if (lockRef.current) return
       const offset = railTop()
       let current = sections[0]
       for (const section of sections) {
@@ -76,6 +113,7 @@ export default function CollectionNav({
       setCurrentId(current.id)
     }
 
+    syncRef.current = syncCurrent
     syncCurrent()
 
     /* A 1px BAND ON THE RAIL'S TOP EDGE, threshold 0. Any section crossing the
@@ -119,6 +157,7 @@ export default function CollectionNav({
         .filter(Boolean)
         .join(' ')}
       aria-label={label}
+      data-hidden={hidden ? '' : undefined}
     >
       <ul className={styles.list}>
         {items.map((item) => {
@@ -138,6 +177,7 @@ export default function CollectionNav({
                    entry links within the same page, so the ARIA value that
                    actually matches is the one for a same-page position. */
                 aria-current={isCurrent ? 'location' : undefined}
+                onClick={() => jump(item.id)}
               >
                 {item.label}
               </a>

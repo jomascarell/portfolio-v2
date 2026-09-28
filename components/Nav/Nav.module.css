@@ -31,7 +31,10 @@
      the pill 16px from the viewport top instead of 64.
 
      This is a RESTING-STATE difference between routes, not the scroll-hiding
-     nav that was refused on 2026-09-11 — nothing here responds to scroll. */
+     nav that was refused on 2026-09-11. The one scroll response, added
+     2026-09-28 with the user's yes, is [data-lowered] below: on a case page
+     the pill rests low at the top and tucks on the first downward scroll. It
+     never hides. */
   transform: translateY(0);
   transition: transform var(--duration-slow) var(--ease-entrance);
   will-change: transform;
@@ -39,6 +42,12 @@
 
 .root[data-mode='interior'] {
   transform: translateY(calc(-1 * var(--space-2xl)));
+}
+
+/* Case pages at the top: the untucked position, the same 300ms-class move on
+   the same curve the reference uses for it. Nav.tsx decides when. */
+.root[data-mode='interior'][data-lowered] {
+  transform: translateY(0);
 }
 
 /* The real, routed Nav only — NOT NavPreview, whose six specimens on /gallery

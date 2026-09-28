@@ -73,6 +73,16 @@ a {
   color: inherit;
 }
 
+/* In-page jumps glide, 2026-09-28 — the section rail's links above all. A plain
+   CSS behaviour rather than scrollIntoView, so an anchor stays an anchor: the
+   hash, and the focus starting point a keyboard user continues from, both
+   still move. Route changes stay instant through data-scroll-behavior on
+   <html> (layout.tsx), which Next 16 needs to be told about. The reduced-motion
+   blanket below turns this back into a jump. */
+html {
+  scroll-behavior: smooth;
+}
+
 /* Motion is opt-in, not opt-out: every animated layer checks this. The blanket
    override lives here so a component that forgets is still covered. */
 @media (prefers-reduced-motion: reduce) {
