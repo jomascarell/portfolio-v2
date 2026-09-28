@@ -67,6 +67,16 @@
     visibility 0s linear var(--duration-deck);
 }
 
+/* The globals.css blanket zeroes transition-duration but not -delay (a hover
+   intent delay elsewhere is not motion, so it stays global-safe). Here the
+   delay only exists to wait out the fade, and with no fade the rail would sit
+   invisible but focusable and clickable for 700ms. */
+@media (prefers-reduced-motion: reduce) {
+  .sectionVariant[data-hidden] {
+    transition-delay: 0s;
+  }
+}
+
 .list {
   display: flex;
   flex-direction: column;
