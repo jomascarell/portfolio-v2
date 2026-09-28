@@ -25,9 +25,11 @@
    /photos: the shell already puts --container-inset on the one <main>.
 
    THE GRID. Twelve columns, --space-md gutters, inside the inset box:
-     1024: box 896, column 60      rail 2 cols = 136   content 9 cols = 668
-     1448: box 1320, column 95.33  rail 2 cols = 207   content 9 cols = 987
-   Rail spans 1-2, content 3-11, column 12 empty. At 1280 SectionNav is drawn
+     1024: box 896, column 60      rail 2 cols = 136   content 8 cols = 592
+     1448: box 1320, column 95.33  rail 2 cols = 207   content 8 cols = 875
+   Rail spans 1-2, content 3-10, columns 11-12 empty. The frames draw content
+   across 9 columns (3-11); code narrowed it to 8 on 2026-09-28, a deliberate
+   departure from Figma, not drift. At 1280 SectionNav is drawn
    207 wide where the grid calls for 178.67 — copied from 1448 and never
    resized, overlapping the content column by 12px. The rule is the grid.
 
