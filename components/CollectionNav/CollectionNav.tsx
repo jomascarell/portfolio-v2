@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { useTopZone } from '@/lib/use-top-zone'
 import styles from './CollectionNav.module.css'
 
@@ -159,11 +159,14 @@ export default function CollectionNav({
       aria-label={label}
       data-hidden={hidden ? '' : undefined}
     >
-      <ul className={styles.list}>
-        {items.map((item) => {
+      <ul
+        className={styles.list}
+        style={{ '--item-count': items.length } as CSSProperties}
+      >
+        {items.map((item, index) => {
           const isCurrent = item.id === currentId
           return (
-            <li key={item.id}>
+            <li key={item.id} style={{ '--item-index': index } as CSSProperties}>
               <a
                 href={`#${item.id}`}
                 /* COMPOSED, not swapped. Swapping the classes meant `.item`

@@ -72,9 +72,48 @@
    delay only exists to wait out the fade, and with no fade the rail would sit
    invisible but focusable and clickable for 700ms. */
 @media (prefers-reduced-motion: reduce) {
-  .sectionVariant[data-hidden] {
-    transition-delay: 0s;
+  .sectionVariant[data-hidden],
+  .sectionVariant .list > li {
+    transition-delay: 0s !important;
   }
+}
+
+/* THE ENTRIES ARRIVE ONE BY ONE, TOP TO BOTTOM, 2026-09-28 — the /projects
+   row entrance applied to the rail, at the user's ask. Same shape as
+   ProjectList's `.entrance`: rise from below, fade, --ease-entrance, one
+   entry every --intro-stagger. It runs at the site's own rhythm unscaled
+   (the list slows it with --row-speed 1.5; a 29px link is not a 100px row).
+
+   Checked against the reference's rail (chunk 844dc47c3aa5e2cc.js, module
+   39725): 16px rise, 450ms, 60ms apart, top to bottom, curve (.5,0,0,1). Ours
+   lands within 10ms of every one of those numbers without a new token; only
+   the curve stays ours, so the rail and the list read as one site.
+
+   LEAVING IS THE REVERSE, and quicker, as his is: bottom entry first, 40ms
+   apart, 250ms each (his numbers; --duration-base is 240). Eight entries clear
+   in 520ms, inside the container's 700ms visibility hold above, so nothing is
+   cut off.
+
+   Transitions, not keyframes, so a scroll back up mid-entrance reverses from
+   wherever each entry is instead of jumping. On the <li>, so `.item`'s colour
+   transition stays untouched. Section rail only; the photos rail is not
+   hidden at the top, so it has nothing to enter from. */
+.sectionVariant .list > li {
+  --rail-rise: var(--space-md);
+
+  transition:
+    opacity var(--intro-text-duration) var(--ease-entrance),
+    transform var(--intro-text-duration) var(--ease-entrance);
+  transition-delay: calc(var(--item-index, 0) * var(--intro-stagger));
+}
+
+.sectionVariant[data-hidden] .list > li {
+  opacity: 0;
+  transform: translateY(var(--rail-rise));
+  transition-duration: var(--duration-base);
+  transition-delay: calc(
+    (var(--item-count, 1) - 1 - var(--item-index, 0)) * 40ms
+  );
 }
 
 .list {
