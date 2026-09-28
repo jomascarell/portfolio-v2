@@ -2,8 +2,8 @@
    object-contain.
 
    THE CLIP FILLS THE PANEL, later 2026-09-28. No padding and no 336 cap: the
-   panel is the clip's own shape at the full figure width (1097 at 1448, so
-   1097x617), the way calebwu.ca draws his videos. The padded 400 panel that
+   panel is the clip's own shape at the full column width (about 817x460 at
+   1448), the way calebwu.ca draws his videos. The padded 400 panel that
    came before it held a 596x336 clip at 1448 and read as crushed. 80svh only
    stops a tall clip outgrowing the screen. REVERSES Figma's
    Height=capped|fluid set, which still draws the 32px padding and the cap. */

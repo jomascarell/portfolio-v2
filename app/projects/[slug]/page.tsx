@@ -82,7 +82,6 @@ function CaseBlockView({ block }: { block: CaseBlock }) {
       if (block.dashboard)
         return (
           <LiveDashboard
-            className={styles.figure}
             embedUrl={block.dashboard.embedUrl}
             title={block.dashboard.title}
             caption={block.caption}
@@ -95,7 +94,7 @@ function CaseBlockView({ block }: { block: CaseBlock }) {
               className={styles.mediaImage}
               src={block.image.src}
               alt={block.image.alt}
-              sizes="(max-width: 1023px) calc(100vw - 112px), 1108px"
+              sizes="(max-width: 1023px) calc(100vw - 112px), 939px"
             />
           ) : block.video ? (
             <MediaVideo video={block.video} />
@@ -237,7 +236,7 @@ function CaseStudyArticle({ caseStudy }: { caseStudy: CaseStudy }) {
               <Image
                 src={caseStudy.cover.image.src}
                 alt={caseStudy.cover.image.alt}
-                sizes="(max-width: 1023px) calc(100vw - 112px), 1108px"
+                sizes="(max-width: 1023px) calc(100vw - 112px), 939px"
                 priority
               />
             </figure>
