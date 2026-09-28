@@ -344,10 +344,11 @@ export const embassaments: CaseStudy = {
           /* The notebook's own embed, loaded with the page — see LiveDashboard
              for why an iframe, and why no click. The copy doc's caption,
              "Loaded on click — for the reasons two sections up.", went with
-             the click; new copy is owed. */
+             the click. This one follows the other two captions' shape. */
           kind: 'media',
           slot: 'Live dashboard embed',
-          caption: null,
+          caption:
+            'The seasonal-trends view, live. Each reservoir’s monthly reserve level, where the April–June peak repeats every year.',
           dashboard: {
             /* Unpinned, so an edit to the published notebook (the English
                translation, for one) shows up here with no rebuild. It
