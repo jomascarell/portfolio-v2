@@ -238,7 +238,7 @@ export const embassaments: CaseStudy = {
           /* Was a three-up strip (sketch, wireframe, shipped chart); cut to the
              sketch alone by the user's decision, 2026-09-25. Its caption,
              "Same view, three stages.", described the strip, so it went with
-             it — new copy is owed. */
+             it; the sketch got its own caption on 2026-09-28. */
           kind: 'media',
           slot: 'Procreate sketch',
           caption: 'First bash of sketches.',

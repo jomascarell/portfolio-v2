@@ -26,7 +26,9 @@
   border: 0;
 }
 
-/* ui/caption — 12/18, text/secondary, left-aligned as the component draws it. */
+/* Caption — 14/20 (font-size-sm), text/secondary, centred to match the
+   figure captions. Both changed 2026-09-28; the component still draws
+   ui/caption 12/18, left-aligned. */
 .caption {
   font-size: var(--font-size-sm);
   line-height: var(--line-height-sm);

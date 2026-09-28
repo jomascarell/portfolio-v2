@@ -189,7 +189,8 @@
 }
 
 /* MediaFigure (1176:1164) — the cover, Caption=No. radius/md, surface/subtle
-   behind an object-contain image. Same box as .mediaImage below. */
+   behind an object-contain image. Same box as .mediaImage below, plus a
+   0.5px neutral/200 edge in place of a shadow (2026-09-28, not in Figma). */
 .cover {
   inline-size: 100%;
 }
@@ -424,7 +425,8 @@
   text-align: center;
 }
 
-/* ui/caption — 12/18, text/secondary, centred. */
+/* Caption — 14/20 (font-size-sm), text/secondary, centred. Stepped up from
+   ui/caption 12/18 on 2026-09-28; Figma still draws 12/18. */
 .caption {
   margin-block-start: var(--space-sm);
   font-size: var(--font-size-sm);
