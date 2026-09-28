@@ -136,6 +136,39 @@ html {
   animation-timing-function: var(--ease-entrance);
 }
 
+/* ---- The page fade (app/template.tsx) --------------------------------------
+   calebwu.ca's route change, measured off his shipped wrapper (chunk
+   a72feb244e36bc09.js, module 2056): the old page fades out over 500ms while
+   the new one waits 200ms and fades in over 700ms, both on
+   cubic-bezier(.22, 1, .36, 1). --duration-reveal and --duration-deck are the
+   500 and 700; the curve is his and exists nowhere else here, so it stays a
+   literal rather than becoming a token for one use. The 200ms is his too.
+
+   The whole transition lasts 900ms, and the page ignores pointer input while a
+   view transition runs, which his (a plain React fade) does not. Worth
+   knowing if a fast second click ever feels swallowed. */
+::view-transition-old(.page-fade) {
+  animation: var(--duration-reveal) cubic-bezier(0.22, 1, 0.36, 1) both
+    page-fade-out;
+}
+
+::view-transition-new(.page-fade) {
+  animation: var(--duration-deck) cubic-bezier(0.22, 1, 0.36, 1) 200ms both
+    page-fade-in;
+}
+
+@keyframes page-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
 /* THE CROSSFADE IS LEFT ALONE ON PURPOSE, and the rule that used to be here
    was the cause of the flicker reported 2026-09-12.
 
