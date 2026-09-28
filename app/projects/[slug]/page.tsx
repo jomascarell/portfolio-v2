@@ -191,7 +191,7 @@ function CaseStudyArticle({ caseStudy }: { caseStudy: CaseStudy }) {
               aria-hidden rather than carry alt text repeating the heading. */}
           <div className={styles.logo} aria-hidden="true">
             <img
-              src="/case-studies/embassaments/icon-embassament.svg"
+              src={caseStudy.logo}
               alt=""
               width={64}
               height={64}
@@ -221,7 +221,7 @@ function CaseStudyArticle({ caseStudy }: { caseStudy: CaseStudy }) {
                   {caseStudy.liveLabel}
                   <span className={styles.liveLinkArrow} aria-hidden="true">
                     <img
-                      src="/case-studies/embassaments/arrow-small-up.svg"
+                      src="/case-studies/arrow-small-up.svg"
                       alt=""
                       width={16}
                       height={16}
@@ -234,10 +234,8 @@ function CaseStudyArticle({ caseStudy }: { caseStudy: CaseStudy }) {
             {/* MediaFigure (1176:1164) — the cover, Caption=No. */}
             <figure className={styles.cover}>
               <Image
-                src="/case-studies/embassaments/cover.png"
-                alt=""
-                width={1892}
-                height={1077}
+                src={caseStudy.cover.image.src}
+                alt={caseStudy.cover.image.alt}
                 sizes="(max-width: 1023px) calc(100vw - 112px), 939px"
                 priority
               />

@@ -78,13 +78,34 @@ export default function CollectionNav({
 
     syncCurrent()
 
-    const observer = new IntersectionObserver(syncCurrent, {
-      rootMargin: `-${Math.max(0, Math.round(railTop()))}px 0px 0px 0px`,
-      threshold: [0, 1],
-    })
-    sections.forEach((section) => observer.observe(section))
+    /* A 1px BAND ON THE RAIL'S TOP EDGE, threshold 0. Any section crossing the
+       line toggles isIntersecting, however tall it is. The old root ran from
+       the rail to the viewport bottom at thresholds [0, 1]: a section taller
+       than that never reaches ratio 1, so its top passing the rail fired
+       nothing, and the rail showed the previous entry through all of Design
+       decisions and Findings (24 of 103 scroll steps wrong at 1448x900,
+       measured 2026-09-28; 0 with the band). The band depends on the viewport
+       height, so it is rebuilt on resize. */
+    let observer: IntersectionObserver | undefined
+    const observe = () => {
+      observer?.disconnect()
+      const top = Math.max(0, Math.round(railTop()))
+      const bottom = Math.max(0, window.innerHeight - top - 1)
+      observer = new IntersectionObserver(syncCurrent, {
+        rootMargin: `-${top}px 0px -${bottom}px 0px`,
+        threshold: 0,
+      })
+      sections.forEach((section) => observer?.observe(section))
+      syncCurrent()
+    }
 
-    return () => observer.disconnect()
+    observe()
+    window.addEventListener('resize', observe)
+
+    return () => {
+      observer?.disconnect()
+      window.removeEventListener('resize', observe)
+    }
   }, [items])
 
   return (

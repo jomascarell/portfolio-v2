@@ -33,6 +33,7 @@
 
 import type { StaticImageData } from 'next/image'
 import type { MediaVideoSource } from '@/components/MediaVideo/MediaVideo'
+import coverImage from '@/public/case-studies/embassaments/cover.png'
 import statusImage from '@/public/case-studies/embassaments/status.png'
 import sketchImage from '@/public/case-studies/embassaments/process-sketch.png'
 
@@ -100,7 +101,11 @@ export type CaseStudy = {
      label, which is what actually shows. */
   liveUrl: string | null
   liveLabel: string
-  cover: { slot: string; caption: string | null }
+  /* ProjectLogo's glyph. Decorative — the page renders it aria-hidden. */
+  logo: string
+  /* The hero. `image.alt` stays empty while the cover only restates the
+     title; give it alt text if a cover ever shows something the copy doesn't. */
+  cover: { slot: string; caption: string | null; image: CaseImage }
   meta: { label: string; value: string }[]
   sections: CaseSection[]
 }
@@ -117,9 +122,11 @@ export const embassaments: CaseStudy = {
     'So I built the tool I wished existed — a live, public dashboard tracking every internal-basin reservoir in Catalonia.',
   liveUrl: 'https://tfgdissenydigital.observablehq.cloud/embassaments-cat/',
   liveLabel: 'View the live dashboard',
+  logo: '/case-studies/embassaments/icon-embassament.svg',
   cover: {
     slot: 'Cover image — full width, directly below the standfirst, above the metadata bar.',
     caption: null,
+    image: { src: coverImage, alt: '' },
   },
   meta: [
     { label: 'Role', value: 'Research, design, and development — solo' },

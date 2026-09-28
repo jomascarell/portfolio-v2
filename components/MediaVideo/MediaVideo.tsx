@@ -33,17 +33,35 @@ export type MediaVideoSource = {
 export default function MediaVideo({ video }: { video: MediaVideoSource }) {
   const ref = useRef<HTMLVideoElement>(null)
   const [playing, setPlaying] = useState(false)
+  /* A pause the reader chose. Scrolling the clip back into view never
+     overrides it; only the control does. */
+  const userPaused = useRef(false)
 
+  /* PLAYS ONLY WHILE ON SCREEN. play() on mount fetched the whole clip with
+     the page and kept it running a screen or more away. Now nothing past the
+     poster loads (`preload="none"`) until the clip nears the viewport, and it
+     pauses again when it leaves. That pause also flips the control to "Play",
+     which is harmless: the control is off screen with it. */
   useEffect(() => {
     const element = ref.current
     if (!element) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    element.play().catch(() => {})
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) element.pause()
+        else if (!userPaused.current) element.play().catch(() => {})
+      },
+      { rootMargin: '200px 0px' },
+    )
+    observer.observe(element)
+    return () => observer.disconnect()
   }, [])
 
   function toggle() {
     const element = ref.current
     if (!element) return
+    userPaused.current = !element.paused
     if (element.paused) element.play().catch(() => {})
     else element.pause()
   }
@@ -59,7 +77,7 @@ export default function MediaVideo({ video }: { video: MediaVideoSource }) {
         muted
         loop
         playsInline
-        preload="metadata"
+        preload="none"
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
       >
