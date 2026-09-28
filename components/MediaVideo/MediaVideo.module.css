@@ -1,18 +1,18 @@
-/* MediaVideo (1161:142). 400 tall at every width, space/xl padding on all
-   sides, radius/lg, surface/subtle.
+/* MediaVideo (1386:161). space/xl padding on all sides, radius/lg,
+   surface/subtle. The clip is 16:9 and object-contain.
 
-   ONE DEPARTURE FROM THE FRAME, and it is deliberate: the frame draws the
-   video as a fixed 320 square. That square is the calebwu.ca placeholder
-   the component was ported from, and our clip is 16:9 — in a 320 square it
-   would letterbox to 320x180. The description's own rule is "object-contain,
-   scale with container", so the video takes the panel's whole padded box
-   and contains itself in it: 596x336 at the 1448 frame. */
+   HEIGHT IS min(400, inner width x 9/16 + padding), since 2026-09-28. The
+   panel hugs the clip, and the clip is capped at 400 minus the padding, so a
+   wide column still draws the 400 panel with the clip at 596x336. The old
+   fixed 400 left 76% of the panel empty on a 344 screen. Figma draws it as
+   Height=capped from 661 wide (inner 597, where 16:9 reaches 336) and
+   Height=fluid below. The 320 square the frame used to draw was the
+   calebwu.ca placeholder, never our clip. */
 .panel {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  block-size: 400px;
   padding: var(--space-xl);
   overflow: clip;
   border-radius: var(--radius-lg);
@@ -22,7 +22,8 @@
 .video {
   display: block;
   inline-size: 100%;
-  block-size: 100%;
+  block-size: auto;
+  max-block-size: calc(400px - 2 * var(--space-xl));
   object-fit: contain;
 }
 

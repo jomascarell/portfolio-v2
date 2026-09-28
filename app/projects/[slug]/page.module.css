@@ -181,8 +181,9 @@
   rotate: 35deg;
 }
 
-/* MediaFigure (1176:1164) — the cover, Caption=No. 360 tall at every width,
-   radius/md, surface/subtle behind an object-contain image. */
+/* MediaFigure (1176:1164) — the cover, Caption=No. radius/md, surface/subtle
+   behind an object-contain image. Height is min(360, width ÷ the image's
+   ratio): see .mediaImage below, which is the same box. */
 .cover {
   inline-size: 100%;
 }
@@ -190,7 +191,8 @@
 .cover img {
   display: block;
   inline-size: 100%;
-  block-size: 360px;
+  block-size: auto;
+  max-block-size: 360px;
   object-fit: contain;
   border-radius: var(--radius-md);
   background-color: var(--color-surface-subtle);
@@ -375,12 +377,20 @@
   inline-size: 100%;
 }
 
-/* The cover's frame (1176:1164), reused for every image slot: 360 tall at
-   every width, radius/md, surface/subtle behind an object-contain image. */
+/* The cover's frame (1176:1164), reused for every image slot: radius/md,
+   surface/subtle behind an object-contain image.
+
+   HEIGHT IS min(360, width ÷ the image's ratio), since 2026-09-28. `auto`
+   takes the ratio from the width/height attributes next/image writes, and the
+   cap keeps wide columns exactly as before — letterboxed at 360. The old fixed
+   360 at every width left 63% of the box empty on a 344 screen. Figma draws
+   the same rule as MediaFigure's Height=capped|fluid: fluid below 640, where
+   16:9 reaches 360. */
 .mediaImage {
   display: block;
   inline-size: 100%;
-  block-size: 360px;
+  block-size: auto;
+  max-block-size: 360px;
   object-fit: contain;
   border-radius: var(--radius-md);
   background-color: var(--color-surface-subtle);

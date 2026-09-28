@@ -103,8 +103,8 @@ export type CaseStudy = {
   liveLabel: string
   /* ProjectLogo's glyph. Decorative — the page renders it aria-hidden. */
   logo: string
-  /* The hero. `image.alt` stays empty while the cover only restates the
-     title; give it alt text if a cover ever shows something the copy doesn't. */
+  /* The hero, in the cover's MediaFigure frame. Its alt says what the image
+     shows, not what the title already said. */
   cover: { slot: string; caption: string | null; image: CaseImage }
   meta: { label: string; value: string }[]
   sections: CaseSection[]
@@ -126,7 +126,10 @@ export const embassaments: CaseStudy = {
   cover: {
     slot: 'Cover image — full width, directly below the standfirst, above the metadata bar.',
     caption: null,
-    image: { src: coverImage, alt: '' },
+    image: {
+      src: coverImage,
+      alt: 'The dashboard’s landing page, headed “Estat dels Embassaments a Catalunya” — the state of Catalonia’s reservoirs.',
+    },
   },
   meta: [
     { label: 'Role', value: 'Research, design, and development — solo' },
