@@ -25,10 +25,15 @@
   object-fit: contain;
 }
 
-/* ---- ScrimControl (1300:662) ----------------------------------------------
-   36x36, 12px inset top-right, black 40% deepening to 60% on hover, radius 10
-   — off the radius ramp (8/16), read off the node. No backdrop-filter: a flat
-   translucent chip, not glass. */
+/* ---- Control (1399:1520), 2026-09-28 --------------------------------------
+   Replaces the 36x36 icon-only ScrimControl. A 36px pill: --space-xs block /
+   --space-md inline padding, --space-sm between icon and label, --radius-lg,
+   neutral/950 at 80%. Still 12px in from the top-right corner — the frame
+   draws the control on its own, so the placement is the old one, kept.
+
+   HOVER IS NOT IN THE FRAME. The old chip deepened 40% -> 60%; this one
+   deepens 80% -> solid, the same step in spirit, so the button still answers
+   the pointer. Drop it if the design means no hover. */
 .control {
   position: absolute;
   inset-block-start: 12px;
@@ -36,13 +41,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  inline-size: 36px;
+  gap: var(--space-sm);
   block-size: 36px;
-  padding: 0;
+  padding-block: var(--space-xs);
+  padding-inline: var(--space-md);
   border: 0;
-  border-radius: 10px;
-  background-color: rgb(0 0 0 / 0.4);
-  color: var(--color-text-inverse);
+  border-radius: var(--radius-lg);
+  background-color: color-mix(in srgb, var(--color-neutral-950) 80%, transparent);
+  color: var(--color-neutral-0);
   cursor: pointer;
   transition:
     opacity var(--duration-fast) var(--ease-standard),
@@ -67,30 +73,24 @@
   }
 
   .control:hover {
-    background-color: rgb(0 0 0 / 0.6);
+    background-color: var(--color-neutral-950);
   }
 }
 
-/* Icon=pause: two 5x16 bars, radius 1, 4 apart. */
-.pause {
-  display: flex;
-  gap: 4px;
-}
-
-.pause span {
-  inline-size: 5px;
+/* 16x16, as the frame's react-icons layers. */
+.icon {
+  flex-shrink: 0;
+  inline-size: 16px;
   block-size: 16px;
-  border-radius: 1px;
-  background-color: currentColor;
 }
 
-/* Icon=play: the triangle from the node's path, 12 wide by 12.12 tall, whose
-   box sits 2px right of centre in the chip (x 14-26 of 36) — optical
-   centring, kept. */
-.play {
-  inline-size: 12px;
-  block-size: 12.12px;
-  margin-inline-start: 4px;
-  background-color: currentColor;
-  clip-path: polygon(0 0, 100% 50%, 0 100%);
+/* Figtree Light 14/20, neutral/0. The frame trims the text box to cap height
+   and baseline, which is what centres the word optically against the icon. */
+.label {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
+  font-weight: var(--font-weight-light);
+  letter-spacing: var(--letter-spacing-normal);
+  white-space: nowrap;
+  text-box: trim-both cap alphabetic;
 }

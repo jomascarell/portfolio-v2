@@ -1,6 +1,8 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { BsPlay } from 'react-icons/bs'
+import { HiOutlinePause } from 'react-icons/hi2'
 import styles from './MediaVideo.module.css'
 
 export type MediaVideoSource = {
@@ -91,14 +93,25 @@ export default function MediaVideo({ video }: { video: MediaVideoSource }) {
         onClick={toggle}
         aria-label={playing ? 'Pause video' : 'Play video'}
       >
+        {/* Control (1399:1520): icon + label. Default draws Play, Variant2
+            Pause — the action the button will take, not the clip's state.
+            Both icons are the react-icons the frame names, the same narrow
+            exception Nav's home and caret use. The aria-label keeps "video"
+            in the name and still contains the visible word (WCAG 2.5.3).
+            The pause is Heroicons v2 (react-icons/hi2) — /hi is v1, whose
+            HiOutlinePause is a circled glyph the frame does not draw. Its
+            1.5 stroke on a 24 grid would be 1px at 16; the frame's is 0.75,
+            so 1.125 here. */}
         {playing ? (
-          <span className={styles.pause} aria-hidden="true">
-            <span />
-            <span />
-          </span>
+          <HiOutlinePause
+            className={styles.icon}
+            strokeWidth={1.125}
+            aria-hidden="true"
+          />
         ) : (
-          <span className={styles.play} aria-hidden="true" />
+          <BsPlay className={styles.icon} aria-hidden="true" />
         )}
+        <span className={styles.label}>{playing ? 'Pause' : 'Play'}</span>
       </button>
     </div>
   )
