@@ -11,6 +11,9 @@ export type MediaVideoSource = {
   poster: string
   width: number
   height: number
+  /* What the clip shows, for a clip with no caption to say it — the cover.
+     Set as the video's accessible name. */
+  label?: string
 }
 
 /* MediaVideo (1161:142) — a muted, looping clip on a surface/subtle panel,
@@ -76,6 +79,7 @@ export default function MediaVideo({ video }: { video: MediaVideoSource }) {
         width={video.width}
         height={video.height}
         poster={video.poster}
+        aria-label={video.label}
         muted
         loop
         playsInline

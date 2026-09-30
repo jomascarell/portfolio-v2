@@ -67,7 +67,7 @@
 
 @media (min-width: 1024px) {
   .content {
-    grid-column: 3 / span 8;
+    grid-column: 4 / span 7;
   }
 }
 
@@ -251,7 +251,6 @@
   color: var(--color-text-secondary);
   margin: 0;
   text-align: center;
-  /* max-width: 11.25rem; */
 }
 
 @media (min-width: 640px) {
@@ -405,6 +404,20 @@
   object-fit: contain;
   border-radius: var(--radius-md);
   background-color: var(--color-surface-subtle);
+}
+
+/* Diagrams on transparent canvases (Emotional UX, 2026-09-30): padded
+   inside the panel so nothing touches its edge. The padding is inside the
+   <img>'s own box, so the panel ground shows through it and the image keeps
+   its ratio. */
+.mediaInset {
+  padding: var(--space-sm);
+}
+
+@media (min-width: 640px) {
+  .mediaInset {
+    padding: var(--space-lg);
+  }
 }
 
 /* NOT FROM THE FILE. The frames hold real images in these slots; no asset has
@@ -616,4 +629,65 @@
   .stats {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
+}
+
+/* ---- Emotional UX additions (proj-emotional, 1402:1574), 2026-09-30 --------
+   Measured across that page's six frames: 1450, 1280, 1024, 768, 640 (the
+   frame is misnamed "1451") and 412. */
+
+/* Bold and italic runs inside body copy. Figma sets them Figtree Bold and
+   Figtree Italic. The layout loads Figtree upright only, so the italic is the
+   browser's slanted upright, not the true italic face. */
+.prose strong,
+.list strong {
+  font-weight: var(--font-weight-bold);
+}
+
+/* The bulleted lists — body type, disc markers, the marker indented 1.5x the
+   type size as the frame's list indent is. Same 1024 step and 640 measure as
+   prose, set in the block below. */
+.list {
+  inline-size: 100%;
+  margin: 0;
+  padding-inline-start: 1.5em;
+  list-style: disc;
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--color-text-primary);
+}
+
+@media (min-width: 1024px) {
+  .list {
+    max-inline-size: 640px;
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-lg);
+  }
+}
+
+/* StatCard with a before -> after pair (1417:1778): 4px apart, the old figure
+   in blue/950 at 60% (the node's rgba(11,43,70,0.6)), a 16px arrow between. */
+.statValue:has(.statFrom) {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.statFrom {
+  color: color-mix(in srgb, var(--color-blue-950) 60%, transparent);
+}
+
+.statArrow {
+  display: block;
+  inline-size: 16px;
+  block-size: 16px;
+  flex: none;
+}
+
+/* The closing "What I'd change" block (1412:1038): 0.5px blue/200 rules above
+   and below, 48px inside them. */
+.callout {
+  padding-block: var(--space-2xl);
+  border-block: 0.5px solid var(--color-blue-200);
 }

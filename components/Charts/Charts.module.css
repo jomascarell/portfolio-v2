@@ -1,0 +1,191 @@
+/* Shared chart styles — every colour and type size a design token.
+   Marks per the dataviz spec: hairline solid grid one step off the surface,
+   2px lines, 8px dots on a 2px surface ring, text in text tokens only (never
+   the data colour). The site is light-only, so there is one mode. */
+
+.chart {
+  position: relative;
+  inline-size: 100%;
+}
+
+.svg {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  overflow: visible;
+  font-family: inherit;
+}
+
+.svg text {
+  font-variant-numeric: tabular-nums;
+  /* A surface-coloured halo, so a gridline or the mean line passing under a
+     label never cuts through its letters. */
+  paint-order: stroke;
+  stroke: var(--color-surface-page);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
+/* ---- Chrome ------------------------------------------------------------- */
+
+.grid {
+  stroke: var(--color-neutral-100);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+.baseline {
+  stroke: var(--color-neutral-200);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+.tick {
+  font-size: var(--font-size-xs);
+  fill: var(--color-text-secondary);
+}
+
+.axisLabel {
+  font-size: var(--font-size-xs);
+  fill: var(--color-text-secondary);
+}
+
+/* ---- Labels ------------------------------------------------------------- */
+
+.label,
+.value {
+  font-size: var(--font-size-sm);
+  fill: var(--color-text-secondary);
+}
+
+.labelStrong,
+.valueStrong {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  fill: var(--color-text-primary);
+}
+
+/* ---- Marks -------------------------------------------------------------- */
+
+.bar {
+  fill: var(--color-neutral-300);
+}
+
+.barAccent {
+  fill: var(--color-text-accent);
+}
+
+.slope,
+.slopeAccent {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.slope {
+  stroke: var(--color-neutral-400);
+}
+
+.slopeAccent {
+  stroke: var(--color-text-accent);
+}
+
+/* The 2px ring is the surface colour, so a dot stays legible where lines
+   cross and where three dots stack at one value. */
+.dot,
+.dotAccent {
+  stroke: var(--color-surface-page);
+  stroke-width: 2;
+}
+
+.dot {
+  fill: var(--color-neutral-400);
+}
+
+.dotAccent {
+  fill: var(--color-text-accent);
+}
+
+/* The reference line — a hairline, solid, in text/secondary. */
+.reference {
+  stroke: var(--color-text-secondary);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+.referenceLabel {
+  font-size: var(--font-size-xs);
+  fill: var(--color-text-secondary);
+}
+
+/* ---- Hover -------------------------------------------------------------- */
+
+.hit {
+  fill: transparent;
+}
+
+.hitLine {
+  stroke: transparent;
+  stroke-width: 14;
+  stroke-linecap: round;
+}
+
+.row {
+  transition: opacity var(--duration-fast) var(--ease-standard);
+}
+
+/* The rest recede while one is hovered; the hovered line darkens to ink. */
+.row[data-dim] {
+  opacity: 0.35;
+}
+
+.row[data-active] .slope {
+  stroke: var(--color-text-secondary);
+}
+
+.row[data-active] .dot {
+  fill: var(--color-text-secondary);
+}
+
+.tooltip {
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-page);
+  box-shadow: var(--shadow-sm);
+  translate: -50% -100%;
+  white-space: nowrap;
+  pointer-events: none;
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-xs);
+  color: var(--color-text-secondary);
+}
+
+.tooltipBelow {
+  translate: -50% 0;
+}
+
+.tooltip strong {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+/* ---- Screen-reader table ------------------------------------------------ */
+
+.srOnly {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

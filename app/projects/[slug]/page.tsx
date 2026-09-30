@@ -2,7 +2,10 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { Fragment } from 'react'
+import SeverityBars from '@/components/Charts/SeverityBars'
+import SlopeChart from '@/components/Charts/SlopeChart'
 import CollectionNav from '@/components/CollectionNav/CollectionNav'
+import ComponentCarousel from '@/components/ComponentCarousel/ComponentCarousel'
 import LiveDashboard from '@/components/LiveDashboard/LiveDashboard'
 import MediaVideo from '@/components/MediaVideo/MediaVideo'
 import {
@@ -11,13 +14,17 @@ import {
   getCaseStudy,
   type CaseBlock,
   type CaseStudy,
-} from '@/lib/case-studies/embassaments'
+  type RichText,
+} from '@/lib/case-studies'
 import { getProject, projects } from '@/lib/projects'
 import styles from './page.module.css'
 
 /* Project detail — the case-study template.
  *
- * Figma: `proj-embassaments` (1147:687). Every value in page.module.css was
+ * Figma: `proj-embassaments` (1147:687), and `proj-emotional` (1402:1574) for
+ * what the second case study added — rich text, lists, the component
+ * carousel, before -> after stats and the callout section. Every value in
+ * page.module.css was
  * read off the file, node by node, across ALL SIX breakpoint frames — 344,
  * 640, 768, 1024, 1280, 1448 — not sampled from the widest one. Anything not
  * from the file says so in the comment beside it.
@@ -61,10 +68,60 @@ export async function generateMetadata(
   return { title: `${project?.title ?? 'Project'} — Joan Mascarell` }
 }
 
+/* Plain runs render as text; `b` and `i` runs as <strong> and <em>, which is
+   what the bold and italic in the frames mean rather than just how they look. */
+function RichTextView({ text }: { text: RichText }) {
+  if (typeof text === 'string') return text
+  return text.map((run, index) =>
+    typeof run === 'string' ? (
+      <Fragment key={index}>{run}</Fragment>
+    ) : 'b' in run ? (
+      <strong key={index}>{run.b}</strong>
+    ) : (
+      <em key={index}>{run.i}</em>
+    ),
+  )
+}
+
 function CaseBlockView({ block }: { block: CaseBlock }) {
   switch (block.kind) {
     case 'prose':
-      return <p className={styles.prose}>{block.text}</p>
+      return (
+        <p className={styles.prose}>
+          <RichTextView text={block.text} />
+        </p>
+      )
+
+    /* Charts are figures: the SVG, then an optional caption. */
+    case 'chart':
+      return (
+        <figure className={styles.figure}>
+          {block.chart.type === 'bars' ? (
+            <SeverityBars data={block.chart} />
+          ) : (
+            <SlopeChart data={block.chart} />
+          )}
+          {block.caption ? (
+            <figcaption className={styles.caption}>{block.caption}</figcaption>
+          ) : null}
+        </figure>
+      )
+
+    case 'carousel':
+      return <ComponentCarousel label={block.label} slides={block.slides} />
+
+    /* The bulleted lists in Emotional UX's System, Test and Next. Body type,
+       so it takes the same 1024 step and the same 640 measure as prose. */
+    case 'list':
+      return (
+        <ul className={styles.list}>
+          {block.items.map((item, index) => (
+            <li key={index}>
+              <RichTextView text={item} />
+            </li>
+          ))}
+        </ul>
+      )
 
     /* 1152:3587 — rule-bounded: 2px color/border/strong on the leading edge
        and 16px of padding, identical at every width. The text is body, so it
@@ -91,7 +148,11 @@ function CaseBlockView({ block }: { block: CaseBlock }) {
         <figure className={styles.figure}>
           {block.image ? (
             <Image
-              className={styles.mediaImage}
+              className={
+                block.inset
+                  ? `${styles.mediaImage} ${styles.mediaInset}`
+                  : styles.mediaImage
+              }
               src={block.image.src}
               alt={block.image.alt}
               sizes="(max-width: 1023px) calc(100vw - 112px), 939px"
@@ -155,24 +216,50 @@ function CaseBlockView({ block }: { block: CaseBlock }) {
     /* StatCardGrid (1144:304). The figure is color/blue/950 — the only type on
        the page that leaves the neutral ramp. One column below 640, 2x2 to
        1279, four across from 1280. */
-    case 'stats':
-      return (
+    /* A `from` value makes a before -> after pair (1417:1778): the old figure
+       in blue/950 at 60%, the AiOutlineArrowRight glyph, then the new one.
+       The arrow's alt is "to", so the pair reads "72s to 36s". The caption
+       under the grid (1420:1828) is the shared figure caption. */
+    case 'stats': {
+      const grid = (
         <dl className={styles.stats}>
           {block.items.map((item) => (
             <div key={item.label} className={styles.stat}>
               <dt className={styles.statLabel}>{item.label}</dt>
-              <dd className={styles.statValue}>{item.value}</dd>
+              <dd className={styles.statValue}>
+                {item.from ? (
+                  <>
+                    <span className={styles.statFrom}>{item.from}</span>
+                    <img
+                      className={styles.statArrow}
+                      src="/case-studies/emotional-ux/arrow.svg"
+                      alt="to"
+                      width={16}
+                      height={16}
+                    />
+                  </>
+                ) : null}
+                {item.value}
+              </dd>
             </div>
           ))}
         </dl>
       )
+      if (!block.caption) return grid
+      return (
+        <figure className={styles.figure}>
+          {grid}
+          <figcaption className={styles.caption}>{block.caption}</figcaption>
+        </figure>
+      )
+    }
   }
 }
 
 function CaseStudyArticle({ caseStudy }: { caseStudy: CaseStudy }) {
   return (
     <div className={styles.article}>
-      {/* SectionNav (1152:2792), built from the photos rail. Eight entries
+      {/* SectionNav (1152:2792), built from the photos rail. Its entries come
           from one source, so a label can never drift from its anchor. */}
       <CollectionNav
         items={caseNavItems(caseStudy)}
@@ -183,19 +270,14 @@ function CaseStudyArticle({ caseStudy }: { caseStudy: CaseStudy }) {
 
       <article className={styles.content}>
         {/* article-header (1147:699). The intro is a nav target but not a
-            section — it carries the h1, which is why there are eight nav
-            entries and seven sections. */}
+            section — it carries the h1, which is why the rail has one entry
+            more than the sections it points at. */}
         <header id={CASE_INTRO_ID} className={styles.header}>
           {/* ProjectLogo (1144:676) — Size=default at every width, including
               344. Its description says it is decorative and must be
               aria-hidden rather than carry alt text repeating the heading. */}
           <div className={styles.logo} aria-hidden="true">
-            <img
-              src={caseStudy.logo}
-              alt=""
-              width={64}
-              height={64}
-            />
+            <img src={caseStudy.logo} alt="" width={64} height={64} />
           </div>
 
           <div className={styles.headerRow}>
@@ -231,15 +313,22 @@ function CaseStudyArticle({ caseStudy }: { caseStudy: CaseStudy }) {
               ) : null}
             </div>
 
-            {/* MediaFigure (1176:1164) — the cover, Caption=No. */}
-            <figure className={styles.cover}>
-              <Image
-                src={caseStudy.cover.image.src}
-                alt={caseStudy.cover.image.alt}
-                sizes="(max-width: 1023px) calc(100vw - 112px), 939px"
-                priority
-              />
-            </figure>
+            {/* MediaFigure (1176:1164) — the cover, Caption=No. Emotional UX
+                draws none. */}
+            {caseStudy.cover ? (
+              <figure className={styles.cover}>
+                {caseStudy.cover.video ? (
+                  <MediaVideo video={caseStudy.cover.video} />
+                ) : caseStudy.cover.image ? (
+                  <Image
+                    src={caseStudy.cover.image.src}
+                    alt={caseStudy.cover.image.alt}
+                    sizes="(max-width: 1023px) calc(100vw - 112px), 939px"
+                    priority
+                  />
+                ) : null}
+              </figure>
+            ) : null}
 
             {/* CaseMetaRow (1143:277). A fixed schema of four, not a repeater:
                 stacked below 640, 2x2 to 1279, four across from 1280. */}
@@ -258,7 +347,11 @@ function CaseStudyArticle({ caseStudy }: { caseStudy: CaseStudy }) {
           <section
             key={section.id}
             id={section.id}
-            className={styles.section}
+            className={
+              section.tone === 'callout'
+                ? `${styles.section} ${styles.callout}`
+                : styles.section
+            }
             aria-labelledby={`${section.id}-heading`}
           >
             {/* `<X> Container` — eyebrow over heading, 8px apart. The eyebrow

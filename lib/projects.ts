@@ -17,10 +17,10 @@
  *
  * TWO THINGS STILL FOR PHASE 9, neither blocking:
  *
- * 1. SLUGS ARE PUBLIC URLS AND TWO NO LONGER MATCH THEIR NAMES. `tfm` was a
- *    working name from the retired build and the project is now "Emotional UX
- *    in e-commerce"; `joies-laia` is close but not exact. Nothing is deployed,
- *    so changing them costs nothing today and costs a redirect later.
+ * 1. SLUGS ARE PUBLIC URLS. `tfm`, a working name from the retired build, was
+ *    renamed `emotional-ux` on 2026-09-30 when its case study landed.
+ *    `joies-laia` is close to its name but not exact. Nothing is deployed, so
+ *    changing it costs nothing today and costs a redirect later.
  *
  * 2. No `summary` field. The detail page will want one, but there is no copy
  *    for it yet and an empty field on four records is not a content module,
@@ -31,15 +31,19 @@ export type Project = {
   /* The descriptive line above the name. */
   category: string
   title: string
+  /* The Nav pill's label on the project's own page, when the title is too
+     long for it. Falls back to `title`. */
+  navLabel?: string
   /* Rendered as a two-digit stamp — 2026 draws as ".26", 2024 as ".24". */
   year: number
 }
 
 export const projects: Project[] = [
   {
-    slug: 'tfm',
+    slug: 'emotional-ux',
     category: 'Testing emotional design',
     title: 'Emotional UX in e-commerce',
+    navLabel: 'Emotional UX',
     year: 2026,
   },
   {

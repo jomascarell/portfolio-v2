@@ -1,0 +1,470 @@
+/* Emotional UX in e-commerce — the case study content.
+ *
+ * Source: the Figma page `proj-emotional` (1402:1574), transcribed off the
+ * 1450 frame on 2026-09-30. The copy is the user's and is reproduced verbatim
+ * except for typography: straight quotes and apostrophes became curly ones,
+ * matching Embassaments, and the backticks the frame draws around
+ * useOptimistic (markdown left in the text) were dropped.
+ *
+ * WHAT THE FRAMES DO DIFFERENTLY FROM EMBASSAMENTS, all decided 2026-09-30:
+ *
+ * - No cover. The header goes straight from the link to the meta row.
+ * - The rail has ten entries for eleven sections plus the intro: Test and
+ *   Next are drawn outside it, and the eyebrow "Design decision" is
+ *   "Design decisions" in the rail. Figma is followed on all three.
+ * - System's first paragraph in the frame (1402:1610) is Embassaments copy
+ *   left over from the template it was built on — Procreate sketches, the
+ *   ACA "drop" visual. Dropped by the user's decision; the Figma frame still
+ *   carries it.
+ *
+ * MEDIA, added 2026-09-30 from the user's `media-proj-emotional/` folder:
+ * the hero (Hero.png), Norman's levels, the checkout flow and the product
+ * card's states. Captions are left null until the user writes or approves
+ * them. The states diagram is the user's later `product-card` export (the
+ * first, `states-product-card`, was outdated), and ships as the PNG, not the
+ * SVG: the SVG is 241 KB of outlined text and reads no better at the same
+ * size. Norman and the checkout flow were re-exported with larger type.
+ *
+ * OPEN: the Repository link has no href in the file. `liveUrl` stays null,
+ * which hides the link, until the URL is supplied. */
+
+import coverImage from '@/public/case-studies/emotional-ux/cover.png'
+import normanImage from '@/public/case-studies/emotional-ux/norman-diagram.png'
+import checkoutImage from '@/public/case-studies/emotional-ux/checkout-flow.png'
+import statesImage from '@/public/case-studies/emotional-ux/product-card-states.png'
+import type { CaseStudy } from './types'
+
+export const emotionalUx: CaseStudy = {
+  slug: 'emotional-ux',
+  title: 'Emotional UX in e-commerce',
+  standfirst:
+    'I took a production e-commerce template, audited what it leaves out, designed a small component system to put it back, and tested it against a live store built on the same template. Usability didn’t move. Trust and purchase intent did, and every participant preferred the redesigned store. The gap between those two results is the point of this project.',
+  liveUrl: null,
+  liveLabel: 'Repository',
+  /* The Next.js mark — the user's own export (project-logo.svg), mask and
+     all. */
+  logo: '/case-studies/emotional-ux/logo.svg',
+  /* Absent from the Figma frames; added by the user's media table. It shows
+     the redesigned store's footer, where the trust bar lives. */
+  cover: {
+    slot: 'Hero — the redesigned store.',
+    caption: null,
+    image: {
+      src: coverImage,
+      alt: 'The redesigned store’s footer: a trust bar of secure payment, real support, free shipping and 30-day returns, above the newsletter sign-up, help links and accepted payment methods.',
+    },
+  },
+  meta: [
+    { label: 'Role', value: 'Research, design & front-end' },
+    {
+      label: 'Tools',
+      value:
+        'Next.js 16 · React 19 · TypeScript · Tailwind v4 · shadcn/UI · Stripe',
+    },
+    { label: 'Timeframe', value: '2026' },
+    { label: 'Context', value: 'Master’s thesis (UNIR)' },
+  ],
+  sections: [
+    {
+      id: 'premise',
+      label: 'Premise',
+      heading: 'Templates optimise everything they can measure',
+      blocks: [
+        {
+          kind: 'prose',
+          text: 'Component-based templates are a real achievement: reusable, fast, maintainable. Your Next Store, the open-source Next.js template I worked on, loads almost instantly thanks to server components, static caching and a CDN.',
+        },
+        {
+          kind: 'prose',
+          text: 'But a template optimises what it can measure. Load time, bundle size and task completion all have a number. Whether a first-time visitor believes the shop will actually ship their order doesn’t. So it goes unbuilt, in this template and in every store that ships on top of it unchanged.',
+        },
+        {
+          kind: 'prose',
+          text: 'That isn’t a styling problem. In e-commerce, trust is what turns a visit into a payment.',
+        },
+      ],
+    },
+    {
+      id: 'audit',
+      label: 'Audit',
+      heading: 'A healthy score with a hole in it',
+      blocks: [
+        {
+          kind: 'prose',
+          text: 'I ran a heuristic evaluation across Nielsen’s ten heuristics and mapped each finding to Norman’s three levels of emotional design: visceral (first impression), behavioural (ease of use) and reflective (trust and meaning).',
+        },
+        {
+          kind: 'prose',
+          text: [
+            'The global severity came out at ',
+            { b: '1.03 out of 4' },
+            ': a template that works. The average hid the problem. Help & Documentation scored ',
+            { b: '2.75' },
+            '. There was no shipping or returns policy, no visible contact and no legal pages. Almost every serious issue sat on the reflective level.',
+          ],
+        },
+        {
+          /* From the user's reference chart (severity-bars.png). The ten
+             values average 1.025, which is the 1.03 the prose quotes. */
+          kind: 'chart',
+          chart: {
+            type: 'bars',
+            label: 'Mean severity of the audit findings per Nielsen heuristic',
+            axisLabel: 'Mean severity (0 = no issue, 4 = catastrophic)',
+            max: 4,
+            mean: 1.03,
+            highlight: 'Help & documentation',
+            rows: [
+              { label: 'Help & documentation', value: 2.75 },
+              { label: 'Error prevention', value: 1.75 },
+              { label: 'User control & freedom', value: 1.5 },
+              { label: 'Visibility of status', value: 1.25 },
+              { label: 'Flexibility & efficiency', value: 1.25 },
+              { label: 'Consistency & standards', value: 1 },
+              { label: 'Error recovery', value: 0.5 },
+              { label: 'Recognition vs recall', value: 0.25 },
+              { label: 'Match with real world', value: 0 },
+              { label: 'Aesthetic & minimalist', value: 0 },
+            ],
+          },
+        },
+        {
+          kind: 'prose',
+          text: [
+            'The template answered “',
+            { i: 'how do I buy this' },
+            '?” perfectly. It had no answer to “',
+            { i: 'should I buy this here?' },
+            '”',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'reframe',
+      label: 'The reframe',
+      heading: 'Emotional design isn’t decoration',
+      blocks: [
+        {
+          kind: 'prose',
+          text: '“Emotional” usually gets read as delight: animation, warmth, personality. The audit pointed somewhere less decorative. What was missing was the reflective layer, the signals a stranger uses to decide whether a small shop is real.',
+        },
+        {
+          kind: 'media',
+          slot: 'Norman’s three levels as a simple diagram',
+          caption: null,
+          inset: true,
+          image: {
+            src: normanImage,
+            alt: 'Diagram: designer, product, user. The user’s response splits into Norman’s three levels — visceral (perceptually induced), behavioural (expectation induced) and reflective (intellectually induced) reactions.',
+          },
+        },
+        {
+          kind: 'prose',
+          text: 'So I designed for the moments where that decision happens, not for charm.',
+        },
+      ],
+    },
+    {
+      id: 'system',
+      label: 'System',
+      heading: 'Four components, zero new dependencies',
+      blocks: [
+        {
+          /* Replaces the ChartSystem table, by the user's decision
+             (2026-09-30). Copy transcribed from their four slide exports,
+             "Behavioral" normalised to UK spelling. The table's "Gap it
+             answers" column is deliberately not carried over. */
+          kind: 'carousel',
+          label: 'The four components',
+          slides: [
+            {
+              title: 'Trust Bar',
+              level: 'Reflective',
+              sketch: 'trust-bar',
+              image: '/case-studies/emotional-ux/components/trust-bar.svg',
+              points: [
+                {
+                  text: 'Shipping, returns and secure payment up front',
+                  pro: true,
+                },
+                {
+                  text: 'Persistent across every page of the store',
+                  pro: true,
+                },
+                { text: 'Answers the Help & Documentation gap', pro: true },
+                { text: 'Easy to tune out once it becomes chrome', pro: false },
+              ],
+            },
+            {
+              title: 'Emotional Product Card',
+              level: 'Visceral + behavioural',
+              sketch: 'product-card',
+              image: '/case-studies/emotional-ux/components/product-card.svg',
+              points: [
+                { text: 'Where the first impression is formed', pro: true },
+                {
+                  text: 'Hover motion and quick-add give instant feedback',
+                  pro: true,
+                },
+                {
+                  text: 'Repeated across the grid, so small gains add up',
+                  pro: true,
+                },
+                { text: 'Too much motion slows down scanning', pro: false },
+              ],
+            },
+            {
+              title: 'Cart Drawer',
+              level: 'Behavioural + reflective',
+              sketch: 'cart-drawer',
+              image: '/case-studies/emotional-ux/components/cart-drawer.svg',
+              points: [
+                { text: 'Review the cart without leaving the page', pro: true },
+                {
+                  text: 'Clear totals and edits prevent errors early',
+                  pro: true,
+                },
+                { text: 'Confirms the choice right after adding', pro: true },
+                { text: 'Covers most of the screen on mobile', pro: false },
+              ],
+            },
+            {
+              title: 'Checkout Trust Layer',
+              level: 'Reflective + behavioural',
+              sketch: 'checkout',
+              image: '/case-studies/emotional-ux/components/checkout.svg',
+              points: [
+                {
+                  text: 'Reassurance at the moment of highest risk',
+                  pro: true,
+                },
+                {
+                  text: 'Security cues and summary sit next to payment',
+                  pro: true,
+                },
+                {
+                  text: 'Stripe’s payment iframe can’t be restyled',
+                  pro: false,
+                },
+                {
+                  text: 'Too many badges start to feel suspicious',
+                  pro: false,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          kind: 'prose',
+          text: 'One constraint shaped everything: no libraries beyond the template’s own stack. If emotional design needs extra weight to exist, it’s the first thing to get cut. Every component extends existing shadcn/Radix primitives instead.',
+        },
+        {
+          kind: 'list',
+          items: [
+            [
+              { b: 'Trust bar' },
+              ': a Server Component. It’s visible on every page and ships zero JavaScript to the browser.',
+            ],
+            [
+              { b: 'Product card' },
+              ': split into a server shell and a small client island, so a grid of thirty products ships one copy of the interaction logic, not thirty.',
+            ],
+            [
+              { b: 'Cart drawer' },
+              ': built on React 19’s useOptimistic. Quantities update before the network responds and roll back automatically if the request fails. Removing an item, whether by the bin icon or by going below one, always asks first.',
+            ],
+          ],
+        },
+      ],
+    },
+    {
+      id: 'design-decision',
+      label: 'Design decision',
+      navLabel: 'Design decisions',
+      heading: 'Trading an inline size picker for a dialog',
+      blocks: [
+        {
+          kind: 'prose',
+          text: 'The prototype showed sizes directly on hover. Once built, it crowded the overlay and fought the link wrapping the card. I replaced it with a dialog that confirms automatically once every option is chosen. It’s one tap for single-attribute products, and it’s properly accessible.',
+        },
+        {
+          kind: 'media',
+          slot: 'Product card, three states',
+          caption: null,
+          inset: true,
+          image: {
+            src: statesImage,
+            alt: 'State diagram of the product card. At rest it shows the main image with name, price and category. Hover darkens the image and shows an Add to cart button. Clicking Add on a product with variants replaces the button with a size selector (S, M, L, XL) and a link to the product. Mouse leave returns from hover to rest; clicking outside returns from the selector.',
+          },
+        },
+      ],
+    },
+    {
+      id: 'wall',
+      label: 'Wall',
+      heading: 'The most anxious moment is the one the store doesn’t own',
+      blocks: [
+        {
+          kind: 'prose',
+          text: 'The fourth component never shipped as designed. Payment is fully delegated to Stripe’s hosted checkout, and the store’s code can’t touch that page.',
+        },
+        {
+          kind: 'prose',
+          text: 'That turned out to be the most revealing finding of the build. The moment with the most at stake, handing over card details, happens on the one surface the store has given away. I moved the trust signals into the cart footer, the last surface the store controls before the handoff.',
+        },
+        {
+          kind: 'media',
+          slot: 'Flow diagram: store, cart footer, Stripe',
+          caption: null,
+          inset: true,
+          image: {
+            src: checkoutImage,
+            alt: 'Flow diagram: product page (add to cart), cart drawer (review items), cart footer (checkout button), then Stripe’s hosted checkout — the one step drawn in a different colour. Stripe returns to a success page and confirms the order by webhook.',
+          },
+        },
+        {
+          kind: 'prose',
+          text: 'Emotional design can walk someone up to the payment step. It can’t go through it. Every delegated surface (payments, auth, embedded widgets) is a place where nobody is designing for trust.',
+        },
+      ],
+    },
+    {
+      id: 'test',
+      label: 'Test',
+      navLabel: null,
+      heading: 'Same template, real competitor, same people',
+      blocks: [
+        {
+          kind: 'prose',
+          text: 'To isolate the system, I compared it against a live jewellery store built on the same template rather than against the bare demo.',
+        },
+        {
+          kind: 'list',
+          items: [
+            '6 participants, within-subjects, with the order counterbalanced (three saw each store first)',
+            '4 tasks per store, each targeting one component',
+            'SUS, a hedonic questionnaire (emotional response, perceived trust, purchase intent) and a closing interview',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'findings',
+      label: 'Findings',
+      heading: 'What the metrics saw, and what they missed',
+      blocks: [
+        {
+          kind: 'stats',
+          items: [
+            { from: '72s', value: '36s', label: 'Time to manage the cart' },
+            {
+              from: '30s',
+              value: '18s',
+              label: 'Time to find returns and payment info',
+            },
+            { value: '+0.58', label: 'Perceived trust, on a 7-point scale' },
+            { value: '6/6', label: 'Participants who preferred the redesign' },
+          ],
+          caption: 'Usability scores were identical: 82.9 vs 83.3.',
+        },
+      ],
+    },
+    {
+      id: 'reading-it-honestly',
+      label: 'Reading it honestly',
+      heading: 'The loudest signal was the order',
+      blocks: [
+        {
+          kind: 'prose',
+          text: [
+            'None of the differences reached statistical significance; with six people, they couldn’t. And one effect dwarfed everything else. Whichever store participants saw second scored about ',
+            { b: '24 SUS points higher' },
+            ', for all six of them. The difference between versions was under one point.',
+          ],
+        },
+        {
+          /* The thesis's Figure 18 (order-effect.png), in English. First
+             scores are labelled in the figure. SECOND SCORES ARE READ OFF
+             WHERE THE LINES LAND, not labelled there — they reproduce the
+             figure's 95 mean and the prose's ~24-point gap, but are owed a
+             check against the thesis data. "A"/"B" is the store each
+             participant saw first, as the figure marks it. */
+          kind: 'chart',
+          chart: {
+            type: 'slope',
+            label:
+              'Order effect on the SUS score: each participant’s first evaluation against their second',
+            axisLabel: 'SUS score (0–100)',
+            domain: [50, 100],
+            step: 10,
+            columns: ['1st store evaluated', '2nd store evaluated'],
+            columnsShort: ['1st store', '2nd store'],
+            series: [
+              { label: 'P4 · A', detail: 'saw A first', from: 97.5, to: 100 },
+              { label: 'P2 · B', detail: 'saw B first', from: 82.5, to: 95 },
+              { label: 'P3 · B', detail: 'saw B first', from: 70, to: 95 },
+              { label: 'P6 · A', detail: 'saw A first', from: 65, to: 90 },
+              { label: 'P1 · B', detail: 'saw B first', from: 57.5, to: 90 },
+              { label: 'P5 · A', detail: 'saw A first', from: 55, to: 100 },
+            ],
+            mean: { from: 71.25, to: 95 },
+          },
+        },
+        {
+          kind: 'prose',
+          text: 'Counterbalancing cancels that out in the averages, but it also means the usability comparison says little on its own. What survives is directional and consistent across three independent sources: the trust scores, the unanimous preference and what people remembered.',
+        },
+        {
+          kind: 'prose',
+          text: 'There’s also one failure worth owning. One participant removed an item from the cart and believed the task was done when it wasn’t. The confirmation dialog still isn’t clear enough.',
+        },
+      ],
+    },
+    {
+      id: 'what-it-means',
+      label: 'What it means',
+      heading: 'Measure only efficiency, and you’ll only build efficiency',
+      blocks: [
+        {
+          kind: 'prose',
+          text: 'This study didn’t prove that emotional design sells more. It showed something more uncomfortable: the standard instrument rated both stores as equivalent, and every participant chose the same one.',
+        },
+        {
+          kind: 'prose',
+          text: 'What made the difference lived on the reflective level. That’s trust, and it’s exactly the dimension a usability score, a performance audit or a component library doesn’t register.',
+        },
+        {
+          kind: 'prose',
+          text: 'That’s the blind spot. It isn’t that teams don’t care how people feel. It’s that the tools we use to decide whether something is done can’t see it. If nobody measures trust, nobody owns it. And in a store, trust is what stands between a visit and a payment.',
+        },
+      ],
+    },
+    {
+      id: 'next',
+      label: 'Next',
+      navLabel: null,
+      tone: 'callout',
+      heading: 'What I’d change',
+      blocks: [
+        {
+          kind: 'list',
+          items: [
+            [
+              { b: 'Remove the order effect' },
+              '. Replicate with a larger, pre-registered sample, or switch to a between-subjects design.',
+            ],
+            [
+              { b: 'Measure behaviour, not intent' },
+              '. Track completed checkouts instead of self-reported willingness to buy.',
+            ],
+            [
+              { b: 'Take the checkout back' },
+              '. Replace the Stripe redirect with embedded Stripe Elements, so the fourth component can finally be built and tested where it belongs.',
+            ],
+          ],
+        },
+      ],
+    },
+  ],
+}

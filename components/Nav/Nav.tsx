@@ -156,7 +156,11 @@ function stateFromPathname(pathname: string): { state: NavState; label?: string 
   if (pathname === '/photos') return { state: 'photos' }
   if (pathname.startsWith('/projects/')) {
     const slug = pathname.slice('/projects/'.length).split('/')[0]
-    return { state: 'project-detail', label: getProject(slug)?.title ?? 'Project' }
+    const project = getProject(slug)
+    return {
+      state: 'project-detail',
+      label: project?.navLabel ?? project?.title ?? 'Project',
+    }
   }
   return { state: 'landing' }
 }

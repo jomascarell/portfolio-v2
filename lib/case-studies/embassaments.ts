@@ -6,19 +6,7 @@
  * `[MEDIA: …]` markers, the parenthetical notes on how to set a quote) that
  * instruction became structure here, not text.
  *
- * WHY A TYPED FILE AND NOT MDX. The rest of the site keeps content in typed
- * `lib/*.ts` records — photos, projects, about, changelog — and pages map over
- * them. A case study is longer but not different in kind, and the typed route
- * keeps the section list, the nav labels and the anchor ids derived from ONE
- * array instead of drifting between a document and a rail. `SectionNav` will
- * read `sections` directly when it lands.
- *
- * THE BLOCK KINDS ARE DELIBERATELY FEW. `prose | quote | media | table |
- * stats` is everything the revised copy actually contains. Each one renders as
- * plain semantic HTML today; each one is the seam where a real component lands
- * later — `media` becomes MediaFigure/MediaVideo/LiveDashboard, `table`
- * becomes ReferenceTable and ChartComparisonTable, `stats` becomes
- * StatCardGrid. Adding a kind is cheap; a kind nothing uses is not.
+ * The content model lives in ./types.ts.
  *
  * TWO CONTENT ITEMS ARE STILL OPEN, both from the copy doc itself:
  *
@@ -31,104 +19,34 @@
  * is final, it is what Figma shipped, and the chart table below has five rows.
  */
 
-import type { StaticImageData } from 'next/image'
-import type { MediaVideoSource } from '@/components/MediaVideo/MediaVideo'
-import coverImage from '@/public/case-studies/embassaments/cover.png'
 import statusImage from '@/public/case-studies/embassaments/status.png'
 import sketchImage from '@/public/case-studies/embassaments/process-sketch.png'
-
-export type CaseImage = { src: StaticImageData; alt: string }
-
-export type CaseBlock =
-  | { kind: 'prose'; text: string }
-  /* The copy doc marks exactly one of these and asks for it to be set as a
-     real pull quote rather than grey body text. It is the best sentence in the
-     document; it gets `blockquote`, not a styled paragraph. */
-  | { kind: 'quote'; text: string }
-  /* A slot, not an asset. `slot` is the copy doc's own placement instruction,
-     kept so whoever fills it knows what belongs there; `caption` is real
-     reader-facing copy where the doc supplies one. The cover deliberately has
-     no caption — the doc calls it the hero.
-
-     `image` fills the slot, in the cover's own MediaFigure frame. A static
-     import, so the intrinsic size comes from the file and cannot drift from a
-     typed number. `video` fills it with MediaVideo instead, and `dashboard`
-     with LiveDashboard, the notebook's embed.
-     With none of them, the slot renders as a placeholder. */
-  | {
-      kind: 'media'
-      slot: string
-      caption: string | null
-      image?: CaseImage
-      video?: MediaVideoSource
-      dashboard?: { embedUrl: string; title: string }
-    }
-  /* Two different components, not one table with a flag off. ReferenceTable
-     has NO header row and sets its first column SemiBold; ChartComparisonTable
-     has a header row in ui/label-strong and sets its first column Regular.
-     Reading them as one shape is what produced a header row on the reference
-     table that the design does not have. */
-  | {
-      kind: 'table'
-      variant: 'reference' | 'chart'
-      columns: [string, string] | null
-      rows: [string, string][]
-    }
-  | { kind: 'stats'; items: { value: string; label: string }[] }
-
-export type CaseSection = {
-  /* The anchor id, the nav target and the eyebrow all derive from one record.
-     calebwu.ca lets its rail labels disagree with its anchor ids and ships a
-     duplicate `id="research"`; deriving them here is what makes that
-     impossible rather than merely unlikely. */
-  id: string
-  /* Doubles as the SectionNav entry and the eyebrow above the heading. */
-  label: string
-  heading: string
-  blocks: CaseBlock[]
-}
-
-export type CaseStudy = {
-  slug: string
-  /* Renders as the page's `h1`. In Figma this carries `heading/h2` (28px) —
-     the style name encodes a document level it does not set, and the mapping
-     is fixed in the page component rather than in the Figma file. */
-  title: string
-  standfirst: string
-  /* Read off DashboardLink (1144:611) in the Figma file, which carries the
-     real href. The copy doc asked for the URL to be supplied at build time and
-     warned that "embassaments-cat" reads like a slug — hence the separate
-     label, which is what actually shows. */
-  liveUrl: string | null
-  liveLabel: string
-  /* ProjectLogo's glyph. Decorative — the page renders it aria-hidden. */
-  logo: string
-  /* The hero, in the cover's MediaFigure frame. Its alt says what the image
-     shows, not what the title already said. */
-  cover: { slot: string; caption: string | null; image: CaseImage }
-  meta: { label: string; value: string }[]
-  sections: CaseSection[]
-}
-
-/* The intro is a nav target but not a section: it is the article header, and
-   it carries the h1 rather than an h2 of its own. Eight nav entries, seven
-   `sections` — the difference is this constant, not an off-by-one. */
-export const CASE_INTRO_ID = 'intro'
+import type { CaseStudy } from './types'
 
 export const embassaments: CaseStudy = {
   slug: 'embassaments',
-  title: 'Catalonia was deep in drought, and I couldn’t get a straight answer.',
+  title: 'Embassaments (Reservoirs)',
   standfirst:
-    'So I built the tool I wished existed — a live, public dashboard tracking every internal-basin reservoir in Catalonia.',
+    'Catalonia was deep in drought, and I couldn’t get a straight answer. So I built the tool I wished existed — a live, public dashboard tracking every internal-basin reservoir in the territory.',
   liveUrl: 'https://tfgdissenydigital.observablehq.cloud/embassaments-cat/',
   liveLabel: 'View the live dashboard',
   logo: '/case-studies/embassaments/icon-embassament.svg',
   cover: {
     slot: 'Cover image — full width, directly below the standfirst, above the metadata bar.',
     caption: null,
-    image: {
-      src: coverImage,
-      alt: 'The dashboard’s landing page, headed “Estat dels Embassaments a Catalunya” — the state of Catalonia’s reservoirs.',
+    /* A 39s tour of the dashboard, replacing the still of its landing page
+       on 2026-09-30. WebM first (VP9, 1.2 MB); the MP4 for Safari is
+       re-encoded from the 2.7 MB source at x264 CRF 30, veryslow,
+       faststart (0.96 MB) — small text stays legible. The poster is the
+       first frame, which is that same landing page. */
+    video: {
+      webm: '/case-studies/embassaments/cover-loop.webm',
+      mp4: '/case-studies/embassaments/cover-loop.mp4',
+      poster: '/case-studies/embassaments/cover-loop-poster.jpg',
+      width: 1200,
+      height: 676,
+      label:
+        'A tour of the dashboard: its landing page, headed “Estat dels Embassaments a Catalunya” — the state of Catalonia’s reservoirs — then the current-status, search, monitor and seasonal-trends views.',
     },
   },
   meta: [
@@ -391,33 +309,4 @@ export const embassaments: CaseStudy = {
       ],
     },
   ],
-}
-
-/* Keyed by slug so the page can look one up, and so the three projects that
-   have no case study yet resolve to `undefined` rather than to a half-empty
-   record. They keep the stub until their copy exists. */
-export const caseStudies: Record<string, CaseStudy> = {
-  embassaments,
-}
-
-export function getCaseStudy(slug: string): CaseStudy | undefined {
-  return caseStudies[slug]
-}
-
-/* The rail's eight entries, from the same array the page renders. SectionNav's
-   description notes that a rail label does not have to equal the heading it
-   points at — "what matters is that one source decides both" — and this is
-   that source. The intro is the entry with no section of its own. */
-export const CASE_INTRO_LABEL = 'Intro'
-
-export function caseNavItems(
-  caseStudy: CaseStudy,
-): { id: string; label: string }[] {
-  return [
-    { id: CASE_INTRO_ID, label: CASE_INTRO_LABEL },
-    ...caseStudy.sections.map((section) => ({
-      id: section.id,
-      label: section.label,
-    })),
-  ]
 }
