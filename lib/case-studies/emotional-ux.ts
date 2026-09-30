@@ -19,14 +19,14 @@
  *
  * MEDIA, added 2026-09-30 from the user's `media-proj-emotional/` folder:
  * the hero (Hero.png), Norman's levels, the checkout flow and the product
- * card's states. Captions are left null until the user writes or approves
- * them. The states diagram is the user's later `product-card` export (the
+ * card's states. Captions written 2026-09-30 from the thesis
+ * (master-thesis.md): Figure 13, Table 9, section 4.5.4.4. The states diagram is the user's later `product-card` export (the
  * first, `states-product-card`, was outdated), and ships as the PNG, not the
  * SVG: the SVG is 241 KB of outlined text and reads no better at the same
  * size. Norman and the checkout flow were re-exported with larger type.
  *
- * OPEN: the Repository link has no href in the file. `liveUrl` stays null,
- * which hides the link, until the URL is supplied. */
+ * The Repository link has no href in the Figma file; the URL is the one the
+ * thesis cites on its cover page. */
 
 import coverImage from '@/public/case-studies/emotional-ux/cover.png'
 import normanImage from '@/public/case-studies/emotional-ux/norman-diagram.png'
@@ -39,7 +39,7 @@ export const emotionalUx: CaseStudy = {
   title: 'Emotional UX in e-commerce',
   standfirst:
     'I took a production e-commerce template, audited what it leaves out, designed a small component system to put it back, and tested it against a live store built on the same template. Usability didn’t move. Trust and purchase intent did, and every participant preferred the redesigned store. The gap between those two results is the point of this project.',
-  liveUrl: null,
+  liveUrl: 'https://github.com/jomascarell/yournextstore',
   liveLabel: 'Repository',
   /* The Next.js mark — the user's own export (project-logo.svg), mask and
      all. */
@@ -48,7 +48,8 @@ export const emotionalUx: CaseStudy = {
      the redesigned store's footer, where the trust bar lives. */
   cover: {
     slot: 'Hero — the redesigned store.',
-    caption: null,
+    caption:
+      'The trust bar in the redesigned store’s footer. Payment, support, shipping and returns, stated before anyone has to ask.',
     image: {
       src: coverImage,
       alt: 'The redesigned store’s footer: a trust bar of secure payment, real support, free shipping and 30-day returns, above the newsletter sign-up, help links and accepted payment methods.',
@@ -152,7 +153,8 @@ export const emotionalUx: CaseStudy = {
         {
           kind: 'media',
           slot: 'Norman’s three levels as a simple diagram',
-          caption: null,
+          caption:
+            'Norman’s three levels. Every severity-3 finding in the audit sat on the reflective one: no returns policy, no visible contact, thin checkout validation.',
           inset: true,
           image: {
             src: normanImage,
@@ -291,7 +293,8 @@ export const emotionalUx: CaseStudy = {
         {
           kind: 'media',
           slot: 'Product card, three states',
-          caption: null,
+          caption:
+            'The product card as built. The size selector only opens for products with variants; everything else goes straight to the cart.',
           inset: true,
           image: {
             src: statesImage,
@@ -316,7 +319,8 @@ export const emotionalUx: CaseStudy = {
         {
           kind: 'media',
           slot: 'Flow diagram: store, cart footer, Stripe',
-          caption: null,
+          caption:
+            'The purchase flow. The store owns every step up to the cart footer; Stripe owns the one where the card details go.',
           inset: true,
           image: {
             src: checkoutImage,
@@ -384,12 +388,12 @@ export const emotionalUx: CaseStudy = {
           ],
         },
         {
-          /* The thesis's Figure 18 (order-effect.png), in English. First
-             scores are labelled in the figure. SECOND SCORES ARE READ OFF
-             WHERE THE LINES LAND, not labelled there — they reproduce the
-             figure's 95 mean and the prose's ~24-point gap, but are owed a
-             check against the thesis data. "A"/"B" is the store each
-             participant saw first, as the figure marks it. */
+          /* The thesis's Figure 18 (order-effect.png), in English. All
+             twelve scores checked 2026-09-30 against the raw SUS table in
+             the thesis's Annex E, and the means against Table 24. "A"/"B"
+             is the store each participant saw first, as the figure marks
+             it: A is the control (the live store, sinesilk.com), B the
+             redesign. */
           kind: 'chart',
           chart: {
             type: 'slope',
@@ -401,12 +405,12 @@ export const emotionalUx: CaseStudy = {
             columns: ['1st store evaluated', '2nd store evaluated'],
             columnsShort: ['1st store', '2nd store'],
             series: [
-              { label: 'P4 · A', detail: 'saw A first', from: 97.5, to: 100 },
-              { label: 'P2 · B', detail: 'saw B first', from: 82.5, to: 95 },
-              { label: 'P3 · B', detail: 'saw B first', from: 70, to: 95 },
-              { label: 'P6 · A', detail: 'saw A first', from: 65, to: 90 },
-              { label: 'P1 · B', detail: 'saw B first', from: 57.5, to: 90 },
-              { label: 'P5 · A', detail: 'saw A first', from: 55, to: 100 },
+              { label: 'P4 · A', detail: 'saw the live store first', from: 97.5, to: 100 },
+              { label: 'P2 · B', detail: 'saw the redesign first', from: 82.5, to: 95 },
+              { label: 'P3 · B', detail: 'saw the redesign first', from: 70, to: 95 },
+              { label: 'P6 · A', detail: 'saw the live store first', from: 65, to: 90 },
+              { label: 'P1 · B', detail: 'saw the redesign first', from: 57.5, to: 90 },
+              { label: 'P5 · A', detail: 'saw the live store first', from: 55, to: 100 },
             ],
             mean: { from: 71.25, to: 95 },
           },
