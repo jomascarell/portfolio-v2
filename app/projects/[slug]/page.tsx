@@ -85,7 +85,7 @@ function RichTextView({ text }: { text: RichText }) {
   )
 }
 
-const MEDIA_SIZES = '(max-width: 1023px) calc(100vw - 112px), 740px'
+const MEDIA_SIZES = '(max-width: 1023px) calc(100vw - 112px), 830px'
 
 /* A figure with a `phone` drawing renders as <picture>, the art-direction
    pattern from next/image's getImageProps docs. Each <source> carries its own

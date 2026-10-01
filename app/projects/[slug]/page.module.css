@@ -400,24 +400,6 @@
   inline-size: 100%;
 }
 
-/* MEDIA CAPS AT 7 OF THE CONTENT COLUMN'S 8, 2026-10-01 (user: "feels too
-   big in desktop"). Not from Figma. The figure stays in the flow, left edge
-   on column 4 with the prose, and only its right edge moves in, to the grid's
-   column-10 line. 100% here is the content column minus the sections'
-   --space-lg padding on both sides, so 7 columns + 6 gutters of the full
-   column works out to (7 x 100% - 1 gutter) / 8 + 3/4 of that padding. Exact
-   at every width; measured on the line at 1024, 1280 and 1448.
-   Images, videos and the cover only; charts, stats, the dashboard and the
-   carousel keep the full column. */
-@media (min-width: 1024px) {
-  .media,
-  .cover {
-    max-inline-size: calc(
-      (100% * 7 - var(--space-md)) / 8 + var(--space-lg) * 0.75
-    );
-  }
-}
-
 /* The cover's frame (1176:1164), reused for every image slot: radius/md,
    surface/subtle behind an object-contain image.
 
@@ -446,6 +428,27 @@
    and the cover keep surface/subtle. */
 .mediaInset {
   background-color: var(--color-surface-page);
+}
+
+/* FIXED FRAME HEIGHT, calebwu.ca's technique (user, 2026-10-01). Images and
+   the cover take the full content column and a fixed height, 26rem from 640
+   and 30rem from 1024 (his h-[26rem] md / h-[30rem] lg); the image is
+   contained inside. Replaces the span-7 width cap of the same day. Measured
+   at 1448: an 827x480 frame for every figure. Below 640 the frame stays the
+   image's own ratio, so the phone drawings keep their shape. */
+@media (min-width: 640px) {
+  .mediaImage,
+  .cover img {
+    block-size: 26rem;
+    max-block-size: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .mediaImage,
+  .cover img {
+    block-size: 30rem;
+  }
 }
 
 /* NOT FROM THE FILE. The frames hold real images in these slots; no asset has
