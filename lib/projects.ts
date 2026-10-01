@@ -43,6 +43,9 @@ export type Project = {
   description?: string
   /* The project's 64x64 outline icon, a path under /public, exported from
      the Figma ProjectListRow drafts (1500:1362, 1502:1387) on 2026-10-01.
+     Both draw inside a centred 48px box (8px clear all round): Embassaments'
+     export was full-bleed and was inset to match, its stroke compensated so
+     it still draws 0.9px. The case header's `logo` uses the same files.
      Data only: where it sits in the list and the case header is not built
      yet. Render with a plain <img src={project.icon} width={64}
      height={64} alt="" />: it is decorative beside the project's name. */

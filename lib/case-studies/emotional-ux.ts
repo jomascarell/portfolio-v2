@@ -46,9 +46,10 @@ export const emotionalUx: CaseStudy = {
     'I took a production e-commerce template, audited what it leaves out, designed a small component system to put it back, and tested it against a live store built on the same template. Usability didn’t move. Trust and purchase intent did, and every participant preferred the redesigned store. The gap between those two results is the point of this project.',
   liveUrl: 'https://github.com/jomascarell/yournextstore',
   liveLabel: 'Repository',
-  /* The Next.js mark — the user's own export (project-logo.svg), mask and
-     all. */
-  logo: '/case-studies/emotional-ux/logo.svg',
+  /* The project icon, Norman's three levels as nested arches, the same file
+     the project list uses (user, 2026-10-01). It replaced the Next.js mark,
+     which stood for the stack rather than the project. */
+  logo: '/case-studies/emotional-ux/icon.svg',
   /* Absent from the Figma frames; added by the user's media table. A 20s
      scroll through the redesigned store (2026-10-01), replacing the still of
      its footer: home page, trust bar, then a product added and the cart

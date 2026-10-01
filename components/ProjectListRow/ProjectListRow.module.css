@@ -12,12 +12,13 @@
      wide, so here the body grows and only wraps under the icon once it would
      be narrower than 200px — "Embassaments" at 28px needs about 190. That
      happens at md (234-wide rows); from 1024 up the two sit side by side.
-     Wrapped, the row gap is the drafts' 0: the icon sits straight on the
-     category, as their own wrap would put it. */
+     Wrapped, the icon and the text are --space-lg (24) apart (user,
+     2026-10-01; the drafts' own row gap is 0). A row gap only ever applies
+     between wrapped lines, so it changes nothing side by side. */
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  gap: 0 var(--space-xl);
+  gap: var(--space-lg) var(--space-xl);
   padding: var(--space-md);
   color: var(--row-ink);
   text-decoration: none;

@@ -31,7 +31,10 @@ export const embassaments: CaseStudy = {
     'Catalonia was deep in drought, and I couldn’t get a straight answer. So I built the tool I wished existed — a live, public dashboard tracking every internal-basin reservoir in the territory.',
   liveUrl: 'https://tfgdissenydigital.observablehq.cloud/embassaments-cat/',
   liveLabel: 'View the live dashboard',
-  logo: '/case-studies/embassaments/icon-embassament.svg',
+  /* The project icon, the same file the project list uses (2026-10-01). Inset
+     to a centred 48px box, 8px clear on every side like Emotional UX's
+     arches; the Figma export ran edge to edge and read as cramped beside it. */
+  logo: '/case-studies/embassaments/icon.svg',
   cover: {
     slot: 'Cover image — full width, directly below the standfirst, above the metadata bar.',
     caption: null,
