@@ -7,6 +7,7 @@ import { IoMdArrowDropright } from 'react-icons/io'
 import { RiHomeLine } from 'react-icons/ri'
 import { getProject } from '@/lib/projects'
 import { siteConfig } from '@/lib/site-config'
+import { useTopZone } from '@/lib/use-top-zone'
 import styles from './Nav.module.css'
 
 /* THE SITE NAV, MOUNTED ONCE. Figma: Nav (829:233), State = landing | projects
@@ -155,7 +156,11 @@ function stateFromPathname(pathname: string): { state: NavState; label?: string 
   if (pathname === '/photos') return { state: 'photos' }
   if (pathname.startsWith('/projects/')) {
     const slug = pathname.slice('/projects/'.length).split('/')[0]
-    return { state: 'project-detail', label: getProject(slug)?.title ?? 'Project' }
+    const project = getProject(slug)
+    return {
+      state: 'project-detail',
+      label: project?.navLabel ?? project?.title ?? 'Project',
+    }
   }
   return { state: 'landing' }
 }
@@ -259,6 +264,15 @@ export default function Nav({ className }: { className?: string }) {
   const mode = modeFor(state)
   const items = buildItems(state, label)
   const routeKey = `${state}:${label ?? ''}`
+
+  /* LOWERED AT THE TOP OF A CASE PAGE, 2026-09-28 (the user's yes). His pill
+     rests low while the reader is at the top and not scrolling down, and tucks
+     on the first downward scroll; it never hides, and scrolling up mid-page
+     does not bring it back down. Case pages only: the panel routes do not
+     scroll the way an article does, so they keep the route-based tuck alone. */
+  const zone = useTopZone()
+  const lowered =
+    state === 'project-detail' && zone.measured && zone.atTop && !zone.scrollingDown
 
   const cloneRefs = useRef(new Map<number, { old: HTMLElement | null; new: HTMLElement | null }>())
 
@@ -386,6 +400,7 @@ export default function Nav({ className }: { className?: string }) {
       className={[styles.root, styles.fixed, className].filter(Boolean).join(' ')}
       aria-label={ariaLabelFor(state)}
       data-mode={mode}
+      data-lowered={lowered ? '' : undefined}
     >
       <ol className={styles.pill} data-mode={mode}>
         {pairs.map((pair, index) => {

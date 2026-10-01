@@ -1,0 +1,100 @@
+/* MediaVideo (1386:161). radius/lg, surface/subtle. The clip is 16:9 and
+   object-contain.
+
+   THE CLIP FILLS THE PANEL, later 2026-09-28. No padding and no 336 cap: the
+   panel is the clip's own shape at the full column width (about 817x460 at
+   1448), the way calebwu.ca draws his videos. The padded 400 panel that
+   came before it held a 596x336 clip at 1448 and read as crushed. 80svh only
+   stops a tall clip outgrowing the screen. REVERSES Figma's
+   Height=capped|fluid set, which still draws the 32px padding and the cap. */
+.panel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: clip;
+  border-radius: var(--radius-lg);
+  background-color: var(--color-surface-subtle);
+}
+
+.video {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  max-block-size: 80svh;
+  object-fit: contain;
+}
+
+/* ---- Control (1399:1520), 2026-09-28 --------------------------------------
+   Replaces the 36x36 icon-only ScrimControl. A 36px pill: --space-xs block /
+   --space-md inline padding, --space-sm between icon and label, --radius-lg,
+   neutral/950 at 80%. Still 12px in from the top-right corner — the frame
+   draws the control on its own, so the placement is the old one, kept.
+
+   HOVER IS NOT IN THE FRAME. The old chip deepened 40% -> 60%; this one
+   deepens 80% -> solid, the same step in spirit, so the button still answers
+   the pointer. Drop it if the design means no hover. */
+.control {
+  position: absolute;
+  inset-block-start: 12px;
+  inset-inline-end: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  block-size: 36px;
+  padding-block: var(--space-xs);
+  padding-inline: var(--space-md);
+  border: 0;
+  border-radius: var(--radius-lg);
+  background-color: color-mix(
+    in srgb,
+    var(--color-neutral-950) 80%,
+    transparent
+  );
+  color: var(--color-neutral-0);
+  cursor: pointer;
+  transition:
+    opacity var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard);
+}
+
+.control:focus-visible {
+  outline: 2px solid var(--color-text-accent);
+  outline-offset: 2px;
+}
+
+/* Playing: hidden until the PANEL is hovered or the control is focused.
+   Paused: pinned, which is the default above. */
+@media (hover: hover) {
+  .panel[data-playing='true'] .control {
+    opacity: 0;
+  }
+
+  .panel[data-playing='true']:hover .control,
+  .panel[data-playing='true'] .control:focus-visible {
+    opacity: 1;
+  }
+
+  .control:hover {
+    background-color: var(--color-neutral-950);
+  }
+}
+
+/* 16x16, as the frame's react-icons layers. */
+.icon {
+  flex-shrink: 0;
+  inline-size: 16px;
+  block-size: 16px;
+}
+
+/* Figtree Light 14/20, neutral/0. The frame trims the text box to cap height
+   and baseline, which is what centres the word optically against the icon. */
+.label {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
+  font-weight: var(--font-weight-light);
+  letter-spacing: var(--letter-spacing-normal);
+  white-space: nowrap;
+  text-box: trim-both cap alphabetic;
+}

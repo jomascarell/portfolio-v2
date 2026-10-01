@@ -1,9 +1,11 @@
-/* The four projects.
+/* The projects, three since 2026-10-01: Okisam was taken off the list
+ * before the first merge to main (confidential client work, no case study to
+ * show). The internship itself still appears on /about and in the intro.
  *
  * Content given directly on 2026-09-11, and it settles what Figma could not:
  * the file's ProjectList draws a fourth row called "Personal Library" that
  * was invented copy to fill the drawing, and there is no project behind it.
- * So the four here are the four, and `biblioteca` is gone.
+ * So the list holds only real projects, and `biblioteca` is gone.
  *
  * A row is `category | name | year`, in that order down the row, and the
  * category is the descriptive line rather than a discipline tag — "Testing
@@ -17,10 +19,10 @@
  *
  * TWO THINGS STILL FOR PHASE 9, neither blocking:
  *
- * 1. SLUGS ARE PUBLIC URLS AND TWO NO LONGER MATCH THEIR NAMES. `tfm` was a
- *    working name from the retired build and the project is now "Emotional UX
- *    in e-commerce"; `joies-laia` is close but not exact. Nothing is deployed,
- *    so changing them costs nothing today and costs a redirect later.
+ * 1. SLUGS ARE PUBLIC URLS. `tfm`, a working name from the retired build, was
+ *    renamed `emotional-ux` on 2026-09-30 when its case study landed.
+ *    `joies-laia` is close to its name but not exact. Nothing is deployed, so
+ *    changing it costs nothing today and costs a redirect later.
  *
  * 2. No `summary` field. The detail page will want one, but there is no copy
  *    for it yet and an empty field on four records is not a content module,
@@ -31,27 +33,25 @@ export type Project = {
   /* The descriptive line above the name. */
   category: string
   title: string
+  /* The Nav pill's label on the project's own page, when the title is too
+     long for it. Falls back to `title`. */
+  navLabel?: string
   /* Rendered as a two-digit stamp — 2026 draws as ".26", 2024 as ".24". */
   year: number
 }
 
 export const projects: Project[] = [
   {
-    slug: 'tfm',
+    slug: 'emotional-ux',
     category: 'Testing emotional design',
     title: 'Emotional UX in e-commerce',
+    navLabel: 'Emotional UX',
     year: 2026,
   },
   {
     slug: 'joies-laia',
     category: 'A brand and store, built pro bono',
     title: 'Joies Laia',
-    year: 2026,
-  },
-  {
-    slug: 'okisam',
-    category: 'Confidential client work, real growth',
-    title: 'Okisam',
     year: 2026,
   },
   {

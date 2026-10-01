@@ -1,0 +1,39 @@
+/* LiveDashboard. The frame and a caption, space/sm apart. No radius, as the
+   Figma component (1227:2) draws its media box. */
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  inline-size: 100%;
+}
+
+/* surface/subtle shows while the frame is still empty. Below the frame's
+   minimum width the panel scrolls sideways rather than the page. */
+.media {
+  overflow-x: auto;
+  overflow-y: clip;
+  background-color: var(--color-surface-subtle);
+}
+
+/* 614 tall, as the dashboard itself frames the same embed. At least 640
+   wide, below which the heatmap's 180px of reservoir names leave no room for
+   the months. */
+.frame {
+  display: block;
+  inline-size: 100%;
+  min-inline-size: 640px;
+  block-size: 614px;
+  border: 0;
+}
+
+/* Caption — 14/20 (font-size-sm), text/secondary, centred to match the
+   figure captions. Both changed 2026-09-28; the component still draws
+   ui/caption 12/18, left-aligned. */
+.caption {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--color-text-secondary);
+  text-align: center;
+}

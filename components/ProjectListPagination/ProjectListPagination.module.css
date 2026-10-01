@@ -1,0 +1,57 @@
+/* Figma: ProjectListPagination (1073:2503). Every number here landed on the
+   scale exactly, so nothing is a literal: the dot is 4 (--space-xs), the gap
+   is 8 (--space-sm), and the rail hugs both. The rail was drawn 8 wide with
+   the 4px dots left-aligned inside it, leaving 4px of dead space down the
+   right edge; confirmed unintentional and fixed in Figma the same day, so
+   the rail hugs here too rather than reproducing the gap. */
+.rail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+
+  /* Centred against the list by the deck wrapper in ProjectList.module.css,
+     via align-self rather than the wrapper's align-items — see the note
+     there, it is load-bearing for the carousel's scroll box. */
+}
+
+/* THE DOT IS THE ROW'S INK, SHRUNK. Figma binds color/neutral/200 and
+   color/neutral/950, which are exactly the two values ProjectListRow already
+   switches --row-ink between for default and .current. So this is not a new
+   colour pair that happens to look similar — it is the same pair, and the
+   semantic tokens are used here so it stays the same pair if the ramp moves.
+
+   50% rather than --radius-*: at 4px the radius scale's smallest step (4) is
+   already the full width, and a circle is what is drawn, not a rounded
+   square that coincidentally reads as one. */
+.dot {
+  inline-size: var(--space-xs);
+  block-size: var(--space-xs);
+  border-radius: 50%;
+  background-color: var(--color-text-subtle);
+  flex-shrink: 0;
+
+  /* The row's own clock and curve, deliberately — ProjectListRow.module.css
+     eases --row-ink over --duration-deck on this same cubic-bezier, and the
+     dot marks the row that is doing it. Left untransitioned the dot would
+     snap while its row spent 700ms easing, and the two would visibly come
+     apart mid-step.
+
+     NOTE FOR THE DESIGNER: the named reference snaps — its dots carry
+     transition-duration 0s and the change is instant. Matching it literally
+     is deleting these two lines. We ease instead because our row eases and
+     the reference's does not. */
+  transition: background-color var(--duration-deck)
+    cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.dot[data-state='active'] {
+  background-color: var(--color-text-primary);
+}
+
+/* The colour still changes — it has to, or the indicator stops indicating.
+   Only the easing goes. */
+@media (prefers-reduced-motion: reduce) {
+  .dot {
+    transition-duration: 0.01ms;
+  }
+}

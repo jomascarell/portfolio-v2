@@ -1,0 +1,795 @@
+/* Case-study template. Figma: `proj-embassaments` (1147:687).
+
+   MEASURED ACROSS ALL SIX FRAMES — 344, 640, 768, 1024, 1280, 1448 — not
+   sampled from the widest. Anything not from the file says so beside it.
+
+   THREE BREAKPOINTS EARN THEIR PLACE, and 768 is not one of them:
+
+     640   tables go one-column -> two; the chart table's header row appears;
+           CaseMetaRow stack -> 2x2; StatCardGrid stack -> 2x2 and its outer
+           padding 32 -> 64.
+     1024  body type 16/26.2 -> 18/30; prose caps at 640; the reference table's
+           columns go 1:2 -> 1:4; SectionNav appears.
+     1280  CaseMetaRow and StatCardGrid go to four across.
+
+   768 draws identically to 640 in every component, so no rule sits there.
+
+   1280 IS A CONFLICT AND IT IS FLAGGED, NOT HIDDEN. The system's tiers are
+   640/768/1024/1440, and a standing decision says 1280 is a drawn canvas
+   inside lg, not a breakpoint. But CaseMetaRow and StatCardGrid are 2x2 at the
+   1024 canvas and four-across at the 1280 canvas, so the design changes
+   somewhere in between and 1280 is the only value consistent with both drawn
+   frames. Implemented at 1280; if the intent was 1440, move these two blocks.
+
+   No horizontal inset here, same reasoning as PanelLayout.module.css and
+   /photos: the shell already puts --container-inset on the one <main>.
+
+   THE GRID. Twelve columns, --space-md gutters, inside the inset box:
+     1024: box 896, column 60      rail 2 cols = 136   content 8 cols = 592
+     1448: box 1320, column 95.33  rail 2 cols = 207   content 8 cols = 875
+   Rail spans 1-2, content 3-10, columns 11-12 empty. The frames draw content
+   across 9 columns (3-11); code narrowed it to 8 on 2026-09-28, a deliberate
+   departure from Figma, not drift. At 1280 SectionNav is drawn
+   207 wide where the grid calls for 178.67 — copied from 1448 and never
+   resized, overlapping the content column by 12px. The rule is the grid.
+
+   TWO MEASURES. Prose is 640 and figures are the full inner width — but the
+   prose cap only binds from 1024 up: at 344/640/768 the drawn prose nodes fill
+   the column.
+
+   MEDIA STAYS IN THE CONTENT COLUMN, 2026-09-28. A breakout to column 12
+   (calebwu.ca's separate figure measure) was tried the same day and read as
+   too big; the fix for the "crushed" look is the dropped height cap below,
+   not a wider column. */
+
+.article {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--space-md);
+}
+
+.rail {
+  grid-column: 1 / span 2;
+  /* align-self: start is load-bearing for `position: sticky` — a stretched
+     grid item does not stick. Same rule, same reason, as /photos. */
+  align-self: start;
+}
+
+.content {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  /* 48px between article-header and the first `goal`, and between every pair
+     of `goal` frames after it. Measured across all seven; no exception. */
+  gap: var(--space-2xl);
+  padding-block-end: var(--space-4xl);
+}
+
+@media (min-width: 1024px) {
+  .content {
+    grid-column: 4 / span 8;
+  }
+}
+
+/* Anchor targets. Nav is fixed, so a jump has to clear it. --nav-clearance is
+   the real measured clearance. NOT from Figma — Figma has no scroll. */
+.header,
+.section {
+  scroll-margin-top: var(--nav-clearance);
+}
+
+/* ---- article-header (1147:699) --------------------------------------------- */
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2xl);
+  padding-block-start: var(--space-2xl);
+}
+
+/* ProjectLogo (1147:1441): a 64px mark with 24px of leading padding, which is
+   why the instance measures 88 wide. Size=default at every width — there is a
+   compact variant in the file and no frame uses it. */
+.logo {
+  padding-inline-start: var(--space-lg);
+}
+
+.logo img {
+  display: block;
+  inline-size: 64px;
+  block-size: 64px;
+}
+
+.headerRow {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-xl);
+  inline-size: 100%;
+  padding-inline: var(--space-lg);
+}
+
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-xl);
+  inline-size: 100%;
+}
+
+/* heading/h2 — Medium 28/36, letter-spacing/normal. Does NOT scale: 28/36 at
+   all six widths, including 344. */
+.title {
+  font-size: var(--font-size-2xl);
+  line-height: var(--line-height-2xl);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--color-text-primary);
+}
+
+/* body/base 16/26.2 -> body/lg 18/30 at 1024. */
+.standfirst {
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--color-text-primary);
+}
+
+/* DashboardLink (1144:582). THE ONE PLACE THE VISUAL DELIBERATELY DEPARTS FROM
+   THE FRAME, on instruction: the frame draws a permanently underlined link,
+   and this project's established link UI — MailLink, plus both rails — is
+   inherited colour, no underline, accent on hover, and a 2px accent focus ring
+   declared OUTSIDE any (hover: hover) query so a touchscreen laptop that
+   resolves hover:none does not strand the keyboard. DashboardLink's own
+   description asks for exactly that ring.
+
+   Size is body/base 16/26.2 and does not scale. */
+.liveLink {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--letter-spacing-normal);
+  color: inherit;
+  text-decoration: underline;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.liveLink:focus-visible {
+  outline: 2px solid var(--color-text-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+@media (hover: hover) {
+  .liveLink:hover {
+    color: var(--color-text-accent);
+  }
+}
+
+/* The arrow sits in a 22.284px box and the glyph is 16px turned 35deg — both
+   read off the node, odd number and all. */
+.liveLinkArrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 22.284px;
+  block-size: 22.284px;
+  flex: none;
+}
+
+.liveLinkArrow svg {
+  display: block;
+  inline-size: 16px;
+  block-size: 16px;
+  rotate: 35deg;
+}
+
+/* THE ARROW STEPS OUT ON HOVER, 2026-10-01. Mozilla's link arrow moves
+   .75rem over 300ms ease-out when the card is hovered; here it is the link
+   itself, and the arrow travels along its own 35deg heading rather than
+   sideways, so it keeps pointing where it goes. --duration-slow is the
+   nearest token to 300ms. The glyph is react-icons' IoMdArrowUp (user's
+   pick), on currentColor, so it takes the link's accent on hover, which the
+   old <img> could not. */
+.liveLinkArrow {
+  transition: translate var(--duration-slow) ease-out;
+}
+
+@media (hover: hover) {
+  .liveLink:hover .liveLinkArrow {
+    translate: calc(0.75rem * sin(35deg)) calc(-0.75rem * cos(35deg));
+  }
+}
+
+/* MediaFigure (1176:1164) — the cover, Caption=No. radius/md, surface/subtle
+   behind an object-contain image. Same box as .mediaImage below, plus a
+   0.5px neutral/200 edge in place of a shadow (2026-09-28, not in Figma). */
+.cover {
+  inline-size: 100%;
+}
+
+.cover img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  max-block-size: 80svh;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-subtle);
+}
+
+/* ---- CaseMetaRow (1143:277) ------------------------------------------------
+   Padding 24/16, 24px between cells both ways, 8px inside a cell. One column
+   below 640, 2x2 to 1279, four across from 1280. */
+
+.meta {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: var(--space-lg);
+  row-gap: var(--space-lg);
+  inline-size: 100%;
+  padding-inline: var(--space-md);
+  padding-block: var(--space-lg);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-subtle);
+  /* tokens.css is explicit that these are box-shadow, never
+     filter: drop-shadow() — the filter creates a containing block. */
+  box-shadow: var(--shadow-xs);
+}
+
+.metaEntry {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+/* Stack variant: 14/20, and the label is MEDIUM where the value is Regular —
+   the one variant where the pair separates by weight as well as colour. */
+.metaLabel {
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--color-text-primary);
+}
+
+.metaValue {
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--color-text-secondary);
+  margin: 0;
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* From 2x2 up both label and value are body/base 16/26.2 Regular and
+     separate by colour alone. */
+  .metaLabel,
+  .metaValue {
+    font-size: var(--font-size-md);
+    line-height: var(--line-height-md);
+    font-weight: var(--font-weight-regular);
+  }
+}
+
+@media (min-width: 1280px) {
+  .meta {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .metaEntry {
+    align-items: start;
+  }
+
+  .metaLabel,
+  .metaValue {
+    text-align: start;
+  }
+}
+
+/* ---- `goal` — one per section ---------------------------------------------
+   24px between everything inside a section, 24px of inline padding, at every
+   width. */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-lg);
+  padding-inline: var(--space-lg);
+  inline-size: 100%;
+}
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  inline-size: 100%;
+}
+
+/* heading/h5 — Figtree REGULAR 14, line-height 17.9, letter-spacing 0,
+   uppercase, text/secondary. Identical at all six widths.
+
+   17.9 IS HARDCODED ON PURPOSE. heading/h5 is off-system: it binds no tokens
+   and 17.9 is not a step in the line-height ramp, which is the fault recorded
+   against it. var(--line-height-sm) would be 20 and would not match. */
+.eyebrow {
+  font-size: var(--font-size-sm);
+  line-height: 17.9px;
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--letter-spacing-normal);
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+/* heading/h3 — Medium 18/30. Does NOT scale; it is 18/30 at 344 too. Which
+   means that below 1024 the heading is genuinely larger than the 16/26.2 body
+   under it, and only at 1024+ do the two meet at 18. The collapse the ramp is
+   criticised for is a wide-screen problem, not a universal one. */
+.sectionHeading {
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-lg);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--color-text-primary);
+}
+
+/* `<X> Explanation` — body/base 16/26.2, stepping to body/lg 18/30 at 1024. */
+.prose {
+  inline-size: 100%;
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--color-text-primary);
+}
+
+/* Pull quote (1152:3587) — rule-bounded: 2px border/strong on the leading
+   edge, 16px of padding, at every width. The text is body, so it steps with
+   the rest of the body copy; it is NOT enlarged and the rule is not the
+   accent. */
+.quote {
+  inline-size: 100%;
+  padding-inline-start: var(--space-md);
+  border-inline-start: 2px solid var(--color-border-strong);
+}
+
+.quote p {
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--color-text-secondary);
+}
+
+/* ---- The body step, and the prose measure, both at 1024 -------------------- */
+
+@media (min-width: 1024px) {
+  .titleBlock,
+  .sectionHeader,
+  .prose,
+  .quote {
+    max-inline-size: 640px;
+  }
+
+  .standfirst,
+  .prose,
+  .quote p {
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-lg);
+  }
+}
+
+/* ---- Figures ---------------------------------------------------------------
+   MediaFigure (1161:138): radius/md, space/sm to the caption, ui/caption in
+   text/secondary, centred. */
+
+.figure {
+  inline-size: 100%;
+}
+
+/* The cover's frame (1176:1164), reused for every image slot: radius/md,
+   surface/subtle behind an object-contain image.
+
+   HEIGHT IS THE IMAGE'S OWN, width ÷ its ratio, since the later 2026-09-28
+   pass. `auto` takes the ratio from the width/height attributes next/image
+   writes, so the box is the image's shape and nothing letterboxes. The 360
+   cap that came before it shrank a 16:9 screenshot to 633 wide inside an 817
+   box at 1448 — the "crushed" look. Now it is 817x465. 80svh remains only so a portrait image
+   cannot outgrow the screen; calebwu.ca caps his one tall slot at 60vh.
+   REVERSES MediaFigure's Height=capped variant in Figma, which still draws
+   the 360. */
+.mediaImage {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  max-block-size: 80svh;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-subtle);
+}
+
+/* Diagrams on transparent canvases (Emotional UX): on the page's own white,
+   not the grey panel, and with no padding, so they line up with the prose
+   and take the full figure width (user, 2026-10-01). Earlier the padding kept
+   labels off the panel's edge; with no panel there is no edge. Screenshots
+   and the cover keep surface/subtle. */
+.mediaInset {
+  background-color: var(--color-surface-page);
+  /* With no panel to centre in, a contained drawing sits on the prose's
+     left edge rather than floating ~30px in from it inside the fixed frame
+     (measured at 1448, 2026-10-01). */
+  object-position: center center;
+}
+
+/* FIXED FRAME HEIGHT, calebwu.ca's technique (user, 2026-10-01). Images and
+   the cover take the full content column and a fixed height, 26rem from 640
+   and 30rem from 1024 (his h-[26rem] md / h-[30rem] lg); the image is
+   contained inside. Replaces the span-7 width cap of the same day. Measured
+   at 1448: an 827x480 frame for every figure. Below 640 the frame stays the
+   image's own ratio, so the phone drawings keep their shape. */
+@media (min-width: 640px) {
+  .mediaImage,
+  .cover img {
+    block-size: 26rem;
+    max-block-size: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .mediaImage,
+  .cover img {
+    block-size: 30rem;
+  }
+}
+
+/* NOT FROM THE FILE. The frames hold real images in these slots; no asset has
+   been supplied yet, so this stands in. The dashed edge should disappear the
+   moment the assets land. */
+.mediaSlot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 200px;
+  padding: var(--space-lg);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-subtle);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
+  text-align: center;
+}
+
+/* Caption — 14/20 (font-size-sm), text/secondary, centred. Stepped up from
+   ui/caption 12/18 on 2026-09-28; Figma still draws 12/18. */
+/* ---- Before / after pair (2026-10-01, not in Figma) -------------------------
+   calebwu.ca's paired figures, adapted: his pairs share a fixed frame height,
+   ours share a SCALE. Each half grows by its export's pixel width (--grow,
+   set inline), so two screenshots exported at one scale keep their real
+   proportions to each other: the template's taller drawer stays taller, and
+   neither one's text is shrunk to make the edges line up. Top-aligned.
+   Stacked below 640, where each drawer gets the full column. From 1024 the
+   row is capped so the taller image stands 36rem at most, centred like the
+   diagrams. */
+.pairRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.pairLabel {
+  margin-block-end: var(--space-sm);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+}
+
+.pairImage {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  border: 0.5px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+}
+
+@media (min-width: 640px) {
+  .pairRow {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--space-md);
+  }
+
+  .pairItem {
+    flex: var(--grow) 1 0;
+    min-inline-size: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .pairRow {
+    max-inline-size: calc(36rem * var(--pair-ratio) + var(--space-md));
+    margin-inline: auto;
+  }
+}
+
+.caption {
+  margin-block-start: var(--space-sm);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+/* ---- ReferenceTable and ChartComparisonTable -------------------------------
+   Both are a GRID in the file and both collapse to one column below 640, term
+   on its own row with its description beneath. Their type is body/base 16/26.2
+   at EVERY width — the tables do not take the 1024 body step.
+
+   Column ratios, measured off the drawn text widths:
+     reference   640-1023  1 : 2      (166.7 : 333.3 at 640)
+     reference   >= 1024   1 : 4      (118.4 : 473.6 at 1024)
+     chart       >= 640    1 : 4      (100 : 400 at 640)
+
+   The variant NAMES in the file do not describe what they draw — the one
+   called "stacked" is the widest two-column form and "two-column-compact" is
+   the actually-stacked one — so these rules follow the geometry, not the
+   names. */
+
+.referenceTable,
+.chartTable {
+  inline-size: 100%;
+}
+
+.tableGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: var(--space-lg);
+  row-gap: 4px;
+  padding-block: var(--space-lg);
+  border-block: 0.8px solid var(--color-border-default);
+  margin: 0;
+}
+
+.tableTerm {
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--color-text-primary);
+}
+
+/* ReferenceTable sets its term SemiBold; ChartComparisonTable sets its
+   Regular. That is the one way their rows differ. */
+.referenceTable .tableTerm {
+  font-weight: var(--font-weight-regular);
+}
+
+.chartTable .tableTerm {
+  font-weight: var(--font-weight-regular);
+}
+
+.tableValue {
+  margin: 0;
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--color-text-secondary);
+}
+
+/* One-column form: the description carries 4px above and 16px below, and the
+   last one carries nothing below — read off the wrapper frames. */
+.tableValue {
+  padding-block: 4px var(--space-md);
+}
+
+.tableValue:last-child {
+  padding-block-end: 0;
+}
+
+/* Hidden below 640: the chart table draws no header row at 344. */
+.tableHeader {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .tableGrid {
+    row-gap: var(--space-md);
+    padding-block: var(--space-md);
+  }
+
+  .tableValue {
+    padding-block: 0;
+  }
+
+  .referenceTable .tableGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  }
+
+  .chartTable .tableGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 4fr);
+  }
+
+  /* ui/label-strong — SemiBold 14/20, text/primary, no uppercase and no extra
+     tracking, sitting space/md above the rule. */
+  .tableHeader {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 4fr);
+    column-gap: var(--space-lg);
+    margin-block-end: var(--space-md);
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-sm);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--letter-spacing-normal);
+    color: var(--color-text-primary);
+  }
+}
+
+@media (min-width: 1024px) {
+  .referenceTable .tableGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 4fr);
+  }
+}
+
+/* ---- StatCardGrid (1144:304) -----------------------------------------------
+   One column below 640, 2x2 to 1279, four across from 1280. 16px between
+   columns and 10px between rows — 10 is not a step in the space scale and is
+   left as the measured literal. The outer padding is 32 at 344 and 64 from
+   640 up. */
+
+.stats {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: var(--space-md);
+  row-gap: 10px;
+  inline-size: 100%;
+  padding-block: var(--space-xl);
+  margin: 0;
+}
+
+.stat {
+  height: 30vh;
+  display: flex;
+  /* dt is the label and dd is the figure, which is the way round the pair
+     reads. The figure is drawn above its label, so the visual order is
+     restored here rather than by inverting the semantics. */
+  flex-direction: column-reverse;
+  align-items: center;
+  justify-content: space-around;
+  padding-block-start: var(--space-lg);
+  padding-block-end: var(--space-lg);
+  padding-inline: var(--space-lg);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-subtle);
+  box-shadow: var(--shadow-xs);
+}
+
+/* display/data — Medium 46/52, letter-spacing -2%, color/blue/950. The blue is
+   the point: the only type on the page that leaves the neutral ramp. It does
+   NOT scale — 46/52 at 344 as well. --letter-spacing-tight is -0.02em, which
+   resolves to the -0.92px the node carries at 46px. */
+.statValue {
+  margin: 0;
+  font-size: var(--font-size-4xl);
+  line-height: var(--line-height-4xl);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-tight);
+  color: var(--color-blue-950);
+  white-space: nowrap;
+}
+
+/* body/sm — Regular 14/20, text/secondary, centred. The label carries the date
+   deliberately: the figures are dated and the dashboard keeps refreshing. */
+.statLabel {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+/* TILTED, STATIC, 2026-10-01. Not from Figma: the user's reference is
+   mozillafoundation.org's pillar cards (-2.5/+4deg, 1024 up only). Softer
+   angles here, -1.5/+2deg, because these cards are quieter than Mozilla's.
+   Odd cards lean left and even ones right, so any count alternates. Its
+   hover-to-straighten was tried the same day and dropped: the tilt stays
+   put. `rotate`, not `transform`, so nothing else on the card shares it. */
+@media (min-width: 1024px) {
+  .stat {
+    rotate: -1.5deg;
+  }
+
+  .stat:nth-child(even) {
+    rotate: 2deg;
+  }
+}
+
+@media (min-width: 640px) {
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-block: var(--space-3xl);
+  }
+}
+
+@media (min-width: 1280px) {
+  .stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* ---- Emotional UX additions (proj-emotional, 1402:1574), 2026-09-30 --------
+   Measured across that page's six frames: 1450, 1280, 1024, 768, 640 (the
+   frame is misnamed "1451") and 412. */
+
+/* Bold and italic runs inside body copy. Figma sets them Figtree Bold and
+   Figtree Italic. The layout loads Figtree upright only, so the italic is the
+   browser's slanted upright, not the true italic face. */
+.prose strong,
+.list strong {
+  font-weight: var(--font-weight-bold);
+}
+
+/* The bulleted lists — body type, disc markers, the marker indented 1.5x the
+   type size as the frame's list indent is. Same 1024 step and 640 measure as
+   prose, set in the block below. */
+.list {
+  inline-size: 100%;
+  margin: 0;
+  padding-inline-start: 1.5em;
+  list-style: disc;
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--color-text-primary);
+}
+
+@media (min-width: 1024px) {
+  .list {
+    max-inline-size: 640px;
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-lg);
+  }
+}
+
+/* StatCard with a before -> after pair (1417:1778): 4px apart, the old figure
+   in blue/950 at 60% (the node's rgba(11,43,70,0.6)), a 16px arrow between. */
+.statValue:has(.statFrom) {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.statFrom {
+  color: color-mix(in srgb, var(--color-blue-950) 60%, transparent);
+}
+
+.statArrow {
+  display: block;
+  inline-size: 16px;
+  block-size: 16px;
+  flex: none;
+}
+
+/* The closing "What I'd change" block (1412:1038): 0.5px blue/200 rules above
+   and below, 48px inside them. */
+.callout {
+  padding-block: var(--space-2xl);
+  border-block: 0.5px solid var(--color-blue-200);
+}
