@@ -1,9 +1,11 @@
-/* The four projects.
+/* The projects, three since 2026-10-01: Okisam was taken off the list
+ * before the first merge to main (confidential client work, no case study to
+ * show). The internship itself still appears on /about and in the intro.
  *
  * Content given directly on 2026-09-11, and it settles what Figma could not:
  * the file's ProjectList draws a fourth row called "Personal Library" that
  * was invented copy to fill the drawing, and there is no project behind it.
- * So the four here are the four, and `biblioteca` is gone.
+ * So the list holds only real projects, and `biblioteca` is gone.
  *
  * A row is `category | name | year`, in that order down the row, and the
  * category is the descriptive line rather than a discipline tag — "Testing
@@ -50,12 +52,6 @@ export const projects: Project[] = [
     slug: 'joies-laia',
     category: 'A brand and store, built pro bono',
     title: 'Joies Laia',
-    year: 2026,
-  },
-  {
-    slug: 'okisam',
-    category: 'Confidential client work, real growth',
-    title: 'Okisam',
     year: 2026,
   },
   {
