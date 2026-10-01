@@ -272,7 +272,7 @@ function CaseBlockView({ block }: { block: CaseBlock }) {
                     <span className={styles.statFrom}>{item.from}</span>
                     <img
                       className={styles.statArrow}
-                      src="/case-studies/emotional-ux/arrow.svg"
+                      src="/case-studies/arrow.svg"
                       alt="to"
                       width={16}
                       height={16}

@@ -55,8 +55,7 @@ export const emotionalUx: CaseStudy = {
      MP4 for Safari (1.3 MB), first frame as the poster. */
   cover: {
     slot: 'Hero — the redesigned store.',
-    caption:
-      'The trust bar in the redesigned store’s footer. Payment, support, shipping and returns, stated before anyone has to ask.',
+    caption: null,
     video: {
       webm: '/case-studies/emotional-ux/cover-loop.webm',
       mp4: '/case-studies/emotional-ux/cover-loop.mp4',

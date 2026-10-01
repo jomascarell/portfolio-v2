@@ -428,6 +428,10 @@
    and the cover keep surface/subtle. */
 .mediaInset {
   background-color: var(--color-surface-page);
+  /* With no panel to centre in, a contained drawing sits on the prose's
+     left edge rather than floating ~30px in from it inside the fixed frame
+     (measured at 1448, 2026-10-01). */
+  object-position: center center;
 }
 
 /* FIXED FRAME HEIGHT, calebwu.ca's technique (user, 2026-10-01). Images and
