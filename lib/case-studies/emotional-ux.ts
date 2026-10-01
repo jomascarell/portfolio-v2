@@ -8,7 +8,8 @@
  *
  * WHAT THE FRAMES DO DIFFERENTLY FROM EMBASSAMENTS, all decided 2026-09-30:
  *
- * - No cover. The header goes straight from the link to the meta row.
+ * - No cover in the frames. One was added later from the user's media
+ *   table (see `cover` below).
  * - The rail has ten entries for eleven sections plus the intro: Test and
  *   Next are drawn outside it, and the eyebrow "Design decision" is
  *   "Design decisions" in the rail. Figma is followed on all three.
@@ -28,7 +29,6 @@
  * The Repository link has no href in the Figma file; the URL is the one the
  * thesis cites on its cover page. */
 
-import coverImage from '@/public/case-studies/emotional-ux/cover.png'
 import normanImage from '@/public/case-studies/emotional-ux/norman-diagram-desktop.png'
 import normanPhone from '@/public/case-studies/emotional-ux/norman-diagram-phone.png'
 import checkoutImage from '@/public/case-studies/emotional-ux/checkout-flow-desktop.png'
@@ -47,15 +47,24 @@ export const emotionalUx: CaseStudy = {
   /* The Next.js mark — the user's own export (project-logo.svg), mask and
      all. */
   logo: '/case-studies/emotional-ux/logo.svg',
-  /* Absent from the Figma frames; added by the user's media table. It shows
-     the redesigned store's footer, where the trust bar lives. */
+  /* Absent from the Figma frames; added by the user's media table. A 20s
+     scroll through the redesigned store (2026-10-01), replacing the still of
+     its footer: home page, trust bar, then a product added and the cart
+     drawer open on its trust signals. Encoded like Embassaments' clip from a
+     5.6 MB source: VP9 WebM first (0.8 MB), x264 CRF 30 veryslow faststart
+     MP4 for Safari (1.3 MB), first frame as the poster. */
   cover: {
     slot: 'Hero — the redesigned store.',
     caption:
       'The trust bar in the redesigned store’s footer. Payment, support, shipping and returns, stated before anyone has to ask.',
-    image: {
-      src: coverImage,
-      alt: 'The redesigned store’s footer: a trust bar of secure payment, real support, free shipping and 30-day returns, above the newsletter sign-up, help links and accepted payment methods.',
+    video: {
+      webm: '/case-studies/emotional-ux/cover-loop.webm',
+      mp4: '/case-studies/emotional-ux/cover-loop.mp4',
+      poster: '/case-studies/emotional-ux/cover-loop-poster.jpg',
+      width: 1200,
+      height: 676,
+      label:
+        'A scroll through the redesigned store: its home page, new arrivals and custom orders, down to the footer’s trust bar of secure payment, real support, free shipping and 30-day returns; then a ring added to the cart, and the cart drawer repeating those guarantees beside the checkout button.',
     },
   },
   meta: [
