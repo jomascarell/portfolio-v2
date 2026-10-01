@@ -98,3 +98,38 @@
   white-space: nowrap;
   text-box: trim-both cap alphabetic;
 }
+
+/* ---- Touch screens, 2026-10-01 (user) --------------------------------------
+   No hover, so no corner pill: a 48px round button in the exact centre of
+   the clip, icon only, the icon centred in it. 48 clears the 44px touch
+   target. Visibility follows MediaVideo.tsx's tap logic (data-shown) while
+   playing; paused, it stays pinned as everywhere else. While hidden it still
+   takes a tap, so the centre of the clip always toggles playback. */
+@media (hover: none) {
+  .control {
+    inset: 0;
+    margin: auto;
+    inline-size: 48px;
+    block-size: 48px;
+    padding: 0;
+    gap: 0;
+    border-radius: 50%;
+  }
+
+  .label {
+    display: none;
+  }
+
+  .icon {
+    inline-size: 24px;
+    block-size: 24px;
+  }
+
+  .panel[data-playing='true'][data-shown='false'] .control {
+    opacity: 0;
+  }
+
+  .panel[data-playing='true'] .control:focus-visible {
+    opacity: 1;
+  }
+}

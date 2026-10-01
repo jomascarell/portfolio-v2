@@ -62,7 +62,15 @@ export type CaseBlock =
          dropped 2026-10-01. */
       inset?: boolean
       video?: MediaVideoSource
-      dashboard?: { embedUrl: string; title: string }
+      /* `still` and `href` are the phone version (2026-10-01 audit): below
+         640 the embed is 640 wide in a ~300px window, so phones get a capture
+         of it that links out to the live dashboard instead. */
+      dashboard?: {
+        embedUrl: string
+        title: string
+        still?: CaseImage
+        href?: string
+      }
     }
   /* Two different components, not one table with a flag off. ReferenceTable
      has NO header row and sets its first column SemiBold; ChartComparisonTable

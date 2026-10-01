@@ -21,6 +21,7 @@
 
 import statusImage from '@/public/case-studies/embassaments/status.png'
 import sketchImage from '@/public/case-studies/embassaments/process-sketch.png'
+import dashboardStill from '@/public/case-studies/embassaments/dashboard-still.png'
 import type { CaseStudy } from './types'
 
 export const embassaments: CaseStudy = {
@@ -30,7 +31,10 @@ export const embassaments: CaseStudy = {
     'Catalonia was deep in drought, and I couldn’t get a straight answer. So I built the tool I wished existed — a live, public dashboard tracking every internal-basin reservoir in the territory.',
   liveUrl: 'https://tfgdissenydigital.observablehq.cloud/embassaments-cat/',
   liveLabel: 'View the live dashboard',
-  logo: '/case-studies/embassaments/icon-embassament.svg',
+  /* The project icon, the same file the project list uses (2026-10-01). Inset
+     to a centred 48px box, 8px clear on every side like Emotional UX's
+     arches; the Figma export ran edge to edge and read as cramped beside it. */
+  logo: '/case-studies/embassaments/icon.svg',
   cover: {
     slot: 'Cover image — full width, directly below the standfirst, above the metadata bar.',
     caption: null,
@@ -38,11 +42,17 @@ export const embassaments: CaseStudy = {
        on 2026-09-30. WebM first (VP9, 1.2 MB); the MP4 for Safari is
        re-encoded from the 2.7 MB source at x264 CRF 30, veryslow,
        faststart (0.96 MB) — small text stays legible. The poster is the
-       first frame, which is that same landing page. */
+       first frame, which is that same landing page. Phones get 720-wide
+       encodes of the same source (0.43 / 0.38 MB), 2026-10-01. */
     video: {
       webm: '/case-studies/embassaments/cover-loop.webm',
       mp4: '/case-studies/embassaments/cover-loop.mp4',
+      phone: {
+        webm: '/case-studies/embassaments/cover-loop-phone.webm',
+        mp4: '/case-studies/embassaments/cover-loop-phone.mp4',
+      },
       poster: '/case-studies/embassaments/cover-loop-poster.jpg',
+      name: 'the dashboard tour',
       width: 1200,
       height: 676,
       label:
@@ -213,7 +223,12 @@ export const embassaments: CaseStudy = {
           video: {
             webm: '/case-studies/embassaments/search-tool-loop.webm',
             mp4: '/case-studies/embassaments/search-tool-loop.mp4',
+            phone: {
+              webm: '/case-studies/embassaments/search-tool-loop-phone.webm',
+              mp4: '/case-studies/embassaments/search-tool-loop-phone.mp4',
+            },
             poster: '/case-studies/embassaments/search-tool-loop-poster.jpg',
+            name: 'the search tool clip',
             width: 1200,
             height: 676,
           },
@@ -276,7 +291,7 @@ export const embassaments: CaseStudy = {
           kind: 'media',
           slot: 'Live dashboard embed',
           caption:
-            'The seasonal-trends view, live. Each reservoir’s monthly reserve level, where the April–June peak repeats every year.',
+            'Live. Each reservoir’s monthly reserve level, where the April–June peak repeats every year.',
           dashboard: {
             /* Unpinned, so an edit to the published notebook (the English
                translation, for one) shows up here with no rebuild. It
@@ -285,6 +300,13 @@ export const embassaments: CaseStudy = {
             embedUrl:
               'https://observablehq.com/embed/@jmj11/tendencies-estacionals?cells=TendenciesEstacionals',
             title: 'Live dashboard: monthly reserve level of each reservoir',
+            /* Captured from the embed above at its 640px minimum, 2x, on
+               2026-10-01. It is a snapshot: the live view keeps changing. */
+            still: {
+              src: dashboardStill,
+              alt: 'The seasonal-trends heatmap: nine reservoirs by month, January to December, coloured by reserve level from 0 to 100%. Foix stays near full all year; Riudecanyes runs lowest in September and October; most reservoirs are fullest between April and June.',
+            },
+            href: 'https://tfgdissenydigital.observablehq.cloud/embassaments-cat/',
           },
         },
       ],

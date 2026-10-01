@@ -1,5 +1,6 @@
 import { Fragment } from 'react'
 import ContactBio from '@/components/ContactBio/ContactBio'
+import NewTabNote from '@/components/NewTabNote/NewTabNote'
 import { bio, type BioSegment } from '@/lib/about'
 import styles from './AboutBio.module.css'
 
@@ -39,6 +40,7 @@ function renderSegment(segment: BioSegment, key: number) {
       className={styles.link}
     >
       {segment.text}
+      <NewTabNote />
     </a>
   )
 }

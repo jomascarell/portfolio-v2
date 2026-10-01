@@ -26,6 +26,64 @@
   border: 0;
 }
 
+/* PHONE STILL (2026-10-01). Below 640 the capture replaces the embed; from
+   640 the embed is back and the still is gone. Only when the data sets a
+   still: without one, .media stays as it was at every width. */
+.still {
+  display: none;
+}
+
+@media (max-width: 639px) {
+  .wideOnly {
+    display: none;
+  }
+
+  .still {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+  }
+}
+
+.stillImage {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  background-color: var(--color-surface-subtle);
+}
+
+.stillLink {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
+  color: inherit;
+  text-decoration: underline;
+}
+
+.stillLink:focus-visible {
+  outline: 2px solid var(--color-text-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.stillArrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 22.284px;
+  block-size: 22.284px;
+  flex: none;
+}
+
+.stillArrow svg {
+  display: block;
+  inline-size: 16px;
+  block-size: 16px;
+  rotate: 35deg;
+}
+
 /* Caption — 14/20 (font-size-sm), text/secondary, centred to match the
    figure captions. Both changed 2026-09-28; the component still draws
    ui/caption 12/18, left-aligned. */

@@ -1,3 +1,4 @@
+import NewTabNote from '@/components/NewTabNote/NewTabNote'
 import Wordmark from '@/components/Wordmark/Wordmark'
 import { siteConfig } from '@/lib/site-config'
 import styles from './IntroCard.module.css'
@@ -100,6 +101,7 @@ export default function IntroCard({
               rel="noopener noreferrer"
             >
               {siteConfig.status.previousHandle.handle}
+              <NewTabNote />
             </a>
           </p>
         </div>

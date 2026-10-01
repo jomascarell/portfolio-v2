@@ -9,6 +9,7 @@ import CollectionNav from '@/components/CollectionNav/CollectionNav'
 import ComponentCarousel from '@/components/ComponentCarousel/ComponentCarousel'
 import LiveDashboard from '@/components/LiveDashboard/LiveDashboard'
 import MediaVideo from '@/components/MediaVideo/MediaVideo'
+import NewTabNote from '@/components/NewTabNote/NewTabNote'
 import {
   CASE_INTRO_ID,
   caseNavItems,
@@ -66,8 +67,38 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const { slug } = await props.params
   const project = getProject(slug)
+  const title = `${project?.title ?? 'Project'} — Joan Mascarell`
+  const description = project?.description
+  const images = project?.shareImage
+    ? [{ url: project.shareImage.src, width: 1200, height: 630, alt: project.shareImage.alt }]
+    : undefined
 
-  return { title: `${project?.title ?? 'Project'} — Joan Mascarell` }
+  /* PER-PROJECT DESCRIPTION AND SHARE CARD (2026-10-01). Paths are relative;
+     the root layout's metadataBase makes them absolute. A project without a
+     description keeps the site-wide one; without a share card, Twitter falls
+     back to the small `summary` card rather than a large card with no
+     image. The share card is a static PNG per project in /public, not the
+     opengraph-image file convention: a static opengraph-image.png in this
+     [slug] folder would give every project the same image, and a generated
+     opengraph-image.tsx would redraw the Figma frame in JSX instead of
+     using its export. */
+  return {
+    title,
+    ...(description ? { description } : {}),
+    openGraph: {
+      title,
+      ...(description ? { description } : {}),
+      url: `/projects/${slug}`,
+      type: 'article',
+      ...(images ? { images } : {}),
+    },
+    twitter: {
+      card: images ? 'summary_large_image' : 'summary',
+      title,
+      ...(description ? { description } : {}),
+      ...(images ? { images } : {}),
+    },
+  }
 }
 
 /* Plain runs render as text; `b` and `i` runs as <strong> and <em>, which is
@@ -187,6 +218,8 @@ function CaseBlockView({ block }: { block: CaseBlock }) {
           <LiveDashboard
             embedUrl={block.dashboard.embedUrl}
             title={block.dashboard.title}
+            still={block.dashboard.still}
+            href={block.dashboard.href}
             caption={block.caption}
           />
         )
@@ -385,6 +418,7 @@ function CaseStudyArticle({ caseStudy }: { caseStudy: CaseStudy }) {
                   <span className={styles.liveLinkArrow} aria-hidden="true">
                     <IoMdArrowUp />
                   </span>
+                  <NewTabNote />
                 </a>
               ) : null}
             </div>

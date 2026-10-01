@@ -4,6 +4,7 @@ import IntroSequence from '@/components/IntroSequence/IntroSequence'
 import Nav from '@/components/Nav/Nav'
 import ScrollRestoration from '@/components/ScrollRestoration/ScrollRestoration'
 import SkipLink, { SKIP_TARGET_ID } from '@/components/SkipLink/SkipLink'
+import { siteUrl } from '@/lib/site-config'
 import shell from './layout.module.css'
 import './tokens.css'
 import './globals.css'
@@ -68,6 +69,9 @@ const figtree = Figtree({
    passed over. */
 
 export const metadata: Metadata = {
+  /* Turns the relative og:image and og:url paths the project pages return
+     into absolute URLs, which link previews require. See lib/site-config. */
+  metadataBase: siteUrl,
   // The retired build shipped "Jan Mascarell" here for months. It is Joan.
   title: 'Joan Mascarell',
   description: 'Portfolio of Joan Mascarell — design and front-end work.',
