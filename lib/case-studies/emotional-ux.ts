@@ -54,14 +54,22 @@ export const emotionalUx: CaseStudy = {
      its footer: home page, trust bar, then a product added and the cart
      drawer open on its trust signals. Encoded like Embassaments' clip from a
      5.6 MB source: VP9 WebM first (0.8 MB), x264 CRF 30 veryslow faststart
-     MP4 for Safari (1.3 MB), first frame as the poster. */
+     MP4 for Safari (1.3 MB). Phones get 720-wide encodes (0.37 / 0.46 MB).
+     The poster is the frame at 18.5s, the cart drawer open over the grid,
+     since the 2026-10-01 audit: readers under reduced motion only ever see
+     the poster, and the first frame was a pool photo, not the store. */
   cover: {
     slot: 'Hero — the redesigned store.',
     caption: null,
     video: {
       webm: '/case-studies/emotional-ux/cover-loop.webm',
       mp4: '/case-studies/emotional-ux/cover-loop.mp4',
+      phone: {
+        webm: '/case-studies/emotional-ux/cover-loop-phone.webm',
+        mp4: '/case-studies/emotional-ux/cover-loop-phone.mp4',
+      },
       poster: '/case-studies/emotional-ux/cover-loop-poster.jpg',
+      name: 'the store tour',
       width: 1200,
       height: 676,
       label:

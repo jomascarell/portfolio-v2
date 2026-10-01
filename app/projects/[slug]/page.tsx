@@ -9,6 +9,7 @@ import CollectionNav from '@/components/CollectionNav/CollectionNav'
 import ComponentCarousel from '@/components/ComponentCarousel/ComponentCarousel'
 import LiveDashboard from '@/components/LiveDashboard/LiveDashboard'
 import MediaVideo from '@/components/MediaVideo/MediaVideo'
+import NewTabNote from '@/components/NewTabNote/NewTabNote'
 import {
   CASE_INTRO_ID,
   caseNavItems,
@@ -187,6 +188,8 @@ function CaseBlockView({ block }: { block: CaseBlock }) {
           <LiveDashboard
             embedUrl={block.dashboard.embedUrl}
             title={block.dashboard.title}
+            still={block.dashboard.still}
+            href={block.dashboard.href}
             caption={block.caption}
           />
         )
@@ -385,6 +388,7 @@ function CaseStudyArticle({ caseStudy }: { caseStudy: CaseStudy }) {
                   <span className={styles.liveLinkArrow} aria-hidden="true">
                     <IoMdArrowUp />
                   </span>
+                  <NewTabNote />
                 </a>
               ) : null}
             </div>

@@ -63,7 +63,7 @@ export default function SocialIcons({
             href={siteConfig.social[key].href}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={label}
+            aria-label={`${label} (opens in a new tab)`}
           >
             <span className={styles.handle} aria-hidden="true">
               {siteConfig.social[key].handle}

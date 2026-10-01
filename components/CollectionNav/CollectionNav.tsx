@@ -101,6 +101,16 @@ export default function CollectionNav({
        whatever either side changes to later. */
     const railTop = () => navRef.current?.getBoundingClientRect().top ?? 0
 
+    /* AT THE BOTTOM OF THE PAGE THE LAST ENTRY IS CURRENT (2026-10-01
+       audit). A last section shorter than the space below the rail can never
+       reach the rail's line, so Embassaments' "Reflection" was never marked:
+       a click on it scrolled to the end, released the lock, and the marker
+       fell back to "Findings". Reaching the end is as far as that section
+       can be scrolled, so it counts as arriving. */
+    const atBottom = () =>
+      window.scrollY + window.innerHeight >=
+      document.documentElement.scrollHeight - 2
+
     const syncCurrent = () => {
       if (lockRef.current) return
       const offset = railTop()
@@ -109,6 +119,10 @@ export default function CollectionNav({
         if (section.getBoundingClientRect().top - offset <= 1) {
           current = section
         }
+      }
+      const last = sections[sections.length - 1]
+      if (atBottom() && last.getBoundingClientRect().top < window.innerHeight) {
+        current = last
       }
       setCurrentId(current.id)
     }
@@ -140,9 +154,23 @@ export default function CollectionNav({
     observe()
     window.addEventListener('resize', observe)
 
+    /* The band only sees sections cross the rail's line; arriving at the
+       bottom crosses nothing. So a scroll listener watches that one state,
+       and re-syncs only when it flips, not on every frame. */
+    let wasAtBottom = atBottom()
+    const onScroll = () => {
+      const now = atBottom()
+      if (now !== wasAtBottom) {
+        wasAtBottom = now
+        syncCurrent()
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+
     return () => {
       observer?.disconnect()
       window.removeEventListener('resize', observe)
+      window.removeEventListener('scroll', onScroll)
     }
   }, [items])
 
