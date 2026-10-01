@@ -67,7 +67,7 @@
 
 @media (min-width: 1024px) {
   .content {
-    grid-column: 4 / span 7;
+    grid-column: 4 / span 8;
   }
 }
 
@@ -203,8 +203,6 @@
   object-fit: contain;
   border-radius: var(--radius-md);
   background-color: var(--color-surface-subtle);
-  /* box-shadow: var(--shadow-xs); */
-  border: 0.5px solid var(--color-neutral-200);
 }
 
 /* ---- CaseMetaRow (1143:277) ------------------------------------------------
@@ -385,6 +383,24 @@
   inline-size: 100%;
 }
 
+/* MEDIA CAPS AT 7 OF THE CONTENT COLUMN'S 8, 2026-10-01 (user: "feels too
+   big in desktop"). Not from Figma. The figure stays in the flow, left edge
+   on column 4 with the prose, and only its right edge moves in, to the grid's
+   column-10 line. 100% here is the content column minus the sections'
+   --space-lg padding on both sides, so 7 columns + 6 gutters of the full
+   column works out to (7 x 100% - 1 gutter) / 8 + 3/4 of that padding. Exact
+   at every width; measured on the line at 1024, 1280 and 1448.
+   Images, videos and the cover only; charts, stats, the dashboard and the
+   carousel keep the full column. */
+@media (min-width: 1024px) {
+  .media,
+  .cover {
+    max-inline-size: calc(
+      (100% * 7 - var(--space-md)) / 8 + var(--space-lg) * 0.75
+    );
+  }
+}
+
 /* The cover's frame (1176:1164), reused for every image slot: radius/md,
    surface/subtle behind an object-contain image.
 
@@ -406,18 +422,13 @@
   background-color: var(--color-surface-subtle);
 }
 
-/* Diagrams on transparent canvases (Emotional UX, 2026-09-30): padded
-   inside the panel so nothing touches its edge. The padding is inside the
-   <img>'s own box, so the panel ground shows through it and the image keeps
-   its ratio. */
+/* Diagrams on transparent canvases (Emotional UX): on the page's own white,
+   not the grey panel, and with no padding, so they line up with the prose
+   and take the full figure width (user, 2026-10-01). Earlier the padding kept
+   labels off the panel's edge; with no panel there is no edge. Screenshots
+   and the cover keep surface/subtle. */
 .mediaInset {
-  padding: var(--space-sm);
-}
-
-@media (min-width: 640px) {
-  .mediaInset {
-    padding: var(--space-lg);
-  }
+  background-color: var(--color-surface-page);
 }
 
 /* NOT FROM THE FILE. The frames hold real images in these slots; no asset has

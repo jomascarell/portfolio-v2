@@ -29,9 +29,12 @@
  * thesis cites on its cover page. */
 
 import coverImage from '@/public/case-studies/emotional-ux/cover.png'
-import normanImage from '@/public/case-studies/emotional-ux/norman-diagram.png'
-import checkoutImage from '@/public/case-studies/emotional-ux/checkout-flow.png'
-import statesImage from '@/public/case-studies/emotional-ux/product-card-states.png'
+import normanImage from '@/public/case-studies/emotional-ux/norman-diagram-desktop.png'
+import normanPhone from '@/public/case-studies/emotional-ux/norman-diagram-phone.png'
+import checkoutImage from '@/public/case-studies/emotional-ux/checkout-flow-desktop.png'
+import checkoutPhone from '@/public/case-studies/emotional-ux/checkout-flow-phone.png'
+import statesImage from '@/public/case-studies/emotional-ux/product-card-states-desktop.png'
+import statesPhone from '@/public/case-studies/emotional-ux/product-card-states-phone.png'
 import type { CaseStudy } from './types'
 
 export const emotionalUx: CaseStudy = {
@@ -158,6 +161,7 @@ export const emotionalUx: CaseStudy = {
           inset: true,
           image: {
             src: normanImage,
+            phone: normanPhone,
             alt: 'Diagram: designer, product, user. The user’s response splits into Norman’s three levels — visceral (perceptually induced), behavioural (expectation induced) and reflective (intellectually induced) reactions.',
           },
         },
@@ -294,10 +298,11 @@ export const emotionalUx: CaseStudy = {
           kind: 'media',
           slot: 'Product card, three states',
           caption:
-            'The product card as built. The size selector only opens for products with variants; everything else goes straight to the cart.',
+            'The product card as built. The size selector only opens for products with variants; everything else goes straight to the cart. Mouse leave and clicking outside both return to rest.',
           inset: true,
           image: {
             src: statesImage,
+            phone: statesPhone,
             alt: 'State diagram of the product card. At rest it shows the main image with name, price and category. Hover darkens the image and shows an Add to cart button. Clicking Add on a product with variants replaces the button with a size selector (S, M, L, XL) and a link to the product. Mouse leave returns from hover to rest; clicking outside returns from the selector.',
           },
         },
@@ -324,6 +329,7 @@ export const emotionalUx: CaseStudy = {
           inset: true,
           image: {
             src: checkoutImage,
+            phone: checkoutPhone,
             alt: 'Flow diagram: product page (add to cart), cart drawer (review items), cart footer (checkout button), then Stripe’s hosted checkout — the one step drawn in a different colour. Stripe returns to a success page and confirms the order by webhook.',
           },
         },

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
+import Image, { getImageProps } from 'next/image'
 import { notFound } from 'next/navigation'
 import { Fragment } from 'react'
 import SeverityBars from '@/components/Charts/SeverityBars'
@@ -13,6 +13,7 @@ import {
   caseNavItems,
   getCaseStudy,
   type CaseBlock,
+  type CaseImage,
   type CaseStudy,
   type RichText,
 } from '@/lib/case-studies'
@@ -83,6 +84,46 @@ function RichTextView({ text }: { text: RichText }) {
   )
 }
 
+const MEDIA_SIZES = '(max-width: 1023px) calc(100vw - 112px), 740px'
+
+/* A figure with a `phone` drawing renders as <picture>, the art-direction
+   pattern from next/image's getImageProps docs. Each <source> carries its own
+   file's width and height, so the box takes the right ratio at either width
+   before the image arrives — the <img>'s attributes alone would hold the
+   phone ratio at 1448 until load. */
+function MediaImage({ image, className }: { image: CaseImage; className: string }) {
+  if (!image.phone)
+    return (
+      <Image className={className} src={image.src} alt={image.alt} sizes={MEDIA_SIZES} />
+    )
+  const common = { alt: image.alt, sizes: MEDIA_SIZES }
+  const {
+    props: { srcSet: desktop },
+  } = getImageProps({ ...common, src: image.src })
+  const {
+    props: { srcSet: phone, ...rest },
+  } = getImageProps({ ...common, src: image.phone })
+  return (
+    <picture>
+      <source
+        media="(min-width: 640px)"
+        srcSet={desktop}
+        sizes={MEDIA_SIZES}
+        width={image.src.width}
+        height={image.src.height}
+      />
+      <source
+        srcSet={phone}
+        sizes={MEDIA_SIZES}
+        width={image.phone.width}
+        height={image.phone.height}
+      />
+      {/* eslint-disable-next-line jsx-a11y/alt-text -- alt arrives in rest, from getImageProps */}
+      <img {...rest} className={className} />
+    </picture>
+  )
+}
+
 function CaseBlockView({ block }: { block: CaseBlock }) {
   switch (block.kind) {
     case 'prose':
@@ -145,17 +186,15 @@ function CaseBlockView({ block }: { block: CaseBlock }) {
           />
         )
       return (
-        <figure className={styles.figure}>
+        <figure className={`${styles.figure} ${styles.media}`}>
           {block.image ? (
-            <Image
+            <MediaImage
+              image={block.image}
               className={
                 block.inset
                   ? `${styles.mediaImage} ${styles.mediaInset}`
                   : styles.mediaImage
               }
-              src={block.image.src}
-              alt={block.image.alt}
-              sizes="(max-width: 1023px) calc(100vw - 112px), 939px"
             />
           ) : block.video ? (
             <MediaVideo video={block.video} />

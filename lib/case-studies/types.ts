@@ -20,7 +20,16 @@ import type { ChartData } from '@/components/Charts/types'
 import type { ComponentSlide } from '@/components/ComponentCarousel/ComponentCarousel'
 import type { MediaVideoSource } from '@/components/MediaVideo/MediaVideo'
 
-export type CaseImage = { src: StaticImageData; alt: string }
+/* `phone` is a second drawing of the same figure for screens below 640,
+   art-directed through <picture>, not a smaller copy. Diagrams need it: at
+   412 the image is 284 wide against 779 at 1448, so no single label size
+   reads at both (2026-10-01). Desktop frames 780 wide at @2x with 20px
+   labels; phone frames 284 wide at @3x with 15px labels. */
+export type CaseImage = {
+  src: StaticImageData
+  phone?: StaticImageData
+  alt: string
+}
 
 /* Body copy with inline emphasis. A plain string is the common case; an array
    mixes plain runs with `{ b }` (bold) and `{ i }` (italic) ones, which is all
@@ -46,8 +55,9 @@ export type CaseBlock =
       slot: string
       caption: string | null
       image?: CaseImage
-      /* Pads the image inside its panel — for diagrams drawn to the edge of
-         a transparent canvas, so their labels do not touch the panel. */
+      /* Marks a diagram on a transparent canvas: it sits on the page's white
+         instead of the grey panel. Named for the padding it used to add,
+         dropped 2026-10-01. */
       inset?: boolean
       video?: MediaVideoSource
       dashboard?: { embedUrl: string; title: string }
