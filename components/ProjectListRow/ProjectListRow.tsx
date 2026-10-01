@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import type { CSSProperties } from 'react'
 import type { Project } from '@/lib/projects'
 import styles from './ProjectListRow.module.css'
 
@@ -37,7 +38,17 @@ import styles from './ProjectListRow.module.css'
  * kept — its own comment on removing it is why: a mouse resting on a row
  * the carousel scrolls past would light that row up and fight `current` for
  * the same visual state. `hover` survives only as a forced state (below),
- * for the gallery's standalone specimen, which never runs the carousel. */
+ * for the gallery's standalone specimen, which never runs the carousel.
+ *
+ * THE PROJECT ICON, 2026-10-01, from the Figma drafts 1500:1361 (Embassaments)
+ * and 1502:1376: a 64px outline icon left of the text, 32px (space/xl) apart,
+ * the text block and the year 8px (space/sm) apart. It is drawn as a CSS
+ * MASK of the project's own SVG, filled with the row's ink, not as an <img>:
+ * an unlit row is color/text/subtle, and a black icon on a near-white row
+ * would light up the one thing the state system keeps dim. The mask takes
+ * only the file's shape, so the two exports' different stroke colours
+ * (black, #111) stop mattering. A project with no icon keeps an empty 64px
+ * slot, so its text still lines up with the rows that have one. */
 
 const STATES = {
   default: styles.default,
@@ -72,17 +83,28 @@ export default function ProjectListRow({
       href={`/projects/${project.slug}`}
       tabIndex={tabIndex}
     >
-      <span className={styles.text}>
-        <span className={styles.category}>{project.category}</span>
-        <span className={styles.title}>{project.title}</span>
-      </span>
-      {/* The stamp is the last two digits behind a full stop — 2026 draws as
+      <span
+        className={styles.icon}
+        aria-hidden="true"
+        style={
+          project.icon
+            ? ({ '--icon': `url(${project.icon})` } as CSSProperties)
+            : undefined
+        }
+      />
+      <span className={styles.body}>
+        <span className={styles.text}>
+          <span className={styles.category}>{project.category}</span>
+          <span className={styles.title}>{project.title}</span>
+        </span>
+        {/* The stamp is the last two digits behind a full stop — 2026 draws as
           ".26", which is a decision the design makes and not a shortening this
           component invents. <time> so the machine-readable year survives the
           abbreviation; the visible text stays exactly what Figma draws. */}
-      <time className={styles.year} dateTime={String(project.year)}>
-        .{String(project.year).slice(-2)}
-      </time>
+        <time className={styles.year} dateTime={String(project.year)}>
+          .{String(project.year).slice(-2)}
+        </time>
+      </span>
     </Link>
   )
 }

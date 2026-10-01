@@ -6,12 +6,18 @@
 .row {
   --row-ink: var(--color-text-subtle);
 
+  /* ICON | BODY, 2026-10-01 (Figma 1500:1361 / 1502:1376): a wrapping row,
+     icon then the text block, gap 0 x space/xl exactly as the drafts set it.
+     The drafts' text block is a fixed 660; the list's real rows are 234-521
+     wide, so here the body grows and only wraps under the icon once it would
+     be narrower than 200px — "Embassaments" at 28px needs about 190. That
+     happens at md (234-wide rows); from 1024 up the two sit side by side.
+     Wrapped, the row gap is the drafts' 0: the icon sits straight on the
+     category, as their own wrap would put it. */
   display: flex;
-  flex-direction: column;
-  gap: 10px; /* Figma: the row's grid gap. Not on the space scale — it sits
-                between --space-sm (8) and --space-md (16). Left as the literal
-                rather than rounded to a token, because rounding it would
-                silently move the design. */
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0 var(--space-xl);
   padding: var(--space-md);
   color: var(--row-ink);
   text-decoration: none;
@@ -98,6 +104,36 @@
    would light up and fight the scroll-driven `current` state for the same
    row — removed here for the same reason, not just to match precedent. */
 
+/* 64x64, the export's own size. The mask is the project's SVG
+   (--icon, set inline from project.icon); the fill is the row's ink, so the
+   icon dims and lights with the text. No --icon, no mask: the slot stays
+   empty and keeps the text aligned. */
+.icon {
+  flex: none;
+  inline-size: 64px;
+  block-size: 64px;
+}
+
+.icon[style] {
+  background-color: var(--row-ink);
+  mask: var(--icon) center / 64px 64px no-repeat;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.current .icon[style] {
+  transition: background-color var(--duration-deck) cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* The text block and the year, space/sm apart (the drafts' 8; the row used
+   to set its own 10 between them). */
+.body {
+  display: flex;
+  flex: 1 1 200px;
+  flex-direction: column;
+  gap: var(--space-sm);
+  min-inline-size: 0;
+}
+
 .text {
   display: flex;
   flex-direction: column;
@@ -126,7 +162,9 @@
 .category {
   font-size: var(--font-size-lg);
   line-height: var(--line-height-lg);
-  font-weight: var(--font-weight-regular);
+  /* Medium, as heading/h3 is and as the note above already said; the rule
+     read regular until the 2026-10-01 drafts were implemented. */
+  font-weight: var(--font-weight-medium);
   letter-spacing: var(--letter-spacing-normal);
 
   /* Follows the row's ink like the title, but declared rather than inherited
@@ -135,12 +173,13 @@
   transition: color var(--duration-fast) var(--ease-standard);
 }
 
-/* Figma text style: heading/h1 — 46/52 Medium, tracking tight. */
+/* Figma text style: heading/h2 — 28/36 Medium, tracking normal, per the
+   2026-10-01 drafts (the comment here used to say heading/h1 46/52 tight). */
 .title {
   font-size: var(--font-size-2xl);
   line-height: var(--line-height-2xl);
   font-weight: var(--font-weight-medium);
-  letter-spacing: var(--letter-spacing-tight);
+  letter-spacing: var(--letter-spacing-normal);
 }
 
 /* Figma text style: display/numeral — 28/36 Light, tracking tight. Its own
