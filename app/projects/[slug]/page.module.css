@@ -181,11 +181,28 @@
   flex: none;
 }
 
-.liveLinkArrow img {
+.liveLinkArrow svg {
   display: block;
   inline-size: 16px;
   block-size: 16px;
   rotate: 35deg;
+}
+
+/* THE ARROW STEPS OUT ON HOVER, 2026-10-01. Mozilla's link arrow moves
+   .75rem over 300ms ease-out when the card is hovered; here it is the link
+   itself, and the arrow travels along its own 35deg heading rather than
+   sideways, so it keeps pointing where it goes. --duration-slow is the
+   nearest token to 300ms. The glyph is react-icons' IoMdArrowUp (user's
+   pick), on currentColor, so it takes the link's accent on hover, which the
+   old <img> could not. */
+.liveLinkArrow {
+  transition: translate var(--duration-slow) ease-out;
+}
+
+@media (hover: hover) {
+  .liveLink:hover .liveLinkArrow {
+    translate: calc(0.75rem * sin(35deg)) calc(-0.75rem * cos(35deg));
+  }
 }
 
 /* MediaFigure (1176:1164) — the cover, Caption=No. radius/md, surface/subtle
@@ -627,6 +644,22 @@
   letter-spacing: var(--letter-spacing-normal);
   color: var(--color-text-secondary);
   text-align: center;
+}
+
+/* TILTED, STATIC, 2026-10-01. Not from Figma: the user's reference is
+   mozillafoundation.org's pillar cards (-2.5/+4deg, 1024 up only). Softer
+   angles here, -1.5/+2deg, because these cards are quieter than Mozilla's.
+   Odd cards lean left and even ones right, so any count alternates. Its
+   hover-to-straighten was tried the same day and dropped: the tilt stays
+   put. `rotate`, not `transform`, so nothing else on the card shares it. */
+@media (min-width: 1024px) {
+  .stat {
+    rotate: -1.5deg;
+  }
+
+  .stat:nth-child(even) {
+    rotate: 2deg;
+  }
 }
 
 @media (min-width: 640px) {

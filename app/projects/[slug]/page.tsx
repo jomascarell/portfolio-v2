@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Image, { getImageProps } from 'next/image'
 import { notFound } from 'next/navigation'
 import { Fragment } from 'react'
+import { IoMdArrowUp } from 'react-icons/io'
 import SeverityBars from '@/components/Charts/SeverityBars'
 import SlopeChart from '@/components/Charts/SlopeChart'
 import CollectionNav from '@/components/CollectionNav/CollectionNav'
@@ -341,12 +342,7 @@ function CaseStudyArticle({ caseStudy }: { caseStudy: CaseStudy }) {
                 >
                   {caseStudy.liveLabel}
                   <span className={styles.liveLinkArrow} aria-hidden="true">
-                    <img
-                      src="/case-studies/arrow-small-up.svg"
-                      alt=""
-                      width={16}
-                      height={16}
-                    />
+                    <IoMdArrowUp />
                   </span>
                 </a>
               ) : null}
