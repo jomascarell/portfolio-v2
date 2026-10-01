@@ -72,7 +72,7 @@
 }
 
 .barAccent {
-  fill: var(--color-text-accent);
+  fill: var(--color-surface-accent);
 }
 
 .slope,
@@ -87,7 +87,7 @@
 }
 
 .slopeAccent {
-  stroke: var(--color-text-accent);
+  stroke: var(--color-surface-accent);
 }
 
 /* The 2px ring is the surface colour, so a dot stays legible where lines
@@ -103,7 +103,7 @@
 }
 
 .dotAccent {
-  fill: var(--color-text-accent);
+  fill: var(--color-surface-accent);
 }
 
 /* The reference line — a hairline, solid, in text/secondary. */

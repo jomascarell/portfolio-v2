@@ -304,7 +304,7 @@
 .houseIcon {
   inline-size: var(--size-icon-sm);
   block-size: var(--size-icon-sm);
-  fill: var(--color-text-accent);
+  fill: var(--color-surface-accent);
   flex-shrink: 0;
 }
 
@@ -319,12 +319,15 @@
   /* Same 2026-09-16 match to calebwu.ca as .home, above — color/text/muted is
      the one thing that stays Figma's, since the current-page-reads-muted
      idea isn't something to source from a reference that has no muted state
-     of its own (his label and his home group are both full-color). */
+     of its own (his label and his home group are both full-color).
+     SECONDARY, not muted, since the 2026-10-01 pre-merge audit: muted
+     (#989898) on the pill's #f7f7f7 is 2.69:1; secondary is 5.4:1 and still
+     reads quieter than "Joan" in primary. */
   font-size: var(--font-size-md);
   line-height: 24px;
   font-weight: var(--font-weight-regular);
   letter-spacing: 0.24px;
-  color: var(--color-text-muted);
+  color: var(--color-text-secondary);
 }
 
 /* Nav.tsx already short-circuits the whole staged sequence under this query —

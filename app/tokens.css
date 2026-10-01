@@ -285,7 +285,12 @@
      back until hovered. Lighter than --color-text-muted on purpose. */
   --color-text-subtle: var(--color-neutral-200);
 
-  --color-text-accent: var(--color-blue-500); /* Links and accent marks. */
+  /* Links and accent TEXT. blue/600, not the brand blue/500, since the
+     2026-10-01 pre-merge audit: blue/500 on white is 3.25:1 and 16px text
+     needs 4.5:1; blue/600 is 4.8:1. Graphics that only need 3:1 (chart
+     highlight, carousel sketch marks, the breadcrumb's house glyph) take
+     --color-surface-accent, which stays blue/500, so they look as before. */
+  --color-text-accent: var(--color-blue-600);
 
   /* Hover/active for accent text. Currently bound to nothing — the hover
      states it exists for have not been built yet (Phase 9). */
@@ -318,7 +323,8 @@
 
   /* Accent ground for the current section marker. Mirrors calebwu.ca, where
      the active pagination thumb takes the accent while the rest sit at
-     neutral/200. */
+     neutral/200. Also the brand blue for non-text graphics (fills, strokes,
+     icon glyphs), which need 3:1, not text's 4.5:1. */
   --color-surface-accent: var(--color-blue-500);
 
   /* Default hairline border and divider. */

@@ -224,7 +224,7 @@
    The exports draw this in orange; the site accent replaces it (user's
    decision, 2026-09-30). The edge stays 1px at every scale, as drawn. */
 .highlight {
-  border: 1px dashed var(--color-text-accent);
+  border: 1px dashed var(--color-surface-accent);
   border-radius: calc(var(--u) * 4);
   background-color: var(--color-blue-50);
 }
@@ -237,7 +237,7 @@
 
 .button {
   block-size: calc(var(--u) * 9);
-  border: 1px solid var(--color-text-accent);
+  border: 1px solid var(--color-surface-accent);
   border-radius: calc(var(--u) * 3);
 }
 
@@ -589,7 +589,7 @@
   inline-size: 16px;
   block-size: 4px;
   border-radius: 2px;
-  background-color: var(--color-text-accent);
+  background-color: var(--color-surface-accent);
   transform: translateX(calc(var(--current, 0) * 26px));
   transition: transform var(--duration-slow) var(--ease-entrance);
   pointer-events: none;
