@@ -475,6 +475,57 @@
 
 /* Caption — 14/20 (font-size-sm), text/secondary, centred. Stepped up from
    ui/caption 12/18 on 2026-09-28; Figma still draws 12/18. */
+/* ---- Before / after pair (2026-10-01, not in Figma) -------------------------
+   calebwu.ca's paired figures, adapted: his pairs share a fixed frame height,
+   ours share a SCALE. Each half grows by its export's pixel width (--grow,
+   set inline), so two screenshots exported at one scale keep their real
+   proportions to each other: the template's taller drawer stays taller, and
+   neither one's text is shrunk to make the edges line up. Top-aligned.
+   Stacked below 640, where each drawer gets the full column. From 1024 the
+   row is capped so the taller image stands 36rem at most, centred like the
+   diagrams. */
+.pairRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.pairLabel {
+  margin-block-end: var(--space-sm);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+}
+
+.pairImage {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  border: 0.5px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+}
+
+@media (min-width: 640px) {
+  .pairRow {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--space-md);
+  }
+
+  .pairItem {
+    flex: var(--grow) 1 0;
+    min-inline-size: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .pairRow {
+    max-inline-size: calc(36rem * var(--pair-ratio) + var(--space-md));
+    margin-inline: auto;
+  }
+}
+
 .caption {
   margin-block-start: var(--space-sm);
   font-size: var(--font-size-sm);

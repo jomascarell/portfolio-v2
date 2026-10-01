@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Image, { getImageProps } from 'next/image'
 import { notFound } from 'next/navigation'
-import { Fragment } from 'react'
+import { Fragment, type CSSProperties } from 'react'
 import { IoMdArrowUp } from 'react-icons/io'
 import SeverityBars from '@/components/Charts/SeverityBars'
 import SlopeChart from '@/components/Charts/SlopeChart'
@@ -86,6 +86,10 @@ function RichTextView({ text }: { text: RichText }) {
 }
 
 const MEDIA_SIZES = '(max-width: 1023px) calc(100vw - 112px), 830px'
+/* One half of a pair: full width when stacked, about half from 640, and
+   capped by the pair's height from 1024 (see .pairRow). */
+const PAIR_SIZES =
+  '(max-width: 639px) calc(100vw - 112px), (max-width: 1023px) 45vw, 360px'
 
 /* A figure with a `phone` drawing renders as <picture>, the art-direction
    pattern from next/image's getImageProps docs. Each <source> carries its own
@@ -209,6 +213,43 @@ function CaseBlockView({ block }: { block: CaseBlock }) {
           ) : null}
         </figure>
       )
+
+    /* Each half's flex-grow is its export's own pixel width, so both are
+       drawn at ONE scale and a taller screenshot stays taller. --pair-ratio
+       (total width over the taller height) lets the CSS cap the pair's
+       height. Assumes both exports share a scale, which the pair's data
+       note asks for. */
+    case 'pair': {
+      const [a, b] = block.items.map((item) => item.image.src)
+      const pairRatio = (a.width + b.width) / Math.max(a.height, b.height)
+      return (
+        <figure
+          className={`${styles.figure} ${styles.pair}`}
+          style={{ '--pair-ratio': pairRatio } as CSSProperties}
+        >
+          <div className={styles.pairRow}>
+            {block.items.map((item, i) => (
+              <div
+                key={item.label}
+                className={styles.pairItem}
+                style={{ '--grow': [a, b][i].width } as CSSProperties}
+              >
+                <p className={styles.pairLabel}>{item.label}</p>
+                <Image
+                  className={styles.pairImage}
+                  src={item.image.src}
+                  alt={item.image.alt}
+                  sizes={PAIR_SIZES}
+                />
+              </div>
+            ))}
+          </div>
+          {block.caption ? (
+            <figcaption className={styles.caption}>{block.caption}</figcaption>
+          ) : null}
+        </figure>
+      )
+    }
 
     /* BOTH TABLES ARE A DESCRIPTION LIST, NOT A <table>, and that is a
        deliberate reading of the design rather than a shortcut.

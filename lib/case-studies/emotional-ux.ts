@@ -35,6 +35,8 @@ import checkoutImage from '@/public/case-studies/emotional-ux/checkout-flow-desk
 import checkoutPhone from '@/public/case-studies/emotional-ux/checkout-flow-phone.png'
 import statesImage from '@/public/case-studies/emotional-ux/product-card-states-desktop.png'
 import statesPhone from '@/public/case-studies/emotional-ux/product-card-states-phone.png'
+import drawerBefore from '@/public/case-studies/emotional-ux/drawer-before.png'
+import drawerAfter from '@/public/case-studies/emotional-ux/drawer-after.png'
 import type { CaseStudy } from './types'
 
 export const emotionalUx: CaseStudy = {
@@ -288,6 +290,32 @@ export const emotionalUx: CaseStudy = {
               { b: 'Cart drawer' },
               ': built on React 19’s useOptimistic. Quantities update before the network responds and roll back automatically if the request fails. Removing an item, whether by the bin icon or by going below one, always asks first.',
             ],
+          ],
+        },
+        /* The media plan's "drawer before/after" (2026-10-01): the user's two
+           exports, both one item below the free-shipping threshold so the
+           states match, and at one scale (the before was scaled up to 1014
+           wide to match the after's 1018). The unlocked state is told in the
+           caption, not shown. */
+        {
+          kind: 'pair',
+          caption:
+            'The cart drawer with one item, before and after. The redesign shows how far free shipping is and puts payment, returns and delivery beside the checkout button. Past the threshold, the bar turns green and shipping shows as free.',
+          items: [
+            {
+              label: 'Before · YNS template',
+              image: {
+                src: drawerBefore,
+                alt: 'The template’s cart drawer: one T-shirt at $61.50, then a long empty space, a discount-code field, the subtotal, “Shipping calculated at checkout” and a Checkout button.',
+              },
+            },
+            {
+              label: 'After · prototype component drawer',
+              image: {
+                src: drawerAfter,
+                alt: 'The redesigned cart drawer: “Add 12,00€ more for free shipping” above a progress bar, one ring at 48,00€, subtotal, shipping and an estimated total with VAT included, then secure payment, 30-day returns and 24/48h delivery above a “Checkout 48,00€” button.',
+              },
+            },
           ],
         },
       ],

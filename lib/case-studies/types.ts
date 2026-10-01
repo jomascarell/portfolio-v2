@@ -31,6 +31,8 @@ export type CaseImage = {
   alt: string
 }
 
+export type PairItem = { label: string; image: CaseImage }
+
 /* Body copy with inline emphasis. A plain string is the common case; an array
    mixes plain runs with `{ b }` (bold) and `{ i }` (italic) ones, which is all
    the Emotional UX frames set inside a paragraph. */
@@ -76,6 +78,16 @@ export type CaseBlock =
   /* One slide per component of the system — ComponentCarousel. Replaced
      Emotional UX's three-column ChartSystem table on 2026-09-30. */
   | { kind: 'carousel'; label: string; slides: ComponentSlide[] }
+  /* Two images compared, before -> after (2026-10-01, the cart drawer). Side
+     by side from 640, stacked below it, each under its own HTML label rather
+     than one baked into the export. EXPORT BOTH AT ONE SCALE: they are drawn
+     at a shared scale (each half's width is its pixel width), so a mismatch
+     in the files shows up on the page as a mismatch in text size. */
+  | {
+      kind: 'pair'
+      caption: string | null
+      items: [PairItem, PairItem]
+    }
   | { kind: 'list'; items: RichText[] }
   /* A chart drawn as SVG from the data here — SeverityBars or SlopeChart. */
   | { kind: 'chart'; chart: ChartData; caption?: string }
