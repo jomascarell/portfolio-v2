@@ -131,9 +131,19 @@ html {
    The reduced-motion block above already kills every view-transition animation,
    so these need no query of their own — the state still changes, it just
    arrives instantly. */
+/* LITERALS, NOT TOKENS, IN EVERY ::view-transition-* RULE (2026-10-02).
+   On the user's iPhone (Safari and Chrome, both WebKit) the page fade did not
+   run at all: the old page stayed fully opaque under the new one for most of
+   a second, then vanished. Desktop Chrome was fine. These were the only
+   rules in the transition built on var(), and an animation whose value
+   fails to resolve is dropped, which leaves both snapshots frozen at
+   opacity 1, the same picture the crossfade note below describes. So the
+   numbers are written out here. They mirror --duration-slow (320ms),
+   --ease-entrance, --duration-reveal (500ms) and --duration-deck (700ms);
+   change those tokens and these by hand together. */
 ::view-transition-group(.morph) {
-  animation-duration: var(--duration-slow);
-  animation-timing-function: var(--ease-entrance);
+  animation-duration: 320ms;
+  animation-timing-function: cubic-bezier(0.62, 0.61, 0.02, 1);
 }
 
 /* ---- The page fade (app/template.tsx) --------------------------------------
@@ -148,13 +158,11 @@ html {
    view transition runs, which his (a plain React fade) does not. Worth
    knowing if a fast second click ever feels swallowed. */
 ::view-transition-old(.page-fade) {
-  animation: var(--duration-reveal) cubic-bezier(0.22, 1, 0.36, 1) both
-    page-fade-out;
+  animation: 500ms cubic-bezier(0.22, 1, 0.36, 1) both page-fade-out;
 }
 
 ::view-transition-new(.page-fade) {
-  animation: var(--duration-deck) cubic-bezier(0.22, 1, 0.36, 1) 200ms both
-    page-fade-in;
+  animation: 700ms cubic-bezier(0.22, 1, 0.36, 1) 200ms both page-fade-in;
 }
 
 @keyframes page-fade-out {

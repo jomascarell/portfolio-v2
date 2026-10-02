@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import ProjectListPagination from '@/components/ProjectListPagination/ProjectListPagination'
 import ProjectListRow from '@/components/ProjectListRow/ProjectListRow'
 import { projects } from '@/lib/projects'
+import { leaveTopZone } from '@/lib/use-top-zone'
 import styles from './ProjectList.module.css'
 
 /* The list of projects on /projects. Figma: ProjectList, Breakpoint = base
@@ -238,7 +239,11 @@ export default function ProjectList({ className }: ProjectListProps) {
         rafId = requestAnimationFrame(tick)
       }
 
+      /* Only the reader moves the carousel through here (wheel, swipe, keys,
+         focus), never setup, so this is where the page "leaves its top" for
+         the pill: see leaveTopZone. */
       const goTo = (next: number) => {
+        leaveTopZone()
         index = canLoop
           ? next
           : Math.min(Math.max(next, 0), projects.length - 1)

@@ -265,14 +265,16 @@ export default function Nav({ className }: { className?: string }) {
   const items = buildItems(state, label)
   const routeKey = `${state}:${label ?? ''}`
 
-  /* LOWERED AT THE TOP OF A CASE PAGE, 2026-09-28 (the user's yes). His pill
-     rests low while the reader is at the top and not scrolling down, and tucks
-     on the first downward scroll; it never hides, and scrolling up mid-page
-     does not bring it back down. Case pages only: the panel routes do not
-     scroll the way an article does, so they keep the route-based tuck alone. */
-  const zone = useTopZone()
-  const lowered =
-    state === 'project-detail' && zone.measured && zone.atTop && !zone.scrollingDown
+  /* LOWERED AT THE TOP OF EVERY INTERIOR PAGE. His pill rests low while the
+     reader is at the top and not scrolling down, and tucks on the first
+     downward scroll; it never hides, and scrolling up mid-page does not bring
+     it back down. Case pages got this 2026-09-28 (the user's yes). The panel
+     routes were left on the route-based tuck alone, which made the pill jump
+     48px between Home and /projects or /about, while Home -> a case page did
+     not move. His does not jump anywhere: checked side by side at phone width
+     2026-10-02 after the user's iPhone recordings showed it. */
+  const zone = useTopZone(pathname)
+  const lowered = mode === 'interior' && zone.measured && zone.atTop && !zone.scrollingDown
 
   const cloneRefs = useRef(new Map<number, { old: HTMLElement | null; new: HTMLElement | null }>())
 
