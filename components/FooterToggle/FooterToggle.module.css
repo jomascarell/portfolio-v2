@@ -1,0 +1,66 @@
+/* FooterDisplayButton, Figma 1088:6305. 92x28 at rest: space/sm by space/lg
+   padding, radius/lg, color/surface/subtle-hover ground, the label in Tilt
+   Warp at font-size/lg, letter-spacing/tight, color/neutral/1000.
+
+   TOUCH ONLY. A pointer that can hover has the wheel and the keyboard already,
+   and the design is drawn for touch devices only. (hover: none) is the same
+   test MediaVideo uses for its touch controls. */
+.toggle {
+  display: none;
+}
+
+@media (hover: none) {
+  .toggle {
+    position: relative;
+    /* inline-block, not flex: text-box trims the line box of the block that
+       holds the text, and a flex container hands its text to an anonymous
+       item it cannot style. As flex the pill measured 39 tall, not 28. */
+    display: inline-block;
+    text-align: center;
+    padding: var(--space-sm) var(--space-lg);
+    border: 0;
+    border-radius: var(--radius-lg);
+    background-color: var(--color-surface-subtle-hover);
+    color: var(--color-neutral-1000);
+    font-family: var(--font-tilt-warp);
+    font-size: var(--font-size-lg);
+    /* -0.02em, as everywhere in code since Gate 06. The Figma file still
+       applies letter-spacing/tight as -2px, which is why its pill is 92 wide
+       and this one is a few px wider. */
+    letter-spacing: var(--letter-spacing-tight);
+    line-height: normal;
+    /* Figma trims the line box to cap height and alphabetic baseline, which
+       is what makes the pill 28 tall. Where text-box is not supported the
+       pill comes out a few px taller; nothing else moves. */
+    text-box: trim-both cap alphabetic;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* 28px is under the 44px a finger needs. This widens what the tap hits
+     without changing what is drawn. */
+  .toggle::before {
+    content: '';
+    position: absolute;
+    inset: -8px 0;
+  }
+
+  /* VISIBLE ONLY WHILE THE BAR IS HIDDEN OR OPEN. In `static` (the landing
+     overflows, so the footer is already at the end of the page) and before
+     FooterReveal has run, there is nothing to reveal.
+
+     visibility, not display, on purpose: FooterReveal decides `static` by
+     whether the landing overflows. If the button took its space away in
+     `static`, the landing would stop overflowing, the bar would go back to
+     `hidden`, the button would return and overflow it again, and the two
+     would flip forever. Keeping the space makes the answer stable. */
+  :global(:root:not([data-footer='hidden']):not([data-footer='revealed'])) .toggle {
+    visibility: hidden;
+  }
+}
+
+/* Not drawn in Figma; the same ring NavLink uses. */
+.toggle:focus-visible {
+  outline: 2px solid var(--color-text-accent);
+  outline-offset: 2px;
+}

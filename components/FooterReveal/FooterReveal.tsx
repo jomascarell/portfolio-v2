@@ -81,6 +81,27 @@ export const RevealStateContext = createContext<RevealState>('static')
    of it opening. */
 const CLOSE_GRACE_MS = 900
 
+/* THE TOUCH WAY IN, 2026-10-02 (Figma 1509:1957, the user's design). Touch has
+   no wheel, so on a phone or tablet whose landing fits the screen the bar had
+   no way in at all: focus only reaches it from a keyboard. components/
+   FooterToggle is a button in the landing's intro card, and it talks to this
+   component through the document rather than through props, because the two
+   sit in different branches of a server-rendered tree.
+
+   - FOOTER_ID: the bar's id, for the button's aria-controls.
+   - <html data-footer="static | hidden | revealed">: the current state, so
+     the button can style itself from CSS and read it on mount.
+   - FOOTER_CHANGE_EVENT: fired on window whenever that attribute changes.
+   - toggleFooter(): asks the bar to open or close. Ignored in `static`,
+     where the footer is already in the page's flow. */
+export const FOOTER_ID = 'site-footer'
+export const FOOTER_CHANGE_EVENT = 'footer-reveal:change'
+const FOOTER_TOGGLE_EVENT = 'footer-reveal:toggle'
+
+export function toggleFooter() {
+  window.dispatchEvent(new Event(FOOTER_TOGGLE_EVENT))
+}
+
 export default function FooterReveal({
   children,
 }: {
@@ -142,6 +163,15 @@ export default function FooterReveal({
     let isOpen = false
     let openedAt = 0
 
+    /* Every state change goes through here so <html data-footer> can never
+       disagree with what the bar is doing. */
+    const apply = (next: RevealState) => {
+      setState(next)
+      if (doc.dataset.footer === next) return
+      doc.dataset.footer = next
+      window.dispatchEvent(new Event(FOOTER_CHANGE_EVENT))
+    }
+
     const setOpen = (next: boolean) => {
       isOpen = next
       if (next) openedAt = performance.now()
@@ -160,7 +190,7 @@ export default function FooterReveal({
          transition that appears in the same commit as the property it governs
          is applied to that change rather than skipped. */
       setArmed(true)
-      setState(next ? 'revealed' : 'hidden')
+      apply(next ? 'revealed' : 'hidden')
     }
 
     /* THE BAND. The bar's own measured height, published for the landing to
@@ -192,12 +222,12 @@ export default function FooterReveal({
     const sync = () => {
       if (contentOverflows()) {
         isOpen = false
-        setState('static')
+        apply('static')
         /* In `static` the bar is back in normal flow and takes its own space
            the ordinary way, so there is no band to subtract. */
         publishBand(false)
       } else {
-        if (!isOpen) setState('hidden')
+        if (!isOpen) apply('hidden')
         publishBand(true)
       }
     }
@@ -288,6 +318,10 @@ export default function FooterReveal({
        would otherwise throw away a text selection. */
     const onPointerDown = (event: PointerEvent) => {
       if (event.target instanceof Node && root.contains(event.target)) return
+      /* The toggle is outside the bar but is not an outside tap: it closes
+         the bar itself, on click. Letting this close it first would make
+         its click open the bar again. */
+      if (event.target instanceof Element && event.target.closest('[data-footer-toggle]')) return
       closeFromOutside()
     }
 
@@ -298,8 +332,21 @@ export default function FooterReveal({
       if (event.key === 'Escape') closeFromOutside()
     }
 
+    /* The button is a deliberate press, so it skips the grace that guards
+       against a gesture's own tail. Closing moves focus like the outside
+       close does, but only if it was inside the bar; on a touch device it
+       is on the button, which stays where it is. */
+    const onToggle = () => {
+      if (contentOverflows()) return
+      if (isOpen && root.contains(document.activeElement)) {
+        document.getElementById(SKIP_TARGET_ID)?.focus()
+      }
+      setOpen(!isOpen)
+    }
+
     document.addEventListener('pointerdown', onPointerDown)
     document.addEventListener('keydown', onKeyDown)
+    window.addEventListener(FOOTER_TOGGLE_EVENT, onToggle)
 
     return () => {
       observer.disconnect()
@@ -308,7 +355,10 @@ export default function FooterReveal({
       root.removeEventListener('focusin', onFocusIn)
       document.removeEventListener('pointerdown', onPointerDown)
       document.removeEventListener('keydown', onKeyDown)
+      window.removeEventListener(FOOTER_TOGGLE_EVENT, onToggle)
       doc.style.removeProperty('--footer-band')
+      delete doc.dataset.footer
+      window.dispatchEvent(new Event(FOOTER_CHANGE_EVENT))
     }
   }, [])
 
@@ -323,6 +373,7 @@ export default function FooterReveal({
   return (
     <div
       ref={rootRef}
+      id={FOOTER_ID}
       className={styles.reveal}
       data-state={state}
       data-armed={armed ? 'true' : undefined}

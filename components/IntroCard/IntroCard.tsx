@@ -1,3 +1,4 @@
+import FooterToggle from '@/components/FooterToggle/FooterToggle'
 import NewTabNote from '@/components/NewTabNote/NewTabNote'
 import Wordmark from '@/components/Wordmark/Wordmark'
 import { siteConfig } from '@/lib/site-config'
@@ -47,11 +48,16 @@ const TYPES = {
 
 type IntroCardProps = {
   type?: keyof typeof TYPES
+  /* The landing's footer button (Figma 1509:1957). Only the landing has a
+     footer, so only the landing asks for it; the same card on /projects
+     does not. */
+  footerToggle?: boolean
   className?: string
 }
 
 export default function IntroCard({
   type = 'intro',
+  footerToggle = false,
   className,
 }: IntroCardProps) {
   return (
@@ -104,6 +110,11 @@ export default function IntroCard({
               <NewTabNote />
             </a>
           </p>
+          {/* Inside the status block, not a fourth block of the card: from
+              1024 the card spreads its blocks apart with space-between, and a
+              fourth one would pull the status lines off the bottom on a
+              touch tablet. In here it arrives with the status lines too. */}
+          {footerToggle && <FooterToggle className={styles.footerToggle} />}
         </div>
       )}
     </div>

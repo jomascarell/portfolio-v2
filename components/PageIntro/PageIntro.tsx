@@ -20,16 +20,17 @@ import styles from './PageIntro.module.css'
 
 type PageIntroProps = {
   type?: 'intro' | 'about'
+  footerToggle?: boolean
   className?: string
 }
 
-export default function PageIntro({ type = 'intro', className }: PageIntroProps) {
+export default function PageIntro({ type = 'intro', footerToggle, className }: PageIntroProps) {
   /* The panel has no entrance of its own — see the note in app/globals.css on
      what the 2026-09-16 restructure retired and why. The beats are the nav and
      the wordmark together, then the text. */
   return (
     <div className={[styles.panel, className].filter(Boolean).join(' ')}>
-      <IntroCard type={type} className={styles.card} />
+      <IntroCard type={type} footerToggle={footerToggle} className={styles.card} />
     </div>
   )
 }

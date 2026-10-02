@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Figtree } from 'next/font/google'
+import { Figtree, Tilt_Warp } from 'next/font/google'
 import IntroSequence from '@/components/IntroSequence/IntroSequence'
 import Nav from '@/components/Nav/Nav'
 import ScrollRestoration from '@/components/ScrollRestoration/ScrollRestoration'
@@ -47,6 +47,22 @@ const figtree = Figtree({
   fallback: ['system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
 })
 
+/* Tilt Warp, for one word: the label of the landing's footer button on touch
+   devices (Figma 1088:6305), at the user's choice on 2026-10-02 over Figtree
+   or an SVG export. The wordmark is the same family but is drawn as paths, so
+   this is the only live text in it.
+
+   preload: false, because the button only renders on touch screens. A browser
+   fetches a web font only when text on the page uses it, so desktop visitors
+   never download this file; preloading would make every visitor pay for it. */
+const tiltWarp = Tilt_Warp({
+  subsets: ['latin'],
+  variable: '--font-tilt-warp',
+  display: 'swap',
+  preload: false,
+  fallback: ['system-ui', 'sans-serif'],
+})
+
 /* Phase 2 decision: the root layout owns everything that must survive a
    navigation. Layouts do not re-render when the route changes, so the frame,
    the footer and the skip link are persistent for free — that is what lets the
@@ -79,7 +95,18 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
-    <html lang="en" className={figtree.variable} data-scroll-behavior="smooth">
+    <html
+      lang="en"
+      className={`${figtree.variable} ${tiltWarp.variable}`}
+      data-scroll-behavior="smooth"
+      /* The page fade runs on the root snapshot (globals.css). React cancels
+         the root's part in a transition when it thinks only its boundaries
+         changed: it sets view-transition-name: none on <html>, so the new page
+         gets no snapshot and appears at once under the fading old one. It
+         only does that when the inline name is empty, so naming it here
+         keeps the fade. Read in react-dom's commit code, 2026-10-02. */
+      style={{ viewTransitionName: 'root' }}
+    >
       <body>
         <div className={shell.shell}>
           {/* Renders nothing. Closes the entrance sequence's door once it has

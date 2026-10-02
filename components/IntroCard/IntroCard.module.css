@@ -96,6 +96,14 @@
   align-items: center;
 }
 
+/* The footer button sits 64px under the status lines in Figma 1509:1957: the
+   card's space/md gap plus its wrapper's space/2xl. It lives inside .status
+   (see IntroCard.tsx), so the status gap is taken back out. Only shows on
+   touch devices; see FooterToggle. */
+.footerToggle {
+  margin-block-start: calc(var(--space-2xl) + var(--space-md) - var(--space-xs));
+}
+
 /* Figma text style: body/base-medium — 16/26.2 SemiBold. Becomes heading/h3
    (18/30 Medium) from 640 up. Both measured on the phase 7 frames and both
    already correct before this rewrite. */
