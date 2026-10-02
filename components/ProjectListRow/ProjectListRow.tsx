@@ -1,5 +1,9 @@
+'use client'
+
 import Link from 'next/link'
 import type { CSSProperties } from 'react'
+import { localizeHref } from '@/lib/i18n/config'
+import { useI18n } from '@/lib/i18n/client'
 import type { Project } from '@/lib/projects'
 import styles from './ProjectListRow.module.css'
 
@@ -75,12 +79,15 @@ export default function ProjectListRow({
   tabIndex,
   className,
 }: ProjectListRowProps) {
+  /* The list's text is translated; the case page it opens stays in English. */
+  const { locale, t } = useI18n()
+  const text = t.projects[project.slug] ?? { category: project.category, title: project.title }
   return (
     <Link
       className={[styles.row, STATES[state], className]
         .filter(Boolean)
         .join(' ')}
-      href={`/projects/${project.slug}`}
+      href={localizeHref(locale, `/projects/${project.slug}`)}
       tabIndex={tabIndex}
     >
       <span
@@ -94,8 +101,8 @@ export default function ProjectListRow({
       />
       <span className={styles.body}>
         <span className={styles.text}>
-          <span className={styles.category}>{project.category}</span>
-          <span className={styles.title}>{project.title}</span>
+          <span className={styles.category}>{text.category}</span>
+          <span className={styles.title}>{text.title}</span>
         </span>
         {/* The stamp is the last two digits behind a full stop — 2026 draws as
           ".26", which is a decision the design makes and not a shortening this

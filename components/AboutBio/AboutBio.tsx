@@ -1,7 +1,8 @@
 import { Fragment } from 'react'
 import ContactBio from '@/components/ContactBio/ContactBio'
 import NewTabNote from '@/components/NewTabNote/NewTabNote'
-import { bio, type BioSegment } from '@/lib/about'
+import type { BioSegment } from '@/lib/about'
+import { getI18n } from '@/lib/i18n/server'
 import styles from './AboutBio.module.css'
 
 /* The biography block on /about. Figma: AboutBio (492:2172), a standalone
@@ -49,7 +50,9 @@ type AboutBioProps = {
   className?: string
 }
 
-export default function AboutBio({ className }: AboutBioProps) {
+export default async function AboutBio({ className }: AboutBioProps) {
+  const { t } = await getI18n()
+  const bio = t.about.bio
   return (
     <div className={[styles.bio, className].filter(Boolean).join(' ')}>
       {/* The prose is wrapped so that .bio's 48px gap separates the two HALVES

@@ -1,6 +1,7 @@
 import FooterToggle from '@/components/FooterToggle/FooterToggle'
 import NewTabNote from '@/components/NewTabNote/NewTabNote'
 import Wordmark from '@/components/Wordmark/Wordmark'
+import { getI18n } from '@/lib/i18n/server'
 import { siteConfig } from '@/lib/site-config'
 import styles from './IntroCard.module.css'
 
@@ -55,11 +56,12 @@ type IntroCardProps = {
   className?: string
 }
 
-export default function IntroCard({
+export default async function IntroCard({
   type = 'intro',
   footerToggle = false,
   className,
 }: IntroCardProps) {
+  const { t } = await getI18n()
   return (
     <div
       className={[
@@ -72,7 +74,7 @@ export default function IntroCard({
     >
       {type === 'intro' && (
         <p className={styles.tagline} data-intro-step="tagline">
-          {siteConfig.tagline}
+          {t.intro.tagline}
         </p>
       )}
 
@@ -94,9 +96,9 @@ export default function IntroCard({
 
       {type === 'intro' && (
         <div className={styles.status} data-intro-step="status">
-          <p className={styles.current}>{siteConfig.status.current}</p>
+          <p className={styles.current}>{t.intro.statusCurrent}</p>
           <p className={styles.previous}>
-            {siteConfig.status.previous}
+            {t.intro.statusPrevious}
             {/* rel="noopener noreferrer" written out rather than relying on the
                 default target="_blank" implies — the same call AboutBio makes,
                 for the same reason. */}

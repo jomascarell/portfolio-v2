@@ -2,7 +2,9 @@
 
 import { useContext, useEffect, useRef, useState } from 'react'
 import { RevealStateContext } from '@/components/FooterReveal/FooterReveal'
-import { formatChangelogDate, latestChangelogEntry } from '@/lib/changelog'
+import { latestChangelogEntry } from '@/lib/changelog'
+import { formatDate } from '@/lib/i18n/config'
+import { useI18n } from '@/lib/i18n/client'
 
 /* calebwu.ca plays this exact line — "Changelog: March 01 2026" — through a
  * character-scramble reveal, timed to the same state that slides its panel
@@ -52,10 +54,11 @@ function settledCells(text: string): Cell[] {
 }
 
 export default function ChangelogText({ className }: { className?: string }) {
+  const { locale, t } = useI18n()
   const latest = latestChangelogEntry()
   const text = latest
-    ? `Changelog: ${formatChangelogDate(latest.date)}`
-    : 'Changelog'
+    ? `${t.footer.changelogLabel}: ${formatDate(latest.date, locale)}`
+    : t.footer.changelogLabel
 
   const revealed = useContext(RevealStateContext) === 'revealed'
   const [cells, setCells] = useState(() => settledCells(text))

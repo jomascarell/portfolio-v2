@@ -4,10 +4,13 @@ import IntroSequence from '@/components/IntroSequence/IntroSequence'
 import Nav from '@/components/Nav/Nav'
 import ScrollRestoration from '@/components/ScrollRestoration/ScrollRestoration'
 import SkipLink, { SKIP_TARGET_ID } from '@/components/SkipLink/SkipLink'
+import { LOCALES, isLocale } from '@/lib/i18n/config'
+import { LocaleProvider } from '@/lib/i18n/client'
+import { MESSAGES } from '@/lib/i18n/messages'
 import { siteUrl } from '@/lib/site-config'
 import shell from './layout.module.css'
-import './tokens.css'
-import './globals.css'
+import '../tokens.css'
+import '../globals.css'
 
 /* Phase 4: the typeface. Figtree is the only family in the Figma file — all 14
    text styles and all 362 text nodes on the Design page use it, in four
@@ -84,19 +87,33 @@ const tiltWarp = Tilt_Warp({
    "jump to main" should not land a keyboard user inside the nav it just
    passed over. */
 
-export const metadata: Metadata = {
-  /* Turns the relative og:image and og:url paths the project pages return
-     into absolute URLs, which link previews require. See lib/site-config. */
-  metadataBase: siteUrl,
-  // The retired build shipped "Jan Mascarell" here for months. It is Joan.
-  title: 'Joan Mascarell',
-  description: 'Portfolio of Joan Mascarell — design and front-end work.',
+/* Every page is built once per language, and a language that is not one of
+   ours is a 404 rather than an on-demand render. */
+export const dynamicParams = false
+
+export function generateStaticParams() {
+  return LOCALES.map((lang) => ({ lang }))
 }
 
-export default function RootLayout({ children }: LayoutProps<'/'>) {
+export async function generateMetadata(props: LayoutProps<'/[lang]'>): Promise<Metadata> {
+  const { lang } = await props.params
+  const t = MESSAGES[isLocale(lang) ? lang : 'en']
+  return {
+    /* Turns the relative og:image and og:url paths the project pages return
+       into absolute URLs, which link previews require. See lib/site-config. */
+    metadataBase: siteUrl,
+    // The retired build shipped "Jan Mascarell" here for months. It is Joan.
+    title: t.meta.title,
+    description: t.meta.description,
+  }
+}
+
+export default async function RootLayout({ children, params }: LayoutProps<'/[lang]'>) {
+  const { lang } = await params
+  const locale = isLocale(lang) ? lang : 'en'
   return (
     <html
-      lang="en"
+      lang={locale}
       className={`${figtree.variable} ${tiltWarp.variable}`}
       data-scroll-behavior="smooth"
       /* The page fade runs on the root snapshot (globals.css). React cancels
@@ -108,6 +125,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       style={{ viewTransitionName: 'root' }}
     >
       <body>
+        <LocaleProvider locale={locale}>
         <div className={shell.shell}>
           {/* Renders nothing. Closes the entrance sequence's door once it has
               run — see the component, and the running order in globals.css. */}
@@ -144,6 +162,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
               inside the landing component, and the markup is absent from the
               served HTML of every other route rather than hidden by CSS. */}
         </div>
+        </LocaleProvider>
       </body>
     </html>
   )

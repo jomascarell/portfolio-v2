@@ -1,6 +1,6 @@
 import MailLink from '@/components/MailLink/MailLink'
 import SocialIcons from '@/components/SocialIcons/SocialIcons'
-import { siteConfig } from '@/lib/site-config'
+import { getI18n } from '@/lib/i18n/server'
 import styles from './ContactBio.module.css'
 
 /* The contact block under the bio. Figma: contact-bio (791:1813), as composed
@@ -22,14 +22,15 @@ import styles from './ContactBio.module.css'
  * uses. Same instance the footer had, unchanged, so the hover handle ported in
  * Phase 5 comes with it.
  *
- * The intro line is siteConfig.contactIntro, which is the string that used to
+ * The intro line is the dictionaries' about.contactIntro, which is the string that used to
  * be called footerIntro. Renamed rather than duplicated: the words did not
  * change, only the place they belong. */
 
-export default function ContactBio({ className }: { className?: string }) {
+export default async function ContactBio({ className }: { className?: string }) {
+  const { t } = await getI18n()
   return (
     <div className={[styles.contact, className].filter(Boolean).join(' ')}>
-      <p className={styles.intro}>{siteConfig.contactIntro}</p>
+      <p className={styles.intro}>{t.about.contactIntro}</p>
       <SocialIcons className={styles.social} size="md" />
       <MailLink className={styles.mail} size="md" />
     </div>

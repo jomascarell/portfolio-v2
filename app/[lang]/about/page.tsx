@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import { languageAlternates } from '@/lib/i18n/alternates'
+import { getI18n } from '@/lib/i18n/server'
 import AboutBio from '@/components/AboutBio/AboutBio'
 import PanelLayout from '@/components/PanelLayout/PanelLayout'
 
@@ -24,8 +26,9 @@ import PanelLayout from '@/components/PanelLayout/PanelLayout'
  * retired build had real prose — see lib/about.ts, which also records why
  * "Designer" is an <em> and not a third link. */
 
-export const metadata: Metadata = {
-  title: 'About — Joan Mascarell',
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getI18n()
+  return { title: t.meta.aboutTitle, alternates: languageAlternates('/about') }
 }
 
 export default function AboutPage() {

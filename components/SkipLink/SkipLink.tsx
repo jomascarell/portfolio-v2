@@ -1,4 +1,6 @@
+import { getI18n } from '@/lib/i18n/server'
 import styles from './SkipLink.module.css'
+import { SKIP_TARGET_ID } from './target'
 
 /* Skip link. First focusable thing in the document, visually hidden until it
    takes focus.
@@ -12,12 +14,13 @@ import styles from './SkipLink.module.css'
  * from the focus order, which would make a skip link that can never be
  * reached. It is clipped instead, and unclips on :focus-visible. */
 
-export const SKIP_TARGET_ID = 'content'
+export { SKIP_TARGET_ID }
 
-export default function SkipLink() {
+export default async function SkipLink() {
+  const { t } = await getI18n()
   return (
     <a className={styles.skipLink} href={`#${SKIP_TARGET_ID}`}>
-      Skip to content
+      {t.common.skipToContent}
     </a>
   )
 }

@@ -1,6 +1,7 @@
 import { SiGithub, SiInstagram } from 'react-icons/si'
 import { FaLinkedin } from 'react-icons/fa'
 import { BsFileEarmarkText } from 'react-icons/bs'
+import { getI18n } from '@/lib/i18n/server'
 import { siteConfig } from '@/lib/site-config'
 import styles from './SocialIcons.module.css'
 
@@ -43,10 +44,11 @@ const LINKS = [
   { key: 'cv', label: 'CV', Icon: BsFileEarmarkText },
 ] as const
 
-export default function SocialIcons({
+export default async function SocialIcons({
   size = 'md',
   className,
 }: SocialIconsProps) {
+  const { t } = await getI18n()
   return (
     <ul
       className={[styles.row, SIZES[size], className].filter(Boolean).join(' ')}
@@ -63,7 +65,7 @@ export default function SocialIcons({
             href={siteConfig.social[key].href}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`${label} (opens in a new tab)`}
+            aria-label={`${label} ${t.common.newTab}`}
           >
             <span className={styles.handle} aria-hidden="true">
               {siteConfig.social[key].handle}

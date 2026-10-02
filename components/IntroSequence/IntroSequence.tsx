@@ -2,6 +2,7 @@
 
 import { useLayoutEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
+import { splitLocale } from '@/lib/i18n/config'
 
 /* Marks the document once the landing entrance has finished, and — 2026-09-17
  * — RE-OPENS it every time the route becomes "/" again, so the sequence
@@ -63,7 +64,7 @@ export default function IntroSequence() {
     mountedRef.current = true
 
     if (!firstRun) {
-      if (pathname !== '/') {
+      if (splitLocale(pathname).path !== '/') {
         document.documentElement.dataset.intro = 'done'
         return
       }

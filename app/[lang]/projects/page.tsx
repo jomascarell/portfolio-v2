@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import { languageAlternates } from '@/lib/i18n/alternates'
+import { getI18n } from '@/lib/i18n/server'
 import PanelLayout from '@/components/PanelLayout/PanelLayout'
 import ProjectList from '@/components/ProjectList/ProjectList'
 
@@ -29,8 +31,9 @@ import ProjectList from '@/components/ProjectList/ProjectList'
  * opt this route into dynamic rendering, and giving each card its own URL later
  * is a routing change we can still make — going the other way is not. */
 
-export const metadata: Metadata = {
-  title: 'Projects — Joan Mascarell',
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getI18n()
+  return { title: t.meta.projectsTitle, alternates: languageAlternates('/projects') }
 }
 
 export default function ProjectsPage() {
