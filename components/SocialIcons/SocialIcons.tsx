@@ -48,7 +48,7 @@ export default async function SocialIcons({
   size = 'md',
   className,
 }: SocialIconsProps) {
-  const { t } = await getI18n()
+  const { locale, t } = await getI18n()
   return (
     <ul
       className={[styles.row, SIZES[size], className].filter(Boolean).join(' ')}
@@ -62,7 +62,10 @@ export default async function SocialIcons({
               from the visible text. */}
           <a
             className={styles.link}
-            href={siteConfig.social[key].href}
+            href={
+              /* The CV is a document per language; the accounts are one URL. */
+              key === 'cv' ? siteConfig.social.cv.href[locale] : siteConfig.social[key].href
+            }
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${label} ${t.common.newTab}`}

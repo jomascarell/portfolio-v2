@@ -83,10 +83,16 @@ export const siteConfig = {
     },
     /* No @ — this is a document, not an account, which is also why the handle
        is written by hand instead of being derived from the URL.
-       TODO: the href is still the placeholder inherited from the retired
-       build. It must be a real URL before launch. */
+       One PDF per language in /public/cv, added 2026-10-02 (they replace the
+       read.cv placeholder from the retired build). SocialIcons picks the one
+       for the page's language. The files keep the user's own names so a
+       download saves under them; Catalan is _CAT, as the user names it. */
     cv: {
-      href: 'https://read.cv/TODO',
+      href: {
+        en: '/cv/CV_JoanMascarell_EN.pdf',
+        ca: '/cv/CV_JoanMascarell_CAT.pdf',
+        es: '/cv/CV_JoanMascarell_ES.pdf',
+      },
       handle: 'CV',
     },
   },
