@@ -29,12 +29,29 @@ const DEAD_BAND_PX = 5
 
 export type TopZone = { measured: boolean; atTop: boolean; scrollingDown: boolean }
 
-export function useTopZone(): TopZone {
+/* A PAGE THAT DOES NOT SCROLL THE WINDOW CAN STILL LEAVE THE TOP (2026-10-02).
+ * /projects is a stepping carousel: the window never moves, so this hook would
+ * read "at the top, not scrolling" forever and the pill would stay lowered over
+ * the list. The list calls this when the reader steps it, which counts as
+ * scrolling down. A window event rather than shared state, so the list does
+ * not need to know who is listening. */
+const LEAVE_EVENT = 'top-zone:leave'
+
+export function leaveTopZone() {
+  window.dispatchEvent(new Event(LEAVE_EVENT))
+}
+
+/* `resetKey` is the route. Nav is mounted once and outlives every navigation,
+ * so without it a direction from the last page (or a leaveTopZone() from
+ * /projects) would carry over and keep the next page's pill tucked at its top.
+ * A new key starts the reading fresh: no direction, position re-read. */
+export function useTopZone(resetKey?: string): TopZone {
   const [zone, setZone] = useState<TopZone>({ measured: false, atTop: true, scrollingDown: false })
 
   useEffect(() => {
     let reference = window.scrollY
     let frame = 0
+    let fresh = true
 
     const read = () => {
       frame = 0
@@ -42,12 +59,14 @@ export function useTopZone(): TopZone {
       const delta = y - reference
       const crossed = Math.abs(delta) > DEAD_BAND_PX
       if (crossed) reference = y
+      const reset = fresh
+      fresh = false
 
       setZone((previous) => {
         const next = {
           measured: true,
           atTop: y < TOP_ZONE_PX,
-          scrollingDown: crossed ? delta > 0 : previous.scrollingDown,
+          scrollingDown: reset ? false : crossed ? delta > 0 : previous.scrollingDown,
         }
         return previous.measured === next.measured &&
           previous.atTop === next.atTop &&
@@ -61,13 +80,22 @@ export function useTopZone(): TopZone {
       if (!frame) frame = requestAnimationFrame(read)
     }
 
+    const leave = () => {
+      cancelAnimationFrame(frame)
+      frame = 0
+      fresh = false
+      setZone({ measured: true, atTop: false, scrollingDown: true })
+    }
+
     schedule()
     window.addEventListener('scroll', schedule, { passive: true })
+    window.addEventListener(LEAVE_EVENT, leave)
     return () => {
       window.removeEventListener('scroll', schedule)
+      window.removeEventListener(LEAVE_EVENT, leave)
       cancelAnimationFrame(frame)
     }
-  }, [])
+  }, [resetKey])
 
   return zone
 }

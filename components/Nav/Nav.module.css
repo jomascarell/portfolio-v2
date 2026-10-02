@@ -32,7 +32,7 @@
 
      This is a RESTING-STATE difference between routes, not the scroll-hiding
      nav that was refused on 2026-09-11. The one scroll response, added
-     2026-09-28 with the user's yes, is [data-lowered] below: on a case page
+     2026-09-28 with the user's yes, is [data-lowered] below: on an interior page
      the pill rests low at the top and tucks on the first downward scroll. It
      never hides. */
   transform: translateY(0);
