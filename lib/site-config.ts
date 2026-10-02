@@ -12,13 +12,12 @@
  * one account while the link opens another. */
 
 /* The absolute origin for metadata URLs (og:image, og:url), read by the root
-   layout's metadataBase. The Vercel production domain, given 2026-10-01.
-   NEXT_PUBLIC_SITE_URL overrides it, for a custom domain later or a preview
-   that should point at itself. Not VERCEL_URL: that is each deployment's own
-   hash URL, and a shared link should always resolve to production. */
-export const siteUrl = new URL(
-  process.env.NEXT_PUBLIC_SITE_URL ?? 'https://portfolio-v2-drab-gamma.vercel.app',
-)
+   layout's metadataBase. The custom domain since 2026-10-02 (bought on
+   Vercel; www redirects to it); before that, portfolio-v2-drab-gamma.vercel.app.
+   NEXT_PUBLIC_SITE_URL overrides it, for a preview that should point at
+   itself. Not VERCEL_URL: that is each deployment's own hash URL, and a
+   shared link should always resolve to production. */
+export const siteUrl = new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://joanmascarell.dev')
 
 export const siteConfig = {
   contactEmail: 'jmjvilallonga@gmail.com',
