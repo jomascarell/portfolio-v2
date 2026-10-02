@@ -5,6 +5,7 @@ import { Fragment, type CSSProperties } from 'react'
 import { IoMdArrowUp } from 'react-icons/io'
 import SeverityBars from '@/components/Charts/SeverityBars'
 import SlopeChart from '@/components/Charts/SlopeChart'
+import CaseEndNav from '@/components/CaseEndNav/CaseEndNav'
 import CollectionNav from '@/components/CollectionNav/CollectionNav'
 import ComponentCarousel from '@/components/ComponentCarousel/ComponentCarousel'
 import LiveDashboard from '@/components/LiveDashboard/LiveDashboard'
@@ -502,11 +503,20 @@ export default async function ProjectDetailPage(
 
   const caseStudy = getCaseStudy(slug)
 
-  /* Three of the four projects have no case-study copy yet, so they keep the
-     stub rather than rendering an article of empty sections. */
-  if (!caseStudy) {
-    return <h1 lang="en">{project.title}</h1>
-  }
-
-  return <CaseStudyArticle caseStudy={caseStudy} />
+  /* CaseEndNav sits after the article, not inside it: it spans the full
+     content width rather than the article's 8 columns, and its text is in the
+     page's language rather than the article's English. A stub page gets it
+     too, so an empty case is never a dead end. */
+  return (
+    <>
+      {caseStudy ? (
+        <CaseStudyArticle caseStudy={caseStudy} />
+      ) : (
+        /* Three of the four projects have no case-study copy yet, so they keep
+           the stub rather than rendering an article of empty sections. */
+        <h1 lang="en">{project.title}</h1>
+      )}
+      <CaseEndNav slug={slug} />
+    </>
+  )
 }

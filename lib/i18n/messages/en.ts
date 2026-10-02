@@ -44,6 +44,12 @@ export const en: Messages = {
     credits: 'Built with NextJS, Claude, Figma.',
     languageLabel: 'Language',
   },
+  caseEnd: {
+    label: 'More projects',
+    previous: 'Previous',
+    next: 'Next',
+    allWork: 'All work',
+  },
   common: {
     skipToContent: 'Skip to content',
     newTab: '(opens in a new tab)',
