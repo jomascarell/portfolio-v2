@@ -1,10 +1,9 @@
 /* Copy and links that appear in more than one place, written once.
  *
- * The rule this file exists to enforce: the tagline and the two status lines
- * are byte-identical everywhere they appear in Figma — landing, landing-footer,
- * projects, about. What varies between those screens is composition, never
- * wording. So the words live here and the screens differ by which components
- * they assemble, not by retyping.
+ * The visible WORDS moved to the dictionaries on 2026-10-02 (lib/i18n/messages,
+ * one per language): the tagline, the status lines, the credits and the contact
+ * line. They are still written once, now once per language. What stays here is
+ * what does not translate: addresses, handles and the language list.
  *
  * Each social entry is an object rather than a bare URL on purpose, carried
  * over from the retired build along with the reason: `handle` is what a label
@@ -42,26 +41,9 @@ export const siteConfig = {
   ],
   defaultLanguage: 'en',
 
-  credits: 'Built with NextJS, Claude, Figma.',
-
-  /* RENAMED FROM footerIntro 2026-09-12. The words did not change; the place
-     they belong did. Phase 7 takes the mail link and the social row out of the
-     footer and puts them in About, and this line introduces them — so a name
-     saying "footer" would now point at the one screen it never appears on. */
-  contactIntro:
-    'Feel free to contact me, and send an e-mail to the following address.',
-
-  /* The intro panel's copy (Phase 6). Verified byte-identical across the four
-     screens that carry a panel, which is the whole reason it sits here: the
-     landing, its footer state, projects and about differ by composition only.
-     On about the panel reduces to the wordmark and none of this renders — but
-     it is the same component deciding that, not different copy. */
-  tagline: 'Translating design into interfaces that hold up.',
-
   /* The second status line is one sentence with two colours: the handle takes
-     color/text/accent and the rest is secondary. Split here rather than in the
-     component so the component does not have to know which word is the
-     employer, and so changing it is a content edit.
+     color/text/accent and the rest is secondary. The words before it are in the
+     dictionaries (intro.statusPrevious); the handle is a name and stays here.
 
      The handle carries its href for the same reason the social entries do: the
      label and the URL it describes have to travel together. The design draws it
@@ -70,8 +52,6 @@ export const siteConfig = {
      same word to, so the two screens agree rather than one of them being inert.
      IntroCard renders it looking exactly as drawn. */
   status: {
-    current: 'Currently working in solo projects',
-    previous: 'Previously interned ',
     previousHandle: {
       href: 'https://okisam.com/',
       handle: '@Okisam',
@@ -83,9 +63,10 @@ export const siteConfig = {
      interior screen carries the Breadcrumb instead. That is the nav model,
      not an omission — see components/NavLinks. */
   nav: [
-    { href: '/projects', label: 'Projects' },
-    { href: '/about', label: 'About' },
-    { href: '/photos', label: 'Photos' },
+    /* Labels come from the dictionaries (lib/i18n/messages, `nav`). */
+    { href: '/projects', key: 'projects' },
+    { href: '/about', key: 'about' },
+    { href: '/photos', key: 'photos' },
   ],
 
   social: {

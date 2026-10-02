@@ -1,8 +1,12 @@
-/* " (opens in a new tab)", for screen readers only. Every link that sets
- * target="_blank" carries one (2026-10-01 audit): sighted readers get the
- * arrow or the context, a screen reader got nothing before the tab switched
- * under it. Links named by aria-label put the same words in the label
- * instead (SocialIcons), since aria-label replaces this text. */
-export default function NewTabNote() {
-  return <span className="visually-hidden"> (opens in a new tab)</span>
+import type { Locale } from '@/lib/i18n/config'
+import { MESSAGES } from '@/lib/i18n/messages'
+import { getI18n } from '@/lib/i18n/server'
+
+/* Read after every link that opens a new tab. In the page's language, unless
+   `lang` says otherwise: case studies and photos stay in English inside a
+   translated page, and a note in Catalan in the middle of English text would be
+   read with the wrong voice. */
+export default async function NewTabNote({ lang }: { lang?: Locale }) {
+  const text = lang ? MESSAGES[lang].common.newTab : (await getI18n()).t.common.newTab
+  return <span className="visually-hidden"> {text}</span>
 }

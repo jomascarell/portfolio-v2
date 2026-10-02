@@ -1,3 +1,4 @@
+import { getI18n } from '@/lib/i18n/server'
 import { siteConfig } from '@/lib/site-config'
 import styles from './MailLink.module.css'
 
@@ -23,14 +24,15 @@ type MailLinkProps = {
   className?: string
 }
 
-export default function MailLink({ size = 'md', className }: MailLinkProps) {
+export default async function MailLink({ size = 'md', className }: MailLinkProps) {
+  const { t } = await getI18n()
   return (
     <p
       className={[styles.root, SIZES[size], className]
         .filter(Boolean)
         .join(' ')}
     >
-      <span className={styles.label}>Mail: </span>
+      <span className={styles.label}>{t.about.mailLabel} </span>
       <a className={styles.link} href={`mailto:${siteConfig.contactEmail}`}>
         {siteConfig.contactEmail}
       </a>

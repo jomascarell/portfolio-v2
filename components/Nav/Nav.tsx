@@ -6,6 +6,9 @@ import { usePathname } from 'next/navigation'
 import { IoMdArrowDropright } from 'react-icons/io'
 import { RiHomeLine } from 'react-icons/ri'
 import { getProject } from '@/lib/projects'
+import { localizeHref, splitLocale, type Locale } from '@/lib/i18n/config'
+import { useI18n } from '@/lib/i18n/client'
+import type { Messages } from '@/lib/i18n/messages'
 import { siteConfig } from '@/lib/site-config'
 import { FROM_HOME } from '@/lib/panel-morph'
 import { useTopZone } from '@/lib/use-top-zone'
@@ -61,13 +64,7 @@ import styles from './Nav.module.css'
  * pre-hydration paint are both correct. The reference ships `width: 0` until
  * its first rAF lands and accepts the flash; we have real SSR to protect. */
 
-const SECTION_LABEL = {
-  projects: 'Projects',
-  about: 'About',
-  photos: 'Photos',
-} as const
-
-type SectionState = keyof typeof SECTION_LABEL
+type SectionState = 'projects' | 'about' | 'photos'
 export type NavState = 'landing' | SectionState | 'project-detail'
 
 /* THE HOUSE IS react-icons, AT THE USER'S REQUEST (2026-09-15) — a deliberate
@@ -102,30 +99,34 @@ type NavProps = {
    its text, so /projects -> /about does roll. */
 type Item = { key: string; node: ReactNode }
 
-function buildItems(state: NavState, label?: string): Item[] {
+function buildItems(state: NavState, locale: Locale, t: Messages, label?: string): Item[] {
   if (state === 'landing') {
     return siteConfig.nav.map((item) => ({
       key: `link:${item.href}`,
       node: (
         /* FROM_HOME is what lets the panel morph on the way out of the
            landing, and only then: see lib/panel-morph. */
-        <Link className={styles.landingLabel} href={item.href} transitionTypes={[FROM_HOME]}>
-          {item.label}
+        <Link
+          className={styles.landingLabel}
+          href={localizeHref(locale, item.href)}
+          transitionTypes={[FROM_HOME]}
+        >
+          {t.nav[item.key]}
         </Link>
       ),
     }))
   }
 
-  const current = label ?? SECTION_LABEL[state as SectionState]
+  const current = label ?? t.nav[state as SectionState]
 
   return [
     {
       key: 'home',
       node: (
         <span className={styles.crumb}>
-          <Link className={styles.home} href="/">
+          <Link className={styles.home} href={localizeHref(locale, '/')}>
             <RiHomeLine className={styles.houseIcon} aria-hidden="true" />
-            <span>Joan</span>
+            <span>{t.nav.home}</span>
           </Link>
           <CaretIcon />
         </span>
@@ -146,14 +147,20 @@ function modeFor(state: NavState) {
   return state === 'landing' ? 'landing' : 'interior'
 }
 
-function ariaLabelFor(state: NavState) {
-  return state === 'landing' ? 'Main' : 'Breadcrumb'
+function ariaLabelFor(state: NavState, t: Messages) {
+  return state === 'landing' ? t.nav.mainLabel : t.nav.breadcrumbLabel
 }
 
 /* Route -> Nav state. /projects/<slug> takes the project's own title, which
    lib/projects.ts answers synchronously: the catalogue is static and
    dynamicParams is false (Phase 2), so a bad slug 404s before Nav renders. */
-function stateFromPathname(pathname: string): { state: NavState; label?: string } {
+/* `pathname` is the browser's, so it may carry a language prefix: /ca/projects.
+   The state is the same in every language, so the prefix comes off first. */
+function stateFromPathname(
+  browserPathname: string,
+  t: Messages,
+): { state: NavState; label?: string } {
+  const pathname = splitLocale(browserPathname).path
   if (pathname === '/projects') return { state: 'projects' }
   if (pathname === '/about') return { state: 'about' }
   if (pathname === '/photos') return { state: 'photos' }
@@ -162,7 +169,7 @@ function stateFromPathname(pathname: string): { state: NavState; label?: string 
     const project = getProject(slug)
     return {
       state: 'project-detail',
-      label: project?.navLabel ?? project?.title ?? 'Project',
+      label: project?.navLabel ?? project?.title ?? t.nav.fallbackProject,
     }
   }
   return { state: 'landing' }
@@ -263,10 +270,11 @@ type Morph = {
 
 export default function Nav({ className }: { className?: string }) {
   const pathname = usePathname()
-  const { state, label } = stateFromPathname(pathname)
+  const { locale, t } = useI18n()
+  const { state, label } = stateFromPathname(pathname, t)
   const mode = modeFor(state)
-  const items = buildItems(state, label)
-  const routeKey = `${state}:${label ?? ''}`
+  const items = buildItems(state, locale, t, label)
+  const routeKey = `${locale}:${state}:${label ?? ''}`
 
   /* LOWERED AT THE TOP OF EVERY INTERIOR PAGE. His pill rests low while the
      reader is at the top and not scrolling down, and tucks on the first
@@ -408,7 +416,7 @@ export default function Nav({ className }: { className?: string }) {
          and only on this routed nav, because NavPreview on /gallery renders
          several at once and a shared name aborts the whole transition. */
       style={{ viewTransitionName: 'site-nav' }}
-      aria-label={ariaLabelFor(state)}
+      aria-label={ariaLabelFor(state, t)}
       data-mode={mode}
       data-lowered={lowered ? '' : undefined}
     >
@@ -524,13 +532,14 @@ export default function Nav({ className }: { className?: string }) {
    with no measurement, no clones and no roll: a specimen is not being
    navigated away from. */
 export function NavPreview({ state, label, className }: NavProps) {
-  const items = buildItems(state, label)
+  const { locale, t } = useI18n()
+  const items = buildItems(state, locale, t, label)
   const mode = modeFor(state)
 
   return (
     <nav
       className={[styles.root, className].filter(Boolean).join(' ')}
-      aria-label={ariaLabelFor(state)}
+      aria-label={ariaLabelFor(state, t)}
       data-mode={mode}
     >
       <ol className={styles.pill} data-mode={mode}>

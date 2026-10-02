@@ -1,6 +1,6 @@
 import ChangelogText from '@/components/Footer/ChangelogText'
 import LanguageSwitcher from '@/components/LanguageSwitcher/LanguageSwitcher'
-import { siteConfig } from '@/lib/site-config'
+import { getI18n } from '@/lib/i18n/server'
 import styles from './Footer.module.css'
 
 /* The footer. Figma: Footer, Breakpoint = lg | md | sm (236:2725), redrawn on
@@ -32,7 +32,8 @@ import styles from './Footer.module.css'
  * Server Component and react-icons, which left with SocialIcons, is still not
  * in its tree at all. */
 
-export default function Footer() {
+export default async function Footer() {
+  const { t } = await getI18n()
   return (
     <footer className={styles.footer}>
       {/* DOM order is changelog, language, credits, and the visual order
@@ -42,7 +43,7 @@ export default function Footer() {
           constraint worth holding if these are ever reordered again. */}
       <ChangelogText className={styles.changelog} />
       <LanguageSwitcher className={styles.language} />
-      <p className={styles.credits}>{siteConfig.credits}</p>
+      <p className={styles.credits}>{t.footer.credits}</p>
     </footer>
   )
 }

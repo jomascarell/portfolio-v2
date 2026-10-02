@@ -63,7 +63,7 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata(
-  props: PageProps<'/projects/[slug]'>,
+  props: PageProps<'/[lang]/projects/[slug]'>,
 ): Promise<Metadata> {
   const { slug } = await props.params
   const project = getProject(slug)
@@ -372,7 +372,9 @@ function CaseBlockView({ block }: { block: CaseBlock }) {
 
 function CaseStudyArticle({ caseStudy }: { caseStudy: CaseStudy }) {
   return (
-    <div className={styles.article}>
+    /* Case studies stay in English in every language, by decision; lang tells a
+       screen reader so inside a Catalan or Spanish page. */
+    <div className={styles.article} lang="en">
       {/* SectionNav (1152:2792), built from the photos rail. Its entries come
           from one source, so a label can never drift from its anchor. */}
       <CollectionNav
@@ -418,7 +420,7 @@ function CaseStudyArticle({ caseStudy }: { caseStudy: CaseStudy }) {
                   <span className={styles.liveLinkArrow} aria-hidden="true">
                     <IoMdArrowUp />
                   </span>
-                  <NewTabNote />
+                  <NewTabNote lang="en" />
                 </a>
               ) : null}
             </div>
@@ -490,7 +492,7 @@ function CaseStudyArticle({ caseStudy }: { caseStudy: CaseStudy }) {
 }
 
 export default async function ProjectDetailPage(
-  props: PageProps<'/projects/[slug]'>,
+  props: PageProps<'/[lang]/projects/[slug]'>,
 ) {
   // params is a Promise in Next 16 — it has to be awaited, not destructured.
   const { slug } = await props.params
@@ -503,7 +505,7 @@ export default async function ProjectDetailPage(
   /* Three of the four projects have no case-study copy yet, so they keep the
      stub rather than rendering an article of empty sections. */
   if (!caseStudy) {
-    return <h1>{project.title}</h1>
+    return <h1 lang="en">{project.title}</h1>
   }
 
   return <CaseStudyArticle caseStudy={caseStudy} />

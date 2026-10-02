@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, useEffect, useRef, useState } from 'react'
-import { SKIP_TARGET_ID } from '@/components/SkipLink/SkipLink'
+import { SKIP_TARGET_ID } from '@/components/SkipLink/target'
 import styles from './FooterReveal.module.css'
 
 /* The footer reveal. Third and last of the client islands Phase 2 planned

@@ -46,7 +46,8 @@ export default function PhotosPage() {
 
   return (
     <>
-      <div className={styles.grid}>
+      {/* Photos stay in English for now (the user is still deciding). */}
+      <div className={styles.grid} lang="en">
         <ViewTransition name="page-intro" share={PANEL_SHARE} default="none">
           <CollectionNav
             items={navItems}

@@ -1,6 +1,10 @@
+import type { Metadata } from 'next'
 import Footer from '@/components/Footer/Footer'
 import FooterReveal from '@/components/FooterReveal/FooterReveal'
 import PanelLayout from '@/components/PanelLayout/PanelLayout'
+import { languageAlternates } from '@/lib/i18n/alternates'
+
+export const metadata: Metadata = { alternates: languageAlternates('/') }
 
 /* The landing — which, since 2026-09-12, is also the closed state of the two
  * screens beside it. Figma: phase 7, landing / 1448 (793:2039) and its five

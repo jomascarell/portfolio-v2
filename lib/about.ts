@@ -62,29 +62,5 @@ export type BioLine = BioSegment[]
 /* Lines separated by <br />; paragraphs separated by a full empty line. */
 export type BioParagraph = BioLine[]
 
-export const bio: BioParagraph[] = [
-  [["Hi, I'm Joan."], [{ em: 'Designer' }, ', crafting UI for the web.']],
-  [
-    [
-      "Master's grad, specializing in frontend design, building on a bachelor's in digital design.",
-    ],
-  ],
-  [
-    [
-      /* The retired build writes this as `at&nbsp;` with the anchor on the next
-         source line. That is a JSX formatting artifact — the non-breaking space
-         is there so the significant space survives the line break in the file —
-         not a typographic decision, so it is an ordinary space here. */
-      'I recently interned at ',
-      { text: 'Okisam', href: 'https://okisam.com/' },
-      ', a solution-driven design agency, developing my first component-based CSS design system from scratch.',
-    ],
-  ],
-  [
-    [
-      'Outside of design, you can find me on ',
-      { text: 'Strava', href: 'https://www.strava.com/athletes/125006587' },
-      ', or on the peak of some random mountain.',
-    ],
-  ],
-]
+/* The bio's text lives in the dictionaries (lib/i18n/messages), one per
+   language, since 2026-10-02. This file keeps its shape. */

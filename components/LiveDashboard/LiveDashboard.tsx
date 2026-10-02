@@ -72,7 +72,7 @@ export default function LiveDashboard({
             <span className={styles.stillArrow} aria-hidden="true">
               <IoMdArrowUp />
             </span>
-            <NewTabNote />
+            <NewTabNote lang="en" />
           </a>
         </div>
       ) : null}

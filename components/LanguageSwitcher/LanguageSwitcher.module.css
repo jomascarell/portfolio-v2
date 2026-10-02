@@ -22,6 +22,8 @@
   padding: 0;
   border: 0;
   background: none;
+  /* Links since 2026-10-02 (they go to the page in that language). */
+  text-decoration: none;
   font-size: var(--font-size-sm);
   line-height: var(--line-height-sm);
   font-weight: var(--font-weight-regular);
@@ -31,7 +33,7 @@
   transition: color var(--duration-fast) var(--ease-standard);
 }
 
-.option[aria-pressed='true'] {
+.option[aria-current='true'] {
   color: var(--color-neutral-50);
 }
 
