@@ -27,7 +27,7 @@
     /* -0.02em, as everywhere in code since Gate 06. The Figma file still
        applies letter-spacing/tight as -2px, which is why its pill is 92 wide
        and this one is a few px wider. */
-    letter-spacing: var(--letter-spacing-tight);
+    letter-spacing: -2px;
     line-height: normal;
     /* Figma trims the line box to cap height and alphabetic baseline, which
        is what makes the pill 28 tall. Where text-box is not supported the
@@ -54,7 +54,8 @@
      `static`, the landing would stop overflowing, the bar would go back to
      `hidden`, the button would return and overflow it again, and the two
      would flip forever. Keeping the space makes the answer stable. */
-  :global(:root:not([data-footer='hidden']):not([data-footer='revealed'])) .toggle {
+  :global(:root:not([data-footer='hidden']):not([data-footer='revealed']))
+    .toggle {
     visibility: hidden;
   }
 }

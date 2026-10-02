@@ -45,6 +45,12 @@ export const ca: Messages = {
     credits: 'Desenvolupat amb NextJS, Claude, Figma.',
     languageLabel: 'Idioma',
   },
+  caseEnd: {
+    label: 'Més projectes',
+    previous: 'Anterior',
+    next: 'Següent',
+    allWork: 'Tots els projectes',
+  },
   common: {
     skipToContent: 'Salta al contingut',
     newTab: "(s'obre en una pestanya nova)",

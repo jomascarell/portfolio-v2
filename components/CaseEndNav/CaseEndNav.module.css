@@ -1,0 +1,150 @@
+/* CaseEndNav (1522:2184). Read off the Position=middle variant at each
+   breakpoint; first and last differ only in content.
+
+   THREE STEPS, at the system's md (768) and lg (1024):
+     sm   padding-inline 0, title 18/30 Medium, no category line
+     md   padding-inline 32 (space/xl), title 18/30 Medium, category 16/26.2
+     lg   padding-inline 64 (space/3xl), title 28/36 Medium, category 18/30
+          Medium
+   padding-block is 48 (space/2xl) everywhere. */
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  /* counterAxisAlignItems MAX: a side with a category line is taller, and the
+     two titles share a bottom edge. */
+  align-items: flex-end;
+  /* 40px is the frame's own item spacing; it is unbound in Figma and sits
+     between space/xl and space/2xl. With space-between it is only the least
+     the two sides can come to. */
+  column-gap: 40px;
+  padding-block: var(--space-2xl);
+}
+
+.link {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  min-inline-size: 0;
+  color: var(--color-text-primary);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.previous {
+  align-items: flex-start;
+  text-align: start;
+}
+
+.next {
+  align-items: flex-end;
+  text-align: end;
+}
+
+/* The case page's link UI: accent on hover, a 2px accent ring for keyboard
+   focus outside any hover query. */
+.link:focus-visible {
+  outline: 2px solid var(--color-text-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--color-text-secondary);
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.arrow {
+  display: flex;
+  flex: none;
+  inline-size: 16px;
+  block-size: 16px;
+  transition: translate var(--duration-slow) ease-out;
+}
+
+.arrow svg {
+  display: block;
+  inline-size: 16px;
+  block-size: 16px;
+}
+
+.previous .arrow svg {
+  rotate: -90deg;
+}
+
+.next .arrow svg {
+  rotate: 90deg;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+/* No category line below md: every sm variant drops it. */
+.category {
+  display: none;
+}
+
+.title {
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-lg);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-normal);
+}
+
+@media (hover: hover) {
+  .link:hover,
+  .link:hover .eyebrow {
+    color: var(--color-text-accent);
+  }
+
+  /* The arrow steps out along its own heading, like the live link's, but a
+     shorter step (4px, not .75rem): it moves sideways beside a short label. */
+  .previous:hover .arrow {
+    translate: calc(-1 * var(--space-xs)) 0;
+  }
+
+  .next:hover .arrow {
+    translate: var(--space-xs) 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .nav {
+    padding-inline: var(--space-xl);
+  }
+
+  .category {
+    display: block;
+    font-size: var(--font-size-md);
+    line-height: var(--line-height-md);
+    font-weight: var(--font-weight-regular);
+    letter-spacing: var(--letter-spacing-normal);
+  }
+}
+
+@media (min-width: 1024px) {
+  .nav {
+    padding-inline: var(--space-3xl);
+  }
+
+  .category {
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-lg);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .title {
+    font-size: var(--font-size-2xl);
+    line-height: var(--line-height-2xl);
+  }
+}

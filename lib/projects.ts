@@ -41,11 +41,11 @@ export type Project = {
   /* The page's meta description and og:description (2026-10-01). Without
      one the page keeps the site-wide description from the root layout. */
   description?: string
-  /* The project's 64x64 outline icon, a path under /public, exported from
-     the Figma ProjectListRow drafts (1500:1362, 1502:1387) on 2026-10-01.
-     Both draw inside a centred 48px box (8px clear all round): Embassaments'
-     export was full-bleed and was inset to match, its stroke compensated so
-     it still draws 0.9px. The case header's `logo` uses the same files.
+  /* The project's 64x64 icon, a path under /public. Each draws inside a
+     centred 48px box (8px clear all round). Emotional UX comes from the Figma
+     ProjectListRow draft 1500:1362 (2026-10-01); Embassaments (0.6px
+     stroke) and Joies Laia (a filled script mark) are the user's own exports
+     of 2026-10-02. The case header's `logo` uses the same files.
      Data only: where it sits in the list and the case header is not built
      yet. Render with a plain <img src={project.icon} width={64}
      height={64} alt="" />: it is decorative beside the project's name. */
@@ -71,6 +71,7 @@ export const projects: Project[] = [
     category: 'A brand and store, built pro bono',
     title: 'Joies Laia',
     year: 2026,
+    icon: '/case-studies/joies-laia/icon.svg',
   },
   {
     /* Spelled "Embssaments" when given, which has no vowel between the b and

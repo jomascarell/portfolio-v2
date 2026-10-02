@@ -36,6 +36,15 @@ export type Messages = {
     credits: string
     languageLabel: string
   }
+  /* The links at the end of a case page. The "Projects" label is nav.projects. */
+  caseEnd: {
+    /* The nav's accessible name. */
+    label: string
+    previous: string
+    next: string
+    /* The title under "Projects" where there is no previous or next case. */
+    allWork: string
+  }
   common: {
     skipToContent: string
     /* Read after every link that opens a new tab. */
