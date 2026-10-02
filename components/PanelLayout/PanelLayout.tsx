@@ -1,5 +1,6 @@
 import { ViewTransition, type ReactNode } from 'react'
 import PageIntro from '@/components/PageIntro/PageIntro'
+import { PANEL_SHARE } from '@/lib/panel-morph'
 import styles from './PanelLayout.module.css'
 
 /* The panel family — landing, projects and about — as ONE component with three
@@ -86,8 +87,14 @@ export default function PanelLayout({
   return (
     <div className={[styles.grid, STATES[state], className].filter(Boolean).join(' ')}>
       {hasPanel && (
-        <ViewTransition name="page-intro" share="morph" default="none">
-          <PageIntro className={styles.panel} type="intro" />
+        <ViewTransition
+          name="page-intro"
+          /* Morphs only when the navigation leaves the landing: see
+             lib/panel-morph for why arriving at it must not. */
+          share={PANEL_SHARE}
+          default="none"
+        >
+          <PageIntro className={styles.panel} type="intro" footerToggle={state === 'landing'} />
         </ViewTransition>
       )}
 

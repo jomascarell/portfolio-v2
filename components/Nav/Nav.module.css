@@ -157,6 +157,17 @@
   position: absolute;
   top: 0;
   left: 0;
+  /* THE ROOT CAUSE OF THE CARET CROWDING "JOAN" ON FIREFOX AND iPHONE, found
+     2026-10-02. Without this, an absolute box is shrink-to-fit against its
+     containing block, and that block is the slot being measured, still at
+     its OLD width when the morph measures it. Blink resolved that to the
+     label's full width anyway; Gecko and WebKit resolve a flex label's
+     min-content differently and clamped it to the old slot (61px read for
+     an 83.6px "Joan" in Firefox). Every slot then animated to the wrong
+     width, and the caret sat on the "n" until the morph ended and the slot
+     went back to auto. max-content takes the slot out of the question, so
+     every engine reads the same number. */
+  width: max-content;
   visibility: hidden;
   white-space: nowrap;
   pointer-events: none;

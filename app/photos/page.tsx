@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { ViewTransition } from 'react'
 import CollectionNav from '@/components/CollectionNav/CollectionNav'
 import PhotoStream from '@/components/PhotoStream/PhotoStream'
+import { PANEL_SHARE } from '@/lib/panel-morph'
 import { collectionAnchorId, photoCollections } from '@/lib/photos'
 import styles from './page.module.css'
 
@@ -46,7 +47,7 @@ export default function PhotosPage() {
   return (
     <>
       <div className={styles.grid}>
-        <ViewTransition name="page-intro" share="morph" default="none">
+        <ViewTransition name="page-intro" share={PANEL_SHARE} default="none">
           <CollectionNav
             items={navItems}
             label="Collections"

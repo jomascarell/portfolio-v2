@@ -239,11 +239,7 @@ export default function ProjectList({ className }: ProjectListProps) {
         rafId = requestAnimationFrame(tick)
       }
 
-      /* Only the reader moves the carousel through here (wheel, swipe, keys,
-         focus), never setup, so this is where the page "leaves its top" for
-         the pill: see leaveTopZone. */
       const goTo = (next: number) => {
-        leaveTopZone()
         index = canLoop
           ? next
           : Math.min(Math.max(next, 0), projects.length - 1)
@@ -252,7 +248,16 @@ export default function ProjectList({ className }: ProjectListProps) {
         animate()
       }
 
-      const step = (direction: number) => goTo(index + direction)
+      /* Wheel, swipe and arrow keys step the carousel, and that is the reader
+         moving through the list, so the page "leaves its top" for the pill
+         (see leaveTopZone). NOT in goTo: focus also goes through there, and
+         clicking a project focuses its link, which tucked the pill a frame
+         before the case page opened and dropped it again (seen in the user's
+         Firefox recording, 2026-10-02). */
+      const step = (direction: number) => {
+        leaveTopZone()
+        goTo(index + direction)
+      }
 
       let accumulated = 0
       let lastWheelAt = 0

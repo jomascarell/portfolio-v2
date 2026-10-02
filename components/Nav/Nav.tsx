@@ -7,6 +7,7 @@ import { IoMdArrowDropright } from 'react-icons/io'
 import { RiHomeLine } from 'react-icons/ri'
 import { getProject } from '@/lib/projects'
 import { siteConfig } from '@/lib/site-config'
+import { FROM_HOME } from '@/lib/panel-morph'
 import { useTopZone } from '@/lib/use-top-zone'
 import styles from './Nav.module.css'
 
@@ -106,7 +107,9 @@ function buildItems(state: NavState, label?: string): Item[] {
     return siteConfig.nav.map((item) => ({
       key: `link:${item.href}`,
       node: (
-        <Link className={styles.landingLabel} href={item.href}>
+        /* FROM_HOME is what lets the panel morph on the way out of the
+           landing, and only then: see lib/panel-morph. */
+        <Link className={styles.landingLabel} href={item.href} transitionTypes={[FROM_HOME]}>
           {item.label}
         </Link>
       ),
@@ -400,6 +403,11 @@ export default function Nav({ className }: { className?: string }) {
   return (
     <nav
       className={[styles.root, styles.fixed, className].filter(Boolean).join(' ')}
+      /* Lifts the nav out of the page fade; globals.css shows it live. Inline,
+         because a CSS module hashes view-transition-name like a class name,
+         and only on this routed nav, because NavPreview on /gallery renders
+         several at once and a shared name aborts the whole transition. */
+      style={{ viewTransitionName: 'site-nav' }}
       aria-label={ariaLabelFor(state)}
       data-mode={mode}
       data-lowered={lowered ? '' : undefined}
