@@ -1,0 +1,119 @@
+/* NotFound's "mark" (Figma 1553:2792): the slider above the glyphs, 48px
+   (space/2xl) apart at every breakpoint. Sizes are read off the variants:
+   sm draws the glyphs 90 tall with a 206-wide slider and a 12px knob; md
+   and lg draw them twice the component's size, 181.25 tall, with a 260-wide
+   slider and a 16px (size/icon/sm) knob. md and lg differ only in the frame's
+   padding, so one step at 768 covers both. */
+
+.mark {
+  --glyph-height: 90px;
+  --slider-width: 206px;
+  --knob: 12px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2xl);
+}
+
+@media (min-width: 768px) {
+  .mark {
+    --glyph-height: 181.25px;
+    --slider-width: 260px;
+    --knob: var(--size-icon-sm);
+  }
+}
+
+/* ---- The glyphs ---------------------------------------------------------- */
+
+.glyphs {
+  display: block;
+  block-size: var(--glyph-height);
+  inline-size: auto;
+  aspect-ratio: 207.68 / 90.624;
+  /* Figma binds the glyphs to neutral/950, the same #292929 as the semantic
+     text role the Wordmark uses; the role is the one a dark theme would
+     change, so the code takes it. */
+  fill: var(--color-text-primary);
+  /* A tilted glyph reaches past the viewBox; an SVG clips to it by default.
+     Same rule, same reason, as the Wordmark. */
+  overflow: visible;
+}
+
+.glyphs path {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+/* ---- The slider ----------------------------------------------------------
+
+   A native range input, so keyboard (arrows, Home, End), touch and screen
+   readers come with it. Figma draws a 3px round-capped track in neutral/950
+   and a white knob with a 1.5px neutral/950 ring. The file seats the knob 2px
+   above the track's centre line (track at y 10, knob centred at 8); that reads
+   as a nudge in the drawing, not an intention, so here the knob is centred. */
+
+.slider {
+  appearance: none;
+  inline-size: var(--slider-width);
+  /* The input's box is the hit area: the knob's height plus room to grab it,
+     which a 3px line would not give a finger. */
+  block-size: 24px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-runnable-track {
+  block-size: 3px;
+  /* Round caps, as the drawn line has. Half the track's height. */
+  border-radius: 1.5px;
+  background: var(--color-text-primary);
+}
+
+.slider::-moz-range-track {
+  block-size: 3px;
+  /* Round caps, as the drawn line has. Half the track's height. */
+  border-radius: 1.5px;
+  background: var(--color-text-primary);
+}
+
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  box-sizing: border-box;
+  inline-size: var(--knob);
+  block-size: var(--knob);
+  /* Centres the knob on the 3px track: WebKit aligns the thumb's top with the
+     track's. */
+  margin-block-start: calc((3px - var(--knob)) / 2);
+  border: 1.5px solid var(--color-text-primary);
+  border-radius: 50%;
+  background: var(--color-surface-page);
+  transition: scale var(--duration-fast) var(--ease-standard);
+}
+
+.slider::-moz-range-thumb {
+  box-sizing: border-box;
+  inline-size: var(--knob);
+  block-size: var(--knob);
+  border: 1.5px solid var(--color-text-primary);
+  border-radius: 50%;
+  background: var(--color-surface-page);
+  transition: scale var(--duration-fast) var(--ease-standard);
+}
+
+/* The knob grows a little while held, so a drag has a visible handle. Not in
+   the file, which draws only the resting state. */
+.slider:active::-webkit-slider-thumb {
+  scale: 1.25;
+}
+
+.slider:active::-moz-range-thumb {
+  scale: 1.25;
+}
+
+.slider:focus-visible {
+  outline: 2px solid var(--color-text-accent);
+  outline-offset: 4px;
+  border-radius: var(--radius-sm);
+}

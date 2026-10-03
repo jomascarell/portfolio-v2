@@ -5,7 +5,6 @@ export const es: Messages = {
   nav: {
     projects: 'Proyectos',
     about: 'Sobre mí',
-    photos: 'Fotos',
     home: 'Joan',
     mainLabel: 'Principal',
     breadcrumbLabel: 'Ruta de navegación',
@@ -50,6 +49,17 @@ export const es: Messages = {
     previous: 'Anterior',
     next: 'Siguiente',
     allWork: 'Todos los proyectos',
+  },
+  placeholder: {
+    note: 'Este proyecto todavía se está construyendo y necesita algo más de tiempo.',
+  },
+  notFound: {
+    lost: '¿Te has perdido?',
+    lostAside: '¿No estamos todos un poco perdidos?',
+    tiltLabel: 'Inclina el 404',
+    home: 'Vuelve al inicio',
+    projects: 'Ver todos los proyectos',
+    metaTitle: 'Página no encontrada — Joan Mascarell',
   },
   common: {
     skipToContent: 'Saltar al contenido',

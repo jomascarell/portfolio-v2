@@ -1,0 +1,133 @@
+/* NotFound (Figma 1553:2792). One centred column: the mark, then the
+   message, 48px (space/2xl) apart. Read off the variants:
+
+     sm      headline heading/h3 18/30, links body/sm, 48 between them
+     md, lg  headline heading/h2 28/36, links body/base, 16 between them
+
+   md and lg differ only in the frame's padding, so the step is at 768. The
+   column fills most of the screen and centres in it, as the frame centres
+   its content. */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2xl);
+  min-block-size: 70svh;
+  padding-block: var(--space-2xl);
+  text-align: center;
+}
+
+/* Hugs the headline, so the links row below spans exactly its width. */
+.message {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-2xl);
+  max-inline-size: 100%;
+}
+
+/* heading/h3, Medium 18/30. The question in primary ink, the aside in
+   secondary: one text node with two fills in the file. */
+.headline {
+  font-size: var(--font-size-xl);
+  line-height: var(--line-height-xl);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--color-text-primary);
+  text-wrap: balance;
+}
+
+.aside {
+  color: var(--color-text-secondary);
+}
+
+/* The two links at either end of the headline's width (Figma: links,
+   space-between). If the row runs out of room they wrap. */
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-sm) var(--space-xl);
+  justify-content: center;
+}
+
+/* body/sm. The site's link UI: inherited ink, underline, accent on hover, a
+   2px accent ring for keyboard focus. */
+.link {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
+  color: var(--color-text-primary);
+  text-decoration: underline;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--color-text-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* The case page's live-link arrow, as Figma draws it here: 16px in a
+   22.284px box, turned 35deg off vertical — up and back for the start, up
+   and on for the projects (the user's call, 2026-10-03). */
+.arrow {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: 22.284px;
+  block-size: 22.284px;
+  transition: translate var(--duration-slow) ease-out;
+}
+
+.arrow svg {
+  display: block;
+  inline-size: var(--size-icon-sm);
+  block-size: var(--size-icon-sm);
+}
+
+.back .arrow svg {
+  rotate: -35deg;
+}
+
+.on .arrow svg {
+  rotate: 35deg;
+}
+
+@media (hover: hover) {
+  .link:hover {
+    color: var(--color-text-accent);
+  }
+
+  /* Each arrow steps .75rem out along its own heading, as the live link's
+     does. */
+  .back:hover .arrow {
+    translate: calc(-0.75rem * sin(35deg)) calc(-0.75rem * cos(35deg));
+  }
+
+  .on:hover .arrow {
+    translate: calc(0.75rem * sin(35deg)) calc(-0.75rem * cos(35deg));
+  }
+}
+
+@media (min-width: 768px) {
+  .message {
+    gap: var(--space-md);
+  }
+
+  /* heading/h2, Medium 28/36. */
+  .headline {
+    font-size: var(--font-size-2xl);
+    line-height: var(--line-height-2xl);
+  }
+
+  /* body/base 16/26.2. */
+  .link {
+    font-size: var(--font-size-md);
+    line-height: var(--line-height-md);
+  }
+}

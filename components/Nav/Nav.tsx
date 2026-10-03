@@ -64,7 +64,7 @@ import styles from './Nav.module.css'
  * pre-hydration paint are both correct. The reference ships `width: 0` until
  * its first rAF lands and accepts the flash; we have real SSR to protect. */
 
-type SectionState = 'projects' | 'about' | 'photos'
+type SectionState = 'projects' | 'about'
 export type NavState = 'landing' | SectionState | 'project-detail'
 
 /* THE HOUSE IS react-icons, AT THE USER'S REQUEST (2026-09-15) — a deliberate
@@ -163,7 +163,6 @@ function stateFromPathname(
   const pathname = splitLocale(browserPathname).path
   if (pathname === '/projects') return { state: 'projects' }
   if (pathname === '/about') return { state: 'about' }
-  if (pathname === '/photos') return { state: 'photos' }
   if (pathname.startsWith('/projects/')) {
     const slug = pathname.slice('/projects/'.length).split('/')[0]
     const project = getProject(slug)

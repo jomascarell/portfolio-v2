@@ -8,7 +8,6 @@ export type Messages = {
   nav: {
     projects: string
     about: string
-    photos: string
     /* The breadcrumb's home link. A name, the same in every language. */
     home: string
     /* Accessible names of the two nav states. */
@@ -44,6 +43,23 @@ export type Messages = {
     next: string
     /* The title under "Projects" where there is no previous or next case. */
     allWork: string
+  }
+  /* A project listed before its case study is written (Joies Laia). */
+  placeholder: {
+    note: string
+  }
+  /* The 404 page. */
+  notFound: {
+    /* The headline's two tones: the question in primary ink, the aside in
+       secondary (Figma NotFound, 1553:2792). */
+    lost: string
+    lostAside: string
+    /* The slider's accessible name. */
+    tiltLabel: string
+    home: string
+    projects: string
+    /* The document <title>. */
+    metaTitle: string
   }
   common: {
     skipToContent: string

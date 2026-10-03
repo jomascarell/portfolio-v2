@@ -5,7 +5,6 @@ export const ca: Messages = {
   nav: {
     projects: 'Projectes',
     about: 'Sobre mi',
-    photos: 'Fotos',
     home: 'Joan',
     mainLabel: 'Principal',
     breadcrumbLabel: 'Ruta de navegació',
@@ -50,6 +49,17 @@ export const ca: Messages = {
     previous: 'Anterior',
     next: 'Següent',
     allWork: 'Tots els projectes',
+  },
+  placeholder: {
+    note: 'Aquest projecte encara s’està construint i necessita una mica més de temps.',
+  },
+  notFound: {
+    lost: 'T’has perdut?',
+    lostAside: 'No estem tots una mica perduts?',
+    tiltLabel: 'Inclina el 404',
+    home: 'Torna a l’inici',
+    projects: 'Mira tots els projectes',
+    metaTitle: 'Pàgina no trobada — Joan Mascarell',
   },
   common: {
     skipToContent: 'Salta al contingut',

@@ -65,7 +65,9 @@ export const siteConfig = {
     /* Labels come from the dictionaries (lib/i18n/messages, `nav`). */
     { href: '/projects', key: 'projects' },
     { href: '/about', key: 'about' },
-    { href: '/photos', key: 'photos' },
+    /* Photos was the third, removed for now by the user (2026-10-03). The
+       page, lib/photos.ts, PhotoStream and the images are in git history
+       before that date. */
   ],
 
   social: {
