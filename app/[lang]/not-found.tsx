@@ -17,10 +17,8 @@ import styles from './not-found.module.css'
  * headline's width. The headline is the h1; the 404 above it is an image
  * labelled "404".
  *
- * THE ARROWS DEPART FROM THE FILE. Figma turns both 35deg, the case page's
- * "opens another site" arrow. Both links stay on this site, so they take
- * CaseEndNav's arrows instead, pointing along the line: back to the start
- * points back, the project list points on.
+ * The arrows are the case page's live-link arrow at 35deg, as the file
+ * draws them: up and back for the start, up and on for the projects.
  *
  * The title is a React <title>, hoisted into <head>: a not-found file cannot
  * export metadata (only global-not-found can, per the Next docs). */

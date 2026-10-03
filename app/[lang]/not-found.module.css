@@ -57,7 +57,6 @@
 .link {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2xs);
   font-size: var(--font-size-sm);
   line-height: var(--line-height-sm);
   color: var(--color-text-primary);
@@ -71,12 +70,16 @@
   border-radius: var(--radius-sm);
 }
 
-/* CaseEndNav's arrow: 16px, turned to point along the line. */
+/* The case page's live-link arrow, as Figma draws it here: 16px in a
+   22.284px box, turned 35deg off vertical — up and back for the start, up
+   and on for the projects (the user's call, 2026-10-03). */
 .arrow {
   display: flex;
   flex: none;
-  inline-size: var(--size-icon-sm);
-  block-size: var(--size-icon-sm);
+  align-items: center;
+  justify-content: center;
+  inline-size: 22.284px;
+  block-size: 22.284px;
   transition: translate var(--duration-slow) ease-out;
 }
 
@@ -87,11 +90,11 @@
 }
 
 .back .arrow svg {
-  rotate: -90deg;
+  rotate: -35deg;
 }
 
 .on .arrow svg {
-  rotate: 90deg;
+  rotate: 35deg;
 }
 
 @media (hover: hover) {
@@ -99,12 +102,14 @@
     color: var(--color-text-accent);
   }
 
+  /* Each arrow steps .75rem out along its own heading, as the live link's
+     does. */
   .back:hover .arrow {
-    translate: calc(-1 * var(--space-xs)) 0;
+    translate: calc(-0.75rem * sin(35deg)) calc(-0.75rem * cos(35deg));
   }
 
   .on:hover .arrow {
-    translate: var(--space-xs) 0;
+    translate: calc(0.75rem * sin(35deg)) calc(-0.75rem * cos(35deg));
   }
 }
 
