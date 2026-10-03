@@ -1,10 +1,10 @@
 /* Motion and positioning for the footer reveal. The mechanic is argued in
    FooterReveal.tsx; this file is the values, and every one of them is a token.
 
-   Nothing here applies until FooterReveal sets data-state to hidden or revealed
-   after mount. In the default `static` state these rules do not match, so the
-   footer is an ordinary block at the end of the landing — which is also exactly
-   what a visitor without JavaScript gets. */
+   The fixed states apply once FooterReveal sets data-state to hidden or
+   revealed after mount; before that, with scripts on, the bar waits parked
+   off-screen (see below). In `static`, and without JavaScript, the footer is
+   an ordinary block at the end of the landing. */
 
 /* The footer is full-bleed and carries its own inset internally. Phase 5 got
    that by mounting it outside <main>; now that the landing owns it, it renders
@@ -51,6 +51,33 @@
      later. No token: tokens.css carries no z-index scale, and inventing one for
      a second consumer would be a system built from two data points. */
   z-index: 20;
+}
+
+/* PARKED BEFORE THE ISLAND RUNS, WHEN IT IS GOING TO RUN — 2026-10-03.
+
+   Until FooterReveal mounts, the bar is `static`: in flow at the end of the
+   landing. On a reload that showed for a few hundred ms — the top 16px of the
+   bar across the bottom of the screen and a scrollbar (the page 81px too tall
+   at 1920x969, 124px on an iPhone 13) — then vanished when the island hid it.
+   Seen in the user's recording, 2026-10-03, on every reload.
+
+   So when scripts are on, the bar starts where `hidden` puts it, and the
+   island only ever moves it if the page turns out to scroll (`static`, in
+   flow below the fold, where nothing is visible to flash). <html
+   data-footer> is the marker: the island sets it on its first decision and
+   removes it on unmount, so this matches exactly the pre-mount window.
+   Without scripts the media query fails and the footer stays the ordinary
+   in-flow block, which is what a no-JS visitor needs. */
+@media (scripting: enabled) {
+  :global(:root:not([data-footer])) .reveal {
+    position: fixed;
+    inset-inline: 0;
+    inset-block-end: 0;
+    margin-inline: 0;
+    z-index: 20;
+    transform: translateY(100%);
+    opacity: 0;
+  }
 }
 
 /* THE TRANSITION IS NOT ON THE STATES, IT IS BEHIND data-armed — see

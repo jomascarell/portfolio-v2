@@ -2,14 +2,17 @@
    padding, radius/lg, color/surface/subtle-hover ground, the label in Tilt
    Warp at font-size/lg, letter-spacing/tight, color/neutral/1000.
 
-   TOUCH ONLY. A pointer that can hover has the wheel and the keyboard already,
-   and the design is drawn for touch devices only. (hover: none) is the same
-   test MediaVideo uses for its touch controls. */
+   TOUCH DEVICES. A pointer that can hover has the wheel and the keyboard
+   already, and the design is drawn for touch devices only. (hover: none) is
+   the test MediaVideo uses for its touch controls; (any-pointer: coarse) was
+   added 2026-10-03 for an iPad with a keyboard case or trackpad, which
+   reports hover and so lost the button. A touchscreen laptop matches it too
+   and shows the button, which is harmless: it does what the wheel does. */
 .toggle {
   display: none;
 }
 
-@media (hover: none) {
+@media (hover: none), (any-pointer: coarse) {
   .toggle {
     position: relative;
     /* inline-block, not flex: text-box trims the line box of the block that
@@ -45,18 +48,29 @@
     inset: -8px 0;
   }
 
-  /* VISIBLE ONLY WHILE THE BAR IS HIDDEN OR OPEN. In `static` (the landing
-     overflows, so the footer is already at the end of the page) and before
-     FooterReveal has run, there is nothing to reveal.
+  /* Hidden only before FooterReveal has run, when there is no state yet. In
+     `static` it stays (a tap scrolls to the footer; see FooterToggle.tsx).
 
-     visibility, not display, on purpose: FooterReveal decides `static` by
-     whether the landing overflows. If the button took its space away in
-     `static`, the landing would stop overflowing, the bar would go back to
-     `hidden`, the button would return and overflow it again, and the two
-     would flip forever. Keeping the space makes the answer stable. */
-  :global(:root:not([data-footer='hidden']):not([data-footer='revealed']))
-    .toggle {
+     Whatever hides it must keep its space: FooterReveal decides `static` by
+     whether the landing overflows, and a button that took its space away
+     would flip that answer back and forth forever. */
+  :global(:root:not([data-footer])) .toggle {
     visibility: hidden;
+  }
+
+  /* FADED WHILE THE BAR IS OPEN (the user's call, 2026-10-03). On short
+     phones the open bar covered it; now it steps aside with the bar's own
+     500ms ease/entrance and comes back as the bar leaves. Opacity and
+     pointer-events rather than visibility: a tap where it was falls through
+     to the page, which is an outside tap and closes the bar, and a screen
+     reader can still reach it to close the bar. */
+  .toggle {
+    transition: opacity var(--duration-reveal) var(--ease-entrance);
+  }
+
+  :global(:root[data-footer='revealed']) .toggle {
+    opacity: 0;
+    pointer-events: none;
   }
 }
 
