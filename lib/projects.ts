@@ -46,9 +46,8 @@ export type Project = {
      ProjectListRow draft 1500:1362 (2026-10-01); Embassaments (0.6px
      stroke) and Joies Laia (a filled script mark) are the user's own exports
      of 2026-10-02. The case header's `logo` uses the same files.
-     Data only: where it sits in the list and the case header is not built
-     yet. Render with a plain <img src={project.icon} width={64}
-     height={64} alt="" />: it is decorative beside the project's name. */
+     Not shown in the project list (removed 2026-10-03, user); the Joies
+     Laia placeholder renders it as a plain decorative <img>. */
   icon?: string
   /* A 1200x630 share card for og:image and twitter:image, a path under
      /public. None exists yet: the Figma file has no share frames. */

@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import type { CSSProperties } from 'react'
 import { localizeHref } from '@/lib/i18n/config'
 import { useI18n } from '@/lib/i18n/client'
 import type { Project } from '@/lib/projects'
@@ -44,15 +43,11 @@ import styles from './ProjectListRow.module.css'
  * the same visual state. `hover` survives only as a forced state (below),
  * for the gallery's standalone specimen, which never runs the carousel.
  *
- * THE PROJECT ICON, 2026-10-01, from the Figma drafts 1500:1361 (Embassaments)
- * and 1502:1376: a 64px outline icon left of the text, 32px (space/xl) apart,
- * the text block and the year 8px (space/sm) apart. It is drawn as a CSS
- * MASK of the project's own SVG, filled with the row's ink, not as an <img>:
- * an unlit row is color/text/subtle, and a black icon on a near-white row
- * would light up the one thing the state system keeps dim. The mask takes
- * only the file's shape, so the two exports' different stroke colours
- * (black, #111) stop mattering. A project with no icon keeps an empty 64px
- * slot, so its text still lines up with the rows that have one. */
+ * NO PROJECT ICON. One was added 2026-10-01 from the Figma drafts 1500:1361
+ * and 1502:1376 (a 64px CSS mask of the project's SVG, left of the text) and
+ * removed 2026-10-03 at the user's request. project.icon stays in
+ * lib/projects.ts for the Joies Laia placeholder's header. The text block
+ * and the year keep the drafts' 8px (space/sm). */
 
 const STATES = {
   default: styles.default,
@@ -90,15 +85,6 @@ export default function ProjectListRow({
       href={localizeHref(locale, `/projects/${project.slug}`)}
       tabIndex={tabIndex}
     >
-      <span
-        className={styles.icon}
-        aria-hidden="true"
-        style={
-          project.icon
-            ? ({ '--icon': `url(${project.icon})` } as CSSProperties)
-            : undefined
-        }
-      />
       <span className={styles.body}>
         <span className={styles.text}>
           <span className={styles.category}>{text.category}</span>
