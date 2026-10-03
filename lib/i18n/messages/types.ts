@@ -8,7 +8,6 @@ export type Messages = {
   nav: {
     projects: string
     about: string
-    photos: string
     /* The breadcrumb's home link. A name, the same in every language. */
     home: string
     /* Accessible names of the two nav states. */

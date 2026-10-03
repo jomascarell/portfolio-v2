@@ -5,7 +5,6 @@ export const ca: Messages = {
   nav: {
     projects: 'Projectes',
     about: 'Sobre mi',
-    photos: 'Fotos',
     home: 'Joan',
     mainLabel: 'Principal',
     breadcrumbLabel: 'Ruta de navegació',

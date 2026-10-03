@@ -7,7 +7,6 @@ export const en: Messages = {
   nav: {
     projects: 'Projects',
     about: 'About',
-    photos: 'Photos',
     home: 'Joan',
     mainLabel: 'Main',
     breadcrumbLabel: 'Breadcrumb',
