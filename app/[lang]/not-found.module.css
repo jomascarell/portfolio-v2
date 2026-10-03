@@ -31,8 +31,8 @@
 /* heading/h3, Medium 18/30. The question in primary ink, the aside in
    secondary: one text node with two fills in the file. */
 .headline {
-  font-size: var(--font-size-lg);
-  line-height: var(--line-height-lg);
+  font-size: var(--font-size-xl);
+  line-height: var(--line-height-xl);
   font-weight: var(--font-weight-medium);
   letter-spacing: var(--letter-spacing-normal);
   color: var(--color-text-primary);
@@ -50,6 +50,7 @@
   flex-wrap: wrap;
   justify-content: space-between;
   gap: var(--space-sm) var(--space-xl);
+  justify-content: center;
 }
 
 /* body/sm. The site's link UI: inherited ink, underline, accent on hover, a
@@ -57,8 +58,8 @@
 .link {
   display: inline-flex;
   align-items: center;
-  font-size: var(--font-size-sm);
-  line-height: var(--line-height-sm);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
   color: var(--color-text-primary);
   text-decoration: underline;
   transition: color var(--duration-fast) var(--ease-standard);
