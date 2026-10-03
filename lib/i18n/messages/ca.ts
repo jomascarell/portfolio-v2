@@ -54,9 +54,9 @@ export const ca: Messages = {
     note: 'Aquest projecte encara s’està construint i necessita una mica més de temps.',
   },
   notFound: {
-    eyebrow: 'Error 404',
-    title: 'Pàgina no trobada',
-    body: 'Aquesta pàgina no existeix, o s’ha mogut.',
+    lost: 'T’has perdut?',
+    lostAside: 'No estem tots una mica perduts?',
+    tiltLabel: 'Inclina el 404',
     home: 'Torna a l’inici',
     projects: 'Mira tots els projectes',
     metaTitle: 'Pàgina no trobada — Joan Mascarell',

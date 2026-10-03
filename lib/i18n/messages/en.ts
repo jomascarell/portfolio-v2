@@ -53,9 +53,9 @@ export const en: Messages = {
     note: 'This project is currently being built and needs some more time.',
   },
   notFound: {
-    eyebrow: 'Error 404',
-    title: 'Page not found',
-    body: "This page doesn't exist, or it has moved.",
+    lost: 'Are you lost?',
+    lostAside: 'Aren’t we all lost a little bit?',
+    tiltLabel: 'Tilt the 404',
     home: 'Back to the start',
     projects: 'See all projects',
     metaTitle: 'Page not found — Joan Mascarell',

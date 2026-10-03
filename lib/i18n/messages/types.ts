@@ -50,11 +50,15 @@ export type Messages = {
   }
   /* The 404 page. */
   notFound: {
-    eyebrow: string
-    title: string
-    body: string
+    /* The headline's two tones: the question in primary ink, the aside in
+       secondary (Figma NotFound, 1553:2792). */
+    lost: string
+    lostAside: string
+    /* The slider's accessible name. */
+    tiltLabel: string
     home: string
     projects: string
+    /* The document <title>. */
     metaTitle: string
   }
   common: {

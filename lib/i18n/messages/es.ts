@@ -54,9 +54,9 @@ export const es: Messages = {
     note: 'Este proyecto todavía se está construyendo y necesita algo más de tiempo.',
   },
   notFound: {
-    eyebrow: 'Error 404',
-    title: 'Página no encontrada',
-    body: 'Esta página no existe, o se ha movido.',
+    lost: '¿Te has perdido?',
+    lostAside: '¿No estamos todos un poco perdidos?',
+    tiltLabel: 'Inclina el 404',
     home: 'Vuelve al inicio',
     projects: 'Ver todos los proyectos',
     metaTitle: 'Página no encontrada — Joan Mascarell',
