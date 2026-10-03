@@ -137,6 +137,15 @@
   color: var(--color-text-primary);
 }
 
+/* The placeholder page's note (Joies Laia, 2026-10-03): standfirst type in
+   the secondary ink, so it reads as a status line under the project's own
+   summary. Not from Figma. */
+.placeholderNote {
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
+  color: var(--color-text-secondary);
+}
+
 /* DashboardLink (1144:582). THE ONE PLACE THE VISUAL DELIBERATELY DEPARTS FROM
    THE FRAME, on instruction: the frame draws a permanently underlined link,
    and this project's established link UI — MailLink, plus both rails — is
@@ -385,6 +394,7 @@
   }
 
   .standfirst,
+  .placeholderNote,
   .prose,
   .quote p {
     font-size: var(--font-size-lg);

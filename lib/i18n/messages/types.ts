@@ -45,6 +45,19 @@ export type Messages = {
     /* The title under "Projects" where there is no previous or next case. */
     allWork: string
   }
+  /* A project listed before its case study is written (Joies Laia). */
+  placeholder: {
+    note: string
+  }
+  /* The 404 page. */
+  notFound: {
+    eyebrow: string
+    title: string
+    body: string
+    home: string
+    projects: string
+    metaTitle: string
+  }
   common: {
     skipToContent: string
     /* Read after every link that opens a new tab. */

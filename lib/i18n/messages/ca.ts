@@ -51,6 +51,17 @@ export const ca: Messages = {
     next: 'Següent',
     allWork: 'Tots els projectes',
   },
+  placeholder: {
+    note: 'Aquest projecte encara s’està construint i necessita una mica més de temps.',
+  },
+  notFound: {
+    eyebrow: 'Error 404',
+    title: 'Pàgina no trobada',
+    body: 'Aquesta pàgina no existeix, o s’ha mogut.',
+    home: 'Torna a l’inici',
+    projects: 'Mira tots els projectes',
+    metaTitle: 'Pàgina no trobada — Joan Mascarell',
+  },
   common: {
     skipToContent: 'Salta al contingut',
     newTab: "(s'obre en una pestanya nova)",

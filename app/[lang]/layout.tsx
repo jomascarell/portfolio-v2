@@ -87,9 +87,12 @@ const tiltWarp = Tilt_Warp({
    "jump to main" should not land a keyboard user inside the nav it just
    passed over. */
 
-/* Every page is built once per language, and a language that is not one of
-   ours is a 404 rather than an on-demand render. */
-export const dynamicParams = false
+/* Every page is built once per language. No `dynamicParams = false` here
+   (removed 2026-10-03): it reached app/[lang]/[...missing], whose paths no one
+   can list, and made every unmatched URL fail with NoFallbackError before the
+   site's own 404 could render. A language that is not ours still never gets
+   here: proxy.ts sends any other first segment to /en/..., where it is an
+   unmatched path and gets the 404. */
 
 export function generateStaticParams() {
   return LOCALES.map((lang) => ({ lang }))

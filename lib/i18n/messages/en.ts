@@ -50,6 +50,17 @@ export const en: Messages = {
     next: 'Next',
     allWork: 'All work',
   },
+  placeholder: {
+    note: 'This project is currently being built and needs some more time.',
+  },
+  notFound: {
+    eyebrow: 'Error 404',
+    title: 'Page not found',
+    body: "This page doesn't exist, or it has moved.",
+    home: 'Back to the start',
+    projects: 'See all projects',
+    metaTitle: 'Page not found — Joan Mascarell',
+  },
   common: {
     skipToContent: 'Skip to content',
     newTab: '(opens in a new tab)',

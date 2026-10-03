@@ -1,0 +1,118 @@
+/* The 404. Same twelve-column grid and content column as the case page
+   (projects/[slug]/page.module.css), and the same type: the eyebrow is the
+   case eyebrow, the title heading/h2, the body the standfirst. Not from Figma
+   — see not-found.tsx. */
+
+.page {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--space-md);
+  /* A short page still owns most of the screen, so the text does not sit in
+     a band at the top with nothing under it. */
+  min-block-size: 60svh;
+}
+
+.content {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-block: var(--space-2xl) var(--space-4xl);
+  padding-inline: var(--space-lg);
+}
+
+@media (min-width: 1024px) {
+  .content {
+    grid-column: 4 / span 8;
+  }
+}
+
+.eyebrow {
+  font-size: var(--font-size-sm);
+  line-height: 17.9px;
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--letter-spacing-normal);
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+/* heading/h2 — Medium 28/36 at every width, the case title's style. */
+.title {
+  margin-block-start: var(--space-sm);
+  font-size: var(--font-size-2xl);
+  line-height: var(--line-height-2xl);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--color-text-primary);
+}
+
+.body {
+  margin-block-start: var(--space-xl);
+  max-inline-size: 40rem;
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
+  color: var(--color-text-primary);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm) var(--space-xl);
+  margin-block-start: var(--space-xl);
+}
+
+/* The case page's link UI (.liveLink there): inherited colour, underline,
+   accent on hover, a 2px accent ring for keyboard focus. The arrow is
+   CaseEndNav's, pointing along the line: the live link's 35deg arrow means
+   "another site", and both of these stay on this one. */
+.link {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
+  color: inherit;
+  text-decoration: underline;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--color-text-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 22px;
+  block-size: 22px;
+  flex: none;
+  transition: translate var(--duration-slow) ease-out;
+}
+
+.arrow svg {
+  display: block;
+  inline-size: 16px;
+  block-size: 16px;
+  rotate: 90deg;
+}
+
+/* body/base 16/26.2 -> body/lg 18/30 at 1024, as the standfirst. */
+@media (min-width: 1024px) {
+  .body,
+  .link {
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-lg);
+  }
+}
+
+@media (hover: hover) {
+  .link:hover {
+    color: var(--color-text-accent);
+  }
+
+  .link:hover .arrow {
+    translate: var(--space-xs) 0;
+  }
+}

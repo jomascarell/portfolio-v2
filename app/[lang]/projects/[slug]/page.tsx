@@ -20,7 +20,8 @@ import {
   type CaseStudy,
   type RichText,
 } from '@/lib/case-studies'
-import { getProject, projects } from '@/lib/projects'
+import { getI18n } from '@/lib/i18n/server'
+import { getProject, projects, type Project } from '@/lib/projects'
 import styles from './page.module.css'
 
 /* Project detail — the case-study template.
@@ -52,12 +53,13 @@ import styles from './page.module.css'
  * and skip levels. The case title is the `h1`, section headings are `h2`, and
  * the eyebrow is a paragraph. This changes no pixel.
  *
- * dynamicParams = false: generateStaticParams enumerates every project, so a
- * slug outside that list is a 404 rather than an on-demand render. It keeps the
- * route fully static — and it is also incompatible with cacheComponents, which
- * is one more reason that flag stays off (Phase 2 decision). */
+ * dynamicParams = true, changed 2026-10-03. generateStaticParams still
+ * prerenders every project; an unknown slug renders on demand and hits the
+ * notFound() below, which shows the site's own 404. With `false` (the Phase 2
+ * setting) Next rejected the slug before the page ran, and served its bare
+ * default 404 with no shell, nav or language. */
 
-export const dynamicParams = false
+export const dynamicParams = true
 
 export function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }))
@@ -83,9 +85,13 @@ export async function generateMetadata(
      [slug] folder would give every project the same image, and a generated
      opengraph-image.tsx would redraw the Figma frame in JSX instead of
      using its export. */
+  /* A placeholder page stays out of search results until its case is
+     written; links to it still work and still preview. */
+  const robots = getCaseStudy(slug) ? undefined : { index: false }
   return {
     title,
     ...(description ? { description } : {}),
+    ...(robots ? { robots } : {}),
     openGraph: {
       title,
       ...(description ? { description } : {}),
@@ -505,18 +511,47 @@ export default async function ProjectDetailPage(
 
   /* CaseEndNav sits after the article, not inside it: it spans the full
      content width rather than the article's 8 columns, and its text is in the
-     page's language rather than the article's English. A stub page gets it
-     too, so an empty case is never a dead end. */
+     page's language rather than the article's English. A placeholder page gets
+     it too, so an unwritten case is never a dead end. */
   return (
     <>
       {caseStudy ? (
         <CaseStudyArticle caseStudy={caseStudy} />
       ) : (
-        /* Three of the four projects have no case-study copy yet, so they keep
-           the stub rather than rendering an article of empty sections. */
-        <h1 lang="en">{project.title}</h1>
+        <CasePlaceholder project={project} />
       )}
       <CaseEndNav slug={slug} />
     </>
+  )
+}
+
+/* A PROJECT THAT IS LISTED BEFORE ITS CASE STUDY IS WRITTEN (Joies Laia, on
+   hold by the user's decision, 2026-10-03). It keeps the case header — icon,
+   title, category in the standfirst's place — so it reads as the same kind of
+   page, then says the case is still being built. No Figma frame: built in
+   code first, for the launch. The text is chrome, so it is in the page's
+   language, like the project list. */
+async function CasePlaceholder({ project }: { project: Project }) {
+  const { t } = await getI18n()
+  const text = t.projects[project.slug] ?? project
+  return (
+    <div className={styles.article}>
+      <div className={styles.content}>
+        <header className={styles.header}>
+          {project.icon ? (
+            <div className={styles.logo} aria-hidden="true">
+              <img src={project.icon} alt="" width={64} height={64} />
+            </div>
+          ) : null}
+          <div className={styles.headerRow}>
+            <div className={styles.titleBlock}>
+              <h1 className={styles.title}>{text.title}</h1>
+              <p className={styles.standfirst}>{text.category}</p>
+              <p className={styles.placeholderNote}>{t.placeholder.note}</p>
+            </div>
+          </div>
+        </header>
+      </div>
+    </div>
   )
 }
