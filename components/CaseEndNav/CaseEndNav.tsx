@@ -21,14 +21,16 @@ import styles from './CaseEndNav.module.css'
  * padding (0 / 32 / 64) is on top of the shell's container inset.
  *
  * THE TEXT IS TRANSLATED, unlike the case study above it. It is navigation
- * chrome, like the project list, which shows the same category and title in
- * the page's language. That is also why it renders outside the article's
- * lang="en" wrapper. */
+ * chrome, like the project list, which shows the same title in the page's
+ * language. That is also why it renders outside the article's lang="en"
+ * wrapper.
+ *
+ * NO CATEGORY LINE (user, 2026-10-04): each side is the label and the title
+ * only. Figma's md and lg variants still draw the category above the title. */
 
 type Side = {
   href: string
   label: string
-  category?: string
   title: string
 }
 
@@ -47,10 +49,7 @@ function EndLink({ side, direction }: { side: Side; direction: 'previous' | 'nex
         <span className={styles.label}>{side.label}</span>
         {direction === 'next' ? arrow : null}
       </span>
-      <span className={styles.text}>
-        {side.category ? <span className={styles.category}>{side.category}</span> : null}
-        <span className={styles.title}>{side.title}</span>
-      </span>
+      <span className={styles.title}>{side.title}</span>
     </Link>
   )
 }
@@ -67,11 +66,10 @@ export default async function CaseEndNav({ slug }: { slug: string }) {
   }
   const sideFor = (at: number, label: string): Side => {
     const project = projects[at]
-    const text = t.projects[project.slug] ?? { category: project.category, title: project.title }
+    const text = t.projects[project.slug] ?? project
     return {
       href: localizeHref(locale, `/projects/${project.slug}`),
       label,
-      category: text.category,
       title: text.title,
     }
   }

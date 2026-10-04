@@ -2,18 +2,20 @@
    breakpoint; first and last differ only in content.
 
    THREE STEPS, at the system's md (768) and lg (1024):
-     sm   padding-inline 0, title 18/30 Medium, no category line
-     md   padding-inline 32 (space/xl), title 18/30 Medium, category 16/26.2
-     lg   padding-inline 64 (space/3xl), title 28/36 Medium, category 18/30
-          Medium
-   padding-block is 48 (space/2xl) everywhere. */
+     sm   padding-inline 0, title 18/30 Medium
+     md   padding-inline 32 (space/xl), title 18/30 Medium
+     lg   padding-inline 64 (space/3xl), title 28/36 Medium
+   padding-block is 48 (space/2xl) everywhere.
+
+   No category line at any width (user, 2026-10-04); Figma's md and lg
+   variants still draw one above the title. */
 
 .nav {
   display: flex;
   justify-content: space-between;
-  /* counterAxisAlignItems MAX: a side with a category line is taller, and the
-     two titles share a bottom edge. */
-  align-items: flex-end;
+  /* counterAxisAlignItems MAX: the two titles share a bottom edge, even when
+     one wraps to two lines. */
+  align-items: flex-start;
   /* 40px is the frame's own item spacing; it is unbound in Figma and sits
      between space/xl and space/2xl. With space-between it is only the least
      the two sides can come to. */
@@ -83,20 +85,9 @@
   rotate: 90deg;
 }
 
-.text {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
-}
-
-/* No category line below md: every sm variant drops it. */
-.category {
-  display: none;
-}
-
 .title {
-  font-size: var(--font-size-lg);
-  line-height: var(--line-height-lg);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
   font-weight: var(--font-weight-medium);
   letter-spacing: var(--letter-spacing-normal);
 }
@@ -122,25 +113,11 @@
   .nav {
     padding-inline: var(--space-xl);
   }
-
-  .category {
-    display: block;
-    font-size: var(--font-size-md);
-    line-height: var(--line-height-md);
-    font-weight: var(--font-weight-regular);
-    letter-spacing: var(--letter-spacing-normal);
-  }
 }
 
 @media (min-width: 1024px) {
   .nav {
     padding-inline: var(--space-3xl);
-  }
-
-  .category {
-    font-size: var(--font-size-lg);
-    line-height: var(--line-height-lg);
-    font-weight: var(--font-weight-medium);
   }
 
   .title {
