@@ -35,8 +35,8 @@ import checkoutImage from '@/public/case-studies/emotional-ux/checkout-flow-desk
 import checkoutPhone from '@/public/case-studies/emotional-ux/checkout-flow-phone.png'
 import statesImage from '@/public/case-studies/emotional-ux/product-card-states-desktop.png'
 import statesPhone from '@/public/case-studies/emotional-ux/product-card-states-phone.png'
-import drawerBefore from '@/public/case-studies/emotional-ux/drawer-before.png'
-import drawerAfter from '@/public/case-studies/emotional-ux/drawer-after.png'
+import drawerBefore from '@/public/case-studies/emotional-ux/drawer-before-footer.png'
+import drawerAfter from '@/public/case-studies/emotional-ux/drawer-after-footer.png'
 import type { CaseStudy } from './types'
 
 export const emotionalUx: CaseStudy = {
@@ -50,31 +50,30 @@ export const emotionalUx: CaseStudy = {
      the project list uses (user, 2026-10-01). It replaced the Next.js mark,
      which stood for the stack rather than the project. */
   logo: '/case-studies/emotional-ux/icon.svg',
-  /* Absent from the Figma frames; added by the user's media table. A 20s
-     scroll through the redesigned store (2026-10-01), replacing the still of
-     its footer: home page, trust bar, then a product added and the cart
-     drawer open on its trust signals. Encoded like Embassaments' clip from a
-     5.6 MB source: VP9 WebM first (0.8 MB), x264 CRF 30 veryslow faststart
-     MP4 for Safari (1.3 MB). Phones get 720-wide encodes (0.37 / 0.46 MB).
-     The poster is the frame at 18.5s, the cart drawer open over the grid,
-     since the 2026-10-01 audit: readers under reduced motion only ever see
-     the poster, and the first frame was a pool photo, not the store. */
+  /* Absent from the Figma frames; added by the user's media table. Since
+     2026-10-04 the whole purchase flow in one take (user's choice), recorded
+     headless off the live deploy (yournextstore-4ilm.vercel.app) in a
+     720x720 desktop window at @2x, scaled to 960, with a drawn cursor: home
+     hero, "Comprar ahora", the catalog scrolled to the rings, hover, Add on
+     Estrella, size 12, the drawer. Fades through white at the loop's seam.
+     Square, so phones see the interface at about half size (342 of 720)
+     where the old 16:9 full-page tour drew it at a quarter. One file at
+     every width: VP9 0.61 MB, x264 0.68 MB. It replaces the 20s tour, which
+     also passed the footer's trust bar; this one shows the drawer's trust
+     row instead. The poster is the drawer open over the grid, because
+     readers under reduced motion only ever see the poster. */
   cover: {
     slot: 'Hero — the redesigned store.',
     caption: null,
     video: {
-      webm: '/case-studies/emotional-ux/cover-loop.webm',
-      mp4: '/case-studies/emotional-ux/cover-loop.mp4',
-      phone: {
-        webm: '/case-studies/emotional-ux/cover-loop-phone.webm',
-        mp4: '/case-studies/emotional-ux/cover-loop-phone.mp4',
-      },
-      poster: '/case-studies/emotional-ux/cover-loop-poster.jpg',
+      webm: '/case-studies/emotional-ux/cover-flow.webm',
+      mp4: '/case-studies/emotional-ux/cover-flow.mp4',
+      poster: '/case-studies/emotional-ux/cover-flow-poster.jpg',
       name: 'the store tour',
-      width: 1200,
-      height: 676,
+      width: 960,
+      height: 960,
       label:
-        'A scroll through the redesigned store: its home page, new arrivals and custom orders, down to the footer’s trust bar of secure payment, real support, free shipping and 30-day returns; then a ring added to the cart, and the cart drawer repeating those guarantees beside the checkout button.',
+        'The redesigned store, from home page to cart: the hero, “Formas, texturas y plata”, then “Comprar ahora” into the catalog, scrolled down to the Sardines earrings and the Estrella ring. Hovering each card swaps its photo; adding Estrella opens a size dialog, size 12 is chosen, and the cart drawer opens with the ring, “Te faltan $5.00 para conseguir el envío gratis”, and secure payment, 30-day returns and 24/48h delivery above the pay button.',
     },
   },
   meta: [
@@ -176,7 +175,7 @@ export const emotionalUx: CaseStudy = {
           kind: 'media',
           slot: 'Norman’s three levels as a simple diagram',
           caption:
-            'Norman’s three levels. Every severity-3 finding in the audit sat on the reflective one: no returns policy, no visible contact, thin checkout validation.',
+            'Norman’s three levels. Every severity-3 finding in the audit sat on the reflective one.',
           inset: true,
           image: {
             src: normanImage,
@@ -304,28 +303,55 @@ export const emotionalUx: CaseStudy = {
         /* The media plan's "drawer before/after" (2026-10-01): the user's two
            exports, both one item below the free-shipping threshold so the
            states match, and at one scale (the before was scaled up to 1014
-           wide to match the after's 1018). The unlocked state is told in the
-           caption, not shown. */
+           wide to match the after's 1018). The unlocked state used to be
+           told in this caption; since 2026-10-04 the drawer loop below shows
+           it. Since the same day both are CROPPED TO THE FOOTER (user's
+           choice), the part that changed beside the checkout button, as
+           -footer.png files: same widths, so the shared scale holds. The
+           whole-drawer exports stay on disk, unreferenced. */
         {
           kind: 'pair',
           caption:
-            'The cart drawer with one item, before and after. The redesign shows how far free shipping is and puts payment, returns and delivery beside the checkout button. Past the threshold, the bar turns green and shipping shows as free.',
+            'The drawer’s footer, before and after: payment, returns and delivery now sit beside checkout.',
           items: [
             {
               label: 'Before · YNS template',
               image: {
                 src: drawerBefore,
-                alt: 'The template’s cart drawer: one T-shirt at $61.50, then a long empty space, a discount-code field, the subtotal, “Shipping calculated at checkout” and a Checkout button.',
+                alt: 'The template’s cart drawer footer: a discount-code field with an Apply button, the subtotal of $61.50, “Shipping calculated at checkout”, a Checkout button and “Continue Shopping”.',
               },
             },
             {
               label: 'After · prototype component drawer',
               image: {
                 src: drawerAfter,
-                alt: 'The redesigned cart drawer: “Add 12,00€ more for free shipping” above a progress bar, one ring at 48,00€, subtotal, shipping and an estimated total with VAT included, then secure payment, 30-day returns and 24/48h delivery above a “Checkout 48,00€” button.',
+                alt: 'The redesigned cart drawer footer: subtotal and shipping, an estimated total of 48,00€ with VAT included, then secure payment (SSL · Stripe), 30-day returns and 24/48h delivery above a “Checkout 48,00€” button and “Continue shopping”.',
               },
             },
           ],
+        },
+        /* The built drawer in motion (2026-10-04): recorded headless off the
+           live deploy (yournextstore-4ilm.vercel.app) at 390 wide, @2x, and
+           cropped to the top 388 square (4px off the left
+           edge drops the drawer's border). Roba ($40) leaves $10 to the $50
+           threshold; + makes it two and the bar fills. Ends on the close
+           so the loop's jump back reads as the drawer closing. Caption is
+           a draft. */
+        {
+          kind: 'media',
+          slot: 'Video loop, muted, looping — the cart drawer crossing the free-shipping threshold',
+          caption:
+            'The drawer as built. One item leaves $10 to free shipping; a second fills the bar and turns it green.',
+          video: {
+            webm: '/case-studies/emotional-ux/drawer-loop.webm',
+            mp4: '/case-studies/emotional-ux/drawer-loop.mp4',
+            poster: '/case-studies/emotional-ux/drawer-loop-poster.jpg',
+            name: 'the cart drawer clip',
+            width: 776,
+            height: 776,
+            label:
+              'On a phone, “Añadir a la cesta” adds the $40 Roba pin. The cart drawer opens: “Te faltan $10.00 para conseguir el envío gratis” above a progress bar at four fifths. Pressing plus makes it two, the bar fills, and the message turns green: “¡Enhorabuena! Tienes envío gratuito.”',
+          },
         },
       ],
     },
@@ -343,12 +369,34 @@ export const emotionalUx: CaseStudy = {
           kind: 'media',
           slot: 'Product card, three states',
           caption:
-            'The product card as built. The size selector only opens for products with variants; everything else goes straight to the cart. Mouse leave and clicking outside both return to rest.',
+            'The card’s states as designed. Products without sizes go straight to the cart.',
           inset: true,
           image: {
             src: statesImage,
             phone: statesPhone,
-            alt: 'State diagram of the product card. At rest it shows the main image with name, price and category. Hover darkens the image and shows an Add to cart button. Clicking Add on a product with variants replaces the button with a size selector (S, M, L, XL) and a link to the product. Mouse leave returns from hover to rest; clicking outside returns from the selector.',
+            alt: 'State diagram of the product card as designed, before the size picker became a dialog. At rest it shows the main image with name, price and category. Hover darkens the image and shows an Add to cart button. Clicking Add on a product with variants replaces the button with a size selector (S, M, L, XL) and a link to the product. Mouse leave returns from hover to rest; clicking outside returns from the selector.',
+          },
+        },
+        /* The card in motion (2026-10-04): recorded headless off the live
+           deploy at a 720x720 desktop window (@2x, scaled to 960), with a
+           drawn cursor since headless draws none. Hover Sardines and
+           Estrella, Add on Estrella (a ring, so sizes), pick 12, the drawer
+           opens, both close, the cursor returns to where it started.
+           Caption is a draft. */
+        {
+          kind: 'media',
+          slot: 'Video loop, muted, looping — the product card from hover to size dialog',
+          caption:
+            'The card as built. Hover swaps the image; Add on a ring opens the size dialog, and picking a size adds it.',
+          video: {
+            webm: '/case-studies/emotional-ux/card-loop.webm',
+            mp4: '/case-studies/emotional-ux/card-loop.mp4',
+            poster: '/case-studies/emotional-ux/card-loop-poster.jpg',
+            name: 'the product card clip',
+            width: 960,
+            height: 960,
+            label:
+              'Two product cards, the Sardines earrings and the Estrella ring. Hovering each swaps its photo and shows a cart button. Clicking the button on Estrella opens a dialog listing sizes 10, 12, 14 and 16; choosing 12 adds the ring and opens the cart drawer, which reads “Te faltan $5.00 para conseguir el envío gratis”.',
           },
         },
       ],
@@ -370,7 +418,7 @@ export const emotionalUx: CaseStudy = {
           kind: 'media',
           slot: 'Flow diagram: store, cart footer, Stripe',
           caption:
-            'The purchase flow. The store owns every step up to the cart footer; Stripe owns the one where the card details go.',
+            'The purchase flow. The store owns every step up to the cart; Stripe owns the card details.',
           inset: true,
           image: {
             src: checkoutImage,
