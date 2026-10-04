@@ -92,7 +92,7 @@
    why the instance measures 88 wide. Size=default at every width — there is a
    compact variant in the file and no frame uses it. */
 .logo {
-  padding-inline-start: var(--space-lg);
+  padding-inline-start: 0;
 }
 
 .logo img {
@@ -107,7 +107,6 @@
   align-items: flex-start;
   gap: var(--space-xl);
   inline-size: 100%;
-  padding-inline: var(--space-lg);
 }
 
 .titleBlock {
@@ -233,7 +232,8 @@
 
 /* ---- CaseMetaRow (1143:277) ------------------------------------------------
    Padding 24/16, 24px between cells both ways, 8px inside a cell. One column
-   below 640, 2x2 to 1279, four across from 1280. */
+   below 640 (as label | value rows, see .metaEntry), 2x2 to 1279, four
+   across from 1280. */
 
 .meta {
   display: grid;
@@ -250,11 +250,18 @@
   box-shadow: var(--shadow-xs);
 }
 
+/* LABEL | VALUE ROWS BELOW 640 (2026-10-04, phone comparison with
+   calebwu.ca): the stack variant centred each label over its value, which
+   took 388px at 390 and read like a form. A row per entry, left-aligned,
+   label in a fixed column (5.5rem clears "Timeframe", the longest; the
+   labels are always English), cut it to 303 (Emotional UX) / 277.
+   Not from Figma, which draws the centred stack at 344. From 640 the
+   entries go back to the file's label-over-value cells. */
 .metaEntry {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-sm);
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  align-items: baseline;
+  column-gap: var(--space-md);
 }
 
 /* Stack variant: 14/20, and the label is MEDIUM where the value is Regular —
@@ -274,12 +281,22 @@
   letter-spacing: var(--letter-spacing-normal);
   color: var(--color-text-secondary);
   margin: 0;
-  text-align: center;
 }
 
 @media (min-width: 640px) {
   .meta {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .metaEntry {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .metaValue {
+    text-align: center;
   }
 
   /* From 2x2 up both label and value are body/base 16/26.2 Regular and
@@ -308,16 +325,32 @@
 }
 
 /* ---- `goal` — one per section ---------------------------------------------
-   24px between everything inside a section, 24px of inline padding, at every
-   width. */
+   24px between everything inside a section, and 24px of inline padding from
+   640 up. */
 
 .section {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: var(--space-lg);
-  padding-inline: var(--space-lg);
   inline-size: 100%;
+}
+
+/* PHONE GUTTER, 2026-10-04 (user): below 640 the header and the sections
+   drop their 24px inline padding and sit on the shell's inset alone (24px
+   on phones, see --container-inset-xs), so a 390 phone gets a 342 column
+   instead of 278. Prompted by a phone comparison with calebwu.ca, whose
+   column is 350 at 390 (20px gutters). Figma draws the 24 at 344 too; this
+   departs from it on purpose. From 640 up the inset is the file's. */
+@media (min-width: 640px) {
+  .logo {
+    padding-inline-start: var(--space-lg);
+  }
+
+  .headerRow,
+  .section {
+    padding-inline: var(--space-lg);
+  }
 }
 
 .sectionHeader {
@@ -462,6 +495,25 @@
   .mediaImage,
   .cover img {
     block-size: 30rem;
+  }
+}
+
+/* A clip in a media block or the cover gets the image frame's height as a
+   CAP, not a fixed height (2026-10-04, the square loops and cover): a 16:9
+   clip is already shorter than the frame and keeps its own shape, while a
+   square one would otherwise draw 827 tall at 1448. Capped, it centres in
+   the grey panel at the frame's height, like a contained image. */
+@media (min-width: 640px) {
+  .media video,
+  .cover video {
+    max-block-size: 26rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .media video,
+  .cover video {
+    max-block-size: 30rem;
   }
 }
 
@@ -673,7 +725,6 @@
 }
 
 .stat {
-  height: 30vh;
   display: flex;
   /* dt is the label and dd is the figure, which is the way round the pair
      reads. The figure is drawn above its label, so the visual order is
@@ -681,6 +732,7 @@
   flex-direction: column-reverse;
   align-items: center;
   justify-content: space-around;
+  gap: var(--space-xs);
   padding-block-start: var(--space-lg);
   padding-block-end: var(--space-lg);
   padding-inline: var(--space-lg);
@@ -734,6 +786,15 @@
   .stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     padding-block: var(--space-3xl);
+  }
+
+  /* THE CARD HEIGHT IS 30vh FROM 640 UP ONLY (2026-10-04). Below 640 the
+     cards stack one per row, and at 30vh each the four took 1107px at 390,
+     over a screen for four figures (phone comparison with calebwu.ca).
+     There each card is its content's height, the figure 4px over its
+     label. The 30vh itself is the 2026-09-25 tuning, not Figma. */
+  .stat {
+    height: 30vh;
   }
 }
 

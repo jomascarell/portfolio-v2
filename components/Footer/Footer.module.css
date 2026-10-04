@@ -104,7 +104,7 @@
 /* ---- md: 640-1023 -------------------------------------------------------
    Eight columns, two rows, 84 tall. Changelog and credits share row 1 at
    opposite ends; language drops to row 2 under the changelog.
-   --container-inset is already 32px below 1024, so no literal is needed. */
+   --container-inset is already 32px from 640 to 1023, so no literal is needed. */
 
 @media (min-width: 640px) {
   .footer {

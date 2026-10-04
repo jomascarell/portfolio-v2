@@ -364,7 +364,13 @@
   --breakpoint-lg: 1024px; /* Desktop — where layout structure actually changes. */
   --breakpoint-xl: 1440px; /* Wide desktop. Replaces the old 1280/1362/1448 spread. */
 
-  /* Horizontal page inset at base, sm AND md — it is 32px everywhere below lg.
+  /* Horizontal page inset on phones, below 640: 24px (user, 2026-10-04).
+     NOT FROM FIGMA, which draws 32 at the 344/412 canvases too. Prompted by a
+     phone comparison with calebwu.ca (20px gutters, a 350 column at 390);
+     with it a 390 phone gets a 342 case column instead of 326. */
+  --container-inset-xs: var(--space-lg);
+
+  /* Horizontal page inset at sm AND md — it is 32px from 640 up to lg.
      The 8-column md grid uses a 32px offset, so the inset does NOT step up
      until lg. Confirmed 2026-09-08: tablet is always 32px. The name predates
      the fifth breakpoint and means "the small inset", not "the inset at sm". */
@@ -447,15 +453,15 @@
 
      NOT FROM FIGMA. One resolved value so components can write
      `padding-inline: var(--container-inset)` without repeating the breakpoint
-     logic. It resolves the two System / Layout insets at the lg breakpoint —
-     32px at sm and md, 64px from 1024 up. The media query is at the bottom of
-     this file.
+     logic. It resolves the System / Layout insets at two breakpoints — 24px
+     on phones, 32px at sm and md, 64px from 1024 up. The media queries are at
+     the bottom of this file.
 
      There is deliberately NO --container-max. 1280px is a breakpoint, not a
      container cap, and the retired build's file warned explicitly against
      using it as a max-width because the frames above 1280 keep stretching to
      the viewport edge. Confirmed 2026-09-08. Do not add one. */
-  --container-inset: var(--container-inset-sm);
+  --container-inset: var(--container-inset-xs);
 
   /* ---- Held outside the system --------------------------------------------
 
@@ -471,9 +477,15 @@
   --color-wordmark-ink: #181614;
 }
 
-/* The container inset steps up at lg — 1024, not 768. The literal is repeated
-   here because a media query cannot read --breakpoint-lg; see the caution in
-   System / Layout above. */
+/* The container inset steps up at sm (640) and again at lg — 1024, not 768.
+   The literals are repeated here because a media query cannot read
+   --breakpoint-*; see the caution in System / Layout above. */
+@media (min-width: 640px) {
+  :root {
+    --container-inset: var(--container-inset-sm);
+  }
+}
+
 @media (min-width: 1024px) {
   :root {
     --container-inset: var(--container-inset-lg);
