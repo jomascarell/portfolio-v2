@@ -46,9 +46,13 @@ export type Project = {
      ProjectListRow draft 1500:1362 (2026-10-01); Embassaments (0.6px
      stroke) and Joies Laia (a filled script mark) are the user's own exports
      of 2026-10-02. The case header's `logo` uses the same files.
-     Not shown in the project list (removed 2026-10-03, user); the Joies
-     Laia placeholder renders it as a plain decorative <img>. */
+     Not shown in the project list (removed 2026-10-03, user). */
   icon?: string
+  /* The placeholder page's cover, in place of the icon (2026-10-04, Figma
+     Frame 88, 1569:1664): a photo under a 15% black scrim with the brand's
+     logo centred on it. Paths under /public. Only read while the project
+     has no case study. */
+  cover?: { photo: string; logo: string }
   /* A 1200x630 share card for og:image and twitter:image, a path under
      /public. None exists yet: the Figma file has no share frames. */
   shareImage?: { src: string; alt: string }
@@ -71,6 +75,10 @@ export const projects: Project[] = [
     title: 'Joies Laia',
     year: 2026,
     icon: '/case-studies/joies-laia/icon.svg',
+    cover: {
+      photo: '/case-studies/joies-laia/cover.jpg',
+      logo: '/case-studies/joies-laia/logo.svg',
+    },
   },
   {
     /* Spelled "Embssaments" when given, which has no vowel between the b and
