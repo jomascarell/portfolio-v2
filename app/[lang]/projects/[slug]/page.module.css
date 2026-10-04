@@ -146,6 +146,41 @@
   color: var(--color-text-secondary);
 }
 
+/* The placeholder's brand cover (Frame 88, 1569:1664): radius/lg, a 15%
+   black scrim, and the logo centred at 372 of the frame's 933 width, so it
+   keeps its share of the frame at every width. 16:9 rather than the frame's
+   933x582, so it has the same proportions as the other case covers, whose
+   clips are 16:9 (user, 2026-10-04); the photo crops to fill it. */
+.brandCover {
+  position: relative;
+  inline-size: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background-color: var(--color-surface-subtle);
+}
+
+.brandCover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: rgb(0 0 0 / 0.15);
+}
+
+.brandCoverPhoto {
+  object-fit: cover;
+}
+
+.brandCoverLogo {
+  position: absolute;
+  z-index: 1;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  translate: -50% -50%;
+  inline-size: calc(100% * 372 / 933);
+  block-size: auto;
+}
+
 /* DashboardLink (1144:582). THE ONE PLACE THE VISUAL DELIBERATELY DEPARTS FROM
    THE FRAME, on instruction: the frame draws a permanently underlined link,
    and this project's established link UI — MailLink, plus both rails — is

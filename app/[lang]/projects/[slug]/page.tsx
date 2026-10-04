@@ -526,11 +526,15 @@ export default async function ProjectDetailPage(
 }
 
 /* A PROJECT THAT IS LISTED BEFORE ITS CASE STUDY IS WRITTEN (Joies Laia, on
-   hold by the user's decision, 2026-10-03). It keeps the case header — icon,
-   title, category in the standfirst's place — so it reads as the same kind of
-   page, then says the case is still being built. No Figma frame: built in
-   code first, for the launch. The text is chrome, so it is in the page's
-   language, like the project list. */
+   hold by the user's decision, 2026-10-03). It keeps the case header — title,
+   category in the standfirst's place — so it reads as the same kind of page,
+   then says the case is still being built. The text is chrome, so it is in
+   the page's language, like the project list.
+
+   The icon gave way to a brand cover on 2026-10-04 (Figma Frame 88,
+   1569:1664), in the case cover's slot under the title block. It is
+   decorative: the h1 already names the project, and the logo only repeats
+   it. */
 async function CasePlaceholder({ project }: { project: Project }) {
   const { t } = await getI18n()
   const text = t.projects[project.slug] ?? project
@@ -538,17 +542,32 @@ async function CasePlaceholder({ project }: { project: Project }) {
     <div className={styles.article}>
       <div className={styles.content}>
         <header className={styles.header}>
-          {project.icon ? (
-            <div className={styles.logo} aria-hidden="true">
-              <img src={project.icon} alt="" width={64} height={64} />
-            </div>
-          ) : null}
           <div className={styles.headerRow}>
             <div className={styles.titleBlock}>
               <h1 className={styles.title}>{text.title}</h1>
               <p className={styles.standfirst}>{text.category}</p>
               <p className={styles.placeholderNote}>{t.placeholder.note}</p>
             </div>
+
+            {project.cover ? (
+              <div className={styles.brandCover} aria-hidden="true">
+                <Image
+                  className={styles.brandCoverPhoto}
+                  src={project.cover.photo}
+                  alt=""
+                  fill
+                  sizes="(max-width: 1023px) calc(100vw - 112px), 939px"
+                  priority
+                />
+                <Image
+                  className={styles.brandCoverLogo}
+                  src={project.cover.logo}
+                  alt=""
+                  width={372}
+                  height={256}
+                />
+              </div>
+            ) : null}
           </div>
         </header>
       </div>
