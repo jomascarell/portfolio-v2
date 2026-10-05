@@ -175,7 +175,7 @@ export const emotionalUx: CaseStudy = {
           kind: 'media',
           slot: 'Norman’s three levels as a simple diagram',
           caption:
-            'Norman’s three levels. Every severity-3 finding in the audit sat on the reflective one.',
+            'Norman’s three levels. Every severity-3 finding in the audit sat on the reflective one: no returns policy, no visible contact, thin checkout validation.',
           inset: true,
           image: {
             src: normanImage,
