@@ -517,4 +517,9 @@ export const emotionalUx: CaseStudy = {
       ],
     },
   ],
+  contact: {
+    title: 'Want more details?',
+    text: 'Reach out for the full study.',
+    label: 'Get in touch',
+  },
 }

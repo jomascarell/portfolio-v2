@@ -153,6 +153,10 @@ export type CaseStudy = {
   }
   meta: { label: string; value: string }[]
   sections: CaseSection[]
+  /* ContactCard, closing the article: title, a line, and the button label
+     of a mailto link to siteConfig.contactEmail. Optional, so a study
+     without one ends on its last section and CaseEndNav. */
+  contact?: { title: string; text: string; label: string }
 }
 
 /* The intro is a nav target but not a section: it is the article header, and

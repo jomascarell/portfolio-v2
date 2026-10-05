@@ -6,6 +6,7 @@ import { IoMdArrowUp } from 'react-icons/io'
 import SeverityBars from '@/components/Charts/SeverityBars'
 import SlopeChart from '@/components/Charts/SlopeChart'
 import CaseEndNav from '@/components/CaseEndNav/CaseEndNav'
+import ContactCard from '@/components/ContactCard/ContactCard'
 import CollectionNav from '@/components/CollectionNav/CollectionNav'
 import ComponentCarousel from '@/components/ComponentCarousel/ComponentCarousel'
 import LiveDashboard from '@/components/LiveDashboard/LiveDashboard'
@@ -493,6 +494,14 @@ function CaseStudyArticle({ caseStudy }: { caseStudy: CaseStudy }) {
             ))}
           </section>
         ))}
+
+        {/* ContactCard (1582:1184), from the case study's data. The wrapper
+            gives it the sections' inset, so its edge lines up with the prose. */}
+        {caseStudy.contact ? (
+          <div className={styles.contact}>
+            <ContactCard {...caseStudy.contact} />
+          </div>
+        ) : null}
       </article>
     </div>
   )

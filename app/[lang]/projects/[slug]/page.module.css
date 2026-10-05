@@ -899,3 +899,11 @@
   padding-block: var(--space-2xl);
   border-block: 0.5px solid var(--color-blue-200);
 }
+
+/* ContactCard's slot: no inset on phones, like the sections; the sections'
+   24px from 640, so the card's edge sits on the prose's. */
+@media (min-width: 640px) {
+  .contact {
+    padding-inline: var(--space-lg);
+  }
+}
