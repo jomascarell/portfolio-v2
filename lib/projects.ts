@@ -49,7 +49,7 @@ export type Project = {
      Not shown in the project list (removed 2026-10-03, user). */
   icon?: string
   /* The placeholder page's cover, in place of the icon (2026-10-04, Figma
-     Frame 88, 1569:1664): a photo under a 15% black scrim with the brand's
+     Frame 88, 1569:1664): a blurred photo (no scrim since 2026-10-05) with the brand's
      logo centred on it. Paths under /public. Only read while the project
      has no case study. */
   cover?: { photo: string; logo: string }
