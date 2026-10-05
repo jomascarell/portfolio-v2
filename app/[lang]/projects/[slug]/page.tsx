@@ -574,6 +574,8 @@ async function CasePlaceholder({ project }: { project: Project }) {
                   alt=""
                   width={372}
                   height={256}
+                  /* With the photo, or the photo shows unbranded first. */
+                  priority
                 />
               </div>
             ) : null}
