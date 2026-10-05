@@ -54,6 +54,11 @@
      one screen, not a value the system reuses. */
   --reveal-gap: var(--space-md);
 
+  /* The padding above and below the card. A property rather than a literal so
+     the card's budget below subtracts whatever is actually spent, including
+     on short screens (see the end of this file). */
+  --landing-pad-block: var(--space-2xl);
+
   align-content: center;
 
   /* THE BUDGET. The landing claims the viewport minus the bar minus the gap
@@ -101,7 +106,7 @@
      there yet, so the page looked mis-centred whenever the footer was closed —
      which is nearly always. The overlap is handled by constraining heights
      instead. */
-  padding-block: var(--space-2xl);
+  padding-block: var(--landing-pad-block);
 }
 
 .landing .panel {
@@ -126,7 +131,7 @@
     468px,
     calc(
       100svh - var(--nav-clearance) - var(--footer-band, 0px) -
-        var(--reveal-gap) - 96px
+        var(--reveal-gap) - var(--landing-pad-block) * 2
     )
   );
 }
@@ -404,5 +409,29 @@
      canvases, so nothing about the panel is a guess. */
   .projects .content {
     grid-column: 8 / span 5;
+  }
+}
+
+/* ---- Short screens: the landing has to fit ------------------------------
+
+   An iPad Air in landscape with Safari's tab bar shows about 700px, and at
+   full spacing the landing's stack is a rigid 714 on touch: Nav 132, this
+   padding 48 + 48, then IntroCard's 486 (its own 48 + 48, tagline, wordmark,
+   status and the footer button). One pixel over the fold and FooterReveal
+   falls back to `static`: the landing scrolls, Safari's toolbar collapses
+   and re-centres it mid-drag, and the footer button scrolls instead of
+   sliding the bar in. Seen in the user's iPad recordings, 2026-10-04.
+
+   Below 760 tall the vertical spacing tightens instead: 24 here, 24 inside
+   the card and 32 above the footer button (IntroCard.module.css), 590 in
+   all. Width-gated at 1024 because that is where the card's 48 starts;
+   below it the card is already at 16. */
+
+@media (min-width: 1024px) and (max-height: 760px) {
+  .landing {
+    --landing-pad-block: var(--space-lg);
+    --intro-pad-block: var(--space-lg);
+    /* 32 between the status lines and the button, less the status gap. */
+    --intro-toggle-gap: calc(var(--space-xl) - var(--space-xs));
   }
 }

@@ -26,6 +26,12 @@ export type MediaVideoSource = {
      so it gets the lighter file everywhere: a softer clip, never a broken
      one. */
   phone?: { webm: string; mp4: string }
+  /* Seconds into the clip that the poster was taken from. The first play
+     starts there (a `#t=` media fragment), so the poster hands over to the
+     same frame; every loop after that starts at 0. Without it a poster from
+     mid-clip cuts to frame 0 on play, which on the Emotional UX cover was
+     drawer -> white -> store hero, read as a flash (2026-10-05). */
+  start?: number
 }
 
 const PHONE_MEDIA = '(max-width: 639px)'
@@ -66,8 +72,21 @@ const AUTO_HIDE_MS = 2500
  * While paused it stays visible, as above: a paused clip with no control
  * would read as a still image with no way to start it. */
 export default function MediaVideo({ video }: { video: MediaVideoSource }) {
+  const at = (src: string) => (video.start ? `${src}#t=${video.start}` : src)
   const ref = useRef<HTMLVideoElement>(null)
   const [playing, setPlaying] = useState(false)
+  /* False until the clip is playing AND has a decoded frame. Until then the
+     video is transparent and the frame's own copy of the poster shows, see
+     the render. `playing` alone is not enough: Firefox fires it at
+     readyState 1, before any frame exists, and painted frame 0 (measured).
+     Whichever of these events comes last flips it. */
+  const [started, setStarted] = useState(false)
+  const markStarted = (event: React.SyntheticEvent<HTMLVideoElement>) => {
+    const element = event.currentTarget
+    if (!element.paused && element.readyState >= element.HAVE_CURRENT_DATA) {
+      setStarted(true)
+    }
+  }
   /* A pause the reader chose. Scrolling the clip back into view never
      overrides it; only the control does. */
   const userPaused = useRef(false)
@@ -158,29 +177,53 @@ export default function MediaVideo({ video }: { video: MediaVideoSource }) {
       data-shown={shown}
       onClick={onPanelClick}
     >
-      <video
-        ref={ref}
-        className={styles.video}
-        width={video.width}
-        height={video.height}
-        poster={video.poster}
-        aria-label={video.label}
-        muted
-        loop
-        playsInline
-        preload="none"
-        onPlay={() => setPlaying(true)}
-        onPause={() => setPlaying(false)}
+      {/* THE POSTER, TWICE. Between play() and the first frame at `start`,
+          browsers paint what they like: Firefox drops the poster and shows
+          the panel's grey, and both engines can show frame 0 for a frame
+          before the `#t=` seek lands, which on the Emotional UX cover is pure
+          white. So the video stays transparent until it is really playing,
+          and this frame, the video's exact box, holds the same poster
+          underneath (measured 2026-10-05). */}
+      <div
+        className={styles.frame}
+        style={{ backgroundImage: `url(${video.poster})` }}
       >
-        {video.phone ? (
-          <>
-            <source src={video.phone.webm} type="video/webm" media={PHONE_MEDIA} />
-            <source src={video.phone.mp4} type="video/mp4" media={PHONE_MEDIA} />
-          </>
-        ) : null}
-        <source src={video.webm} type="video/webm" />
-        <source src={video.mp4} type="video/mp4" />
-      </video>
+        <video
+          ref={ref}
+          className={styles.video}
+          data-started={started}
+          width={video.width}
+          height={video.height}
+          poster={video.poster}
+          aria-label={video.label}
+          muted
+          loop
+          playsInline
+          preload="none"
+          onPlay={() => setPlaying(true)}
+          onPlaying={markStarted}
+          onLoadedData={markStarted}
+          onCanPlay={markStarted}
+          onPause={() => setPlaying(false)}
+        >
+          {video.phone ? (
+            <>
+              <source
+                src={at(video.phone.webm)}
+                type="video/webm"
+                media={PHONE_MEDIA}
+              />
+              <source
+                src={at(video.phone.mp4)}
+                type="video/mp4"
+                media={PHONE_MEDIA}
+              />
+            </>
+          ) : null}
+          <source src={at(video.webm)} type="video/webm" />
+          <source src={at(video.mp4)} type="video/mp4" />
+        </video>
+      </div>
 
       <button
         type="button"

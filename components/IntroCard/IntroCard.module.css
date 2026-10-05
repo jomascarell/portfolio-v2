@@ -101,8 +101,9 @@
    (see IntroCard.tsx), so the status gap is taken back out. Only shows on
    touch devices; see FooterToggle. */
 .footerToggle {
-  margin-block-start: calc(
-    var(--space-2xl) + var(--space-md) - var(--space-xs)
+  margin-block-start: var(
+    --intro-toggle-gap,
+    calc(var(--space-2xl) + var(--space-md) - var(--space-xs))
   );
 }
 
@@ -220,9 +221,12 @@
    unchanged from the 640 tier. */
 
 @media (min-width: 1024px) {
+  /* --intro-pad-block: the landing tightens it on short screens
+     (PanelLayout.module.css), so the card fits above the fold. */
   .card {
     gap: var(--space-xl);
     padding: var(--space-2xl);
+    padding-block: var(--intro-pad-block, var(--space-2xl));
   }
 
   /* The height is unchanged — only the distribution. */

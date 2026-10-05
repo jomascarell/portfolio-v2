@@ -25,6 +25,19 @@
   object-fit: contain;
 }
 
+/* The video's own box, holding a copy of the poster (set inline) fitted the
+   way the video is, so it sits exactly behind it. See MediaVideo.tsx. */
+.frame {
+  inline-size: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.video[data-started='false'] {
+  opacity: 0;
+}
+
 /* ---- Control (1399:1520), 2026-09-28 --------------------------------------
    Replaces the 36x36 icon-only ScrimControl. A 36px pill: --space-xs block /
    --space-md inline padding, --space-sm between icon and label, --radius-lg,
