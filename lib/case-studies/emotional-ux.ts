@@ -175,7 +175,7 @@ export const emotionalUx: CaseStudy = {
           kind: 'media',
           slot: 'Norman’s three levels as a simple diagram',
           caption:
-            'Norman’s three levels. Every severity-3 finding in the audit sat on the reflective one.',
+            'Norman’s three levels. Every severity-3 finding in the audit sat on the reflective one: no returns policy, no visible contact, thin checkout validation.',
           inset: true,
           image: {
             src: normanImage,
@@ -197,7 +197,9 @@ export const emotionalUx: CaseStudy = {
         {
           /* Replaces the ChartSystem table, by the user's decision
              (2026-09-30). Copy transcribed from their four slide exports,
-             "Behavioral" normalised to UK spelling. The table's "Gap it
+             "Behavioral" normalised to UK spelling. The pro / trade-off
+             checklist was removed 2026-10-05 (user: it read as a copy of
+             Caleb's carousel); each slide is now sketch, title and level. The table's "Gap it
              answers" column is deliberately not carried over. */
           kind: 'carousel',
           label: 'The four components',
@@ -205,77 +207,22 @@ export const emotionalUx: CaseStudy = {
             {
               title: 'Trust Bar',
               level: 'Reflective',
-              sketch: 'trust-bar',
               image: '/case-studies/emotional-ux/components/trust-bar.svg',
-              points: [
-                {
-                  text: 'Shipping, returns and secure payment up front',
-                  pro: true,
-                },
-                {
-                  text: 'Persistent across every page of the store',
-                  pro: true,
-                },
-                { text: 'Answers the Help & Documentation gap', pro: true },
-                { text: 'Easy to tune out once it becomes chrome', pro: false },
-              ],
             },
             {
               title: 'Emotional Product Card',
               level: 'Visceral + behavioural',
-              sketch: 'product-card',
               image: '/case-studies/emotional-ux/components/product-card.svg',
-              points: [
-                { text: 'Where the first impression is formed', pro: true },
-                {
-                  text: 'Hover motion and quick-add give instant feedback',
-                  pro: true,
-                },
-                {
-                  text: 'Repeated across the grid, so small gains add up',
-                  pro: true,
-                },
-                { text: 'Too much motion slows down scanning', pro: false },
-              ],
             },
             {
               title: 'Cart Drawer',
               level: 'Behavioural + reflective',
-              sketch: 'cart-drawer',
               image: '/case-studies/emotional-ux/components/cart-drawer.svg',
-              points: [
-                { text: 'Review the cart without leaving the page', pro: true },
-                {
-                  text: 'Clear totals and edits prevent errors early',
-                  pro: true,
-                },
-                { text: 'Confirms the choice right after adding', pro: true },
-                { text: 'Covers most of the screen on mobile', pro: false },
-              ],
             },
             {
               title: 'Checkout Trust Layer',
               level: 'Reflective + behavioural',
-              sketch: 'checkout',
               image: '/case-studies/emotional-ux/components/checkout.svg',
-              points: [
-                {
-                  text: 'Reassurance at the moment of highest risk',
-                  pro: true,
-                },
-                {
-                  text: 'Security cues and summary sit next to payment',
-                  pro: true,
-                },
-                {
-                  text: 'Stripe’s payment iframe can’t be restyled',
-                  pro: false,
-                },
-                {
-                  text: 'Too many badges start to feel suspicious',
-                  pro: false,
-                },
-              ],
             },
           ],
         },
@@ -570,4 +517,9 @@ export const emotionalUx: CaseStudy = {
       ],
     },
   ],
+  contact: {
+    title: 'Want more details?',
+    text: 'Reach out for the full study.',
+    label: 'Get in touch',
+  },
 }
