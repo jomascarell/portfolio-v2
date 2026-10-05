@@ -101,7 +101,9 @@ export const emotionalUx: CaseStudy = {
           text: 'But a template optimises what it can measure. Load time, bundle size and task completion all have a number. Whether a first-time visitor believes the shop will actually ship their order doesn’t. So it goes unbuilt, in this template and in every store that ships on top of it unchanged.',
         },
         {
-          kind: 'prose',
+          /* Pull quote (2026-10-05, user): the section's closing line, moved
+             out of the prose rather than repeated. */
+          kind: 'quote',
           text: 'That isn’t a styling problem. In e-commerce, trust is what turns a visit into a payment.',
         },
       ],
@@ -486,7 +488,14 @@ export const emotionalUx: CaseStudy = {
         },
         {
           kind: 'prose',
-          text: 'That’s the blind spot. It isn’t that teams don’t care how people feel. It’s that the tools we use to decide whether something is done can’t see it. If nobody measures trust, nobody owns it. And in a store, trust is what stands between a visit and a payment.',
+          text: 'That’s the blind spot. It isn’t that teams don’t care how people feel. It’s that the tools we use to decide whether something is done can’t see it.',
+        },
+        {
+          /* Pull quote (2026-10-05, user), split out of the paragraph above.
+             Its old closing sentence ("…trust is what stands between a
+             visit and a payment") was dropped: it repeated Premise's quote. */
+          kind: 'quote',
+          text: 'If nobody measures trust, nobody owns it.',
         },
       ],
     },
