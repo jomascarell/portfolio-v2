@@ -77,7 +77,10 @@ export const projects: Project[] = [
     icon: '/case-studies/joies-laia/icon.svg',
     cover: {
       photo: '/case-studies/joies-laia/cover.jpg',
-      logo: '/case-studies/joies-laia/logo.svg',
+      /* The PNG that the original logo.svg only wrapped as base64 (313 KB,
+         served as-is and lazy). As a PNG, next/image resizes it to WebP and
+         it can load with the photo instead of popping in after it. */
+      logo: '/case-studies/joies-laia/logo.png',
     },
   },
   {
