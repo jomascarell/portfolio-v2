@@ -3,6 +3,7 @@ import { IoMdArrowUp } from 'react-icons/io'
 import { localizeHref } from '@/lib/i18n/config'
 import { getI18n } from '@/lib/i18n/server'
 import { projects } from '@/lib/projects'
+import { keepHyphens } from '@/lib/typography'
 import styles from './CaseEndNav.module.css'
 
 /* The end of a case page: a way back and a way on.
@@ -49,7 +50,7 @@ function EndLink({ side, direction }: { side: Side; direction: 'previous' | 'nex
         <span className={styles.label}>{side.label}</span>
         {direction === 'next' ? arrow : null}
       </span>
-      <span className={styles.title}>{side.title}</span>
+      <span className={styles.title}>{keepHyphens(side.title)}</span>
     </Link>
   )
 }
