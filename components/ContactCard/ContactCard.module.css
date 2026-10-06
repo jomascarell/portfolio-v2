@@ -29,8 +29,8 @@
   flex-direction: column;
   gap: var(--space-2xs);
   min-inline-size: 0;
-  font-size: var(--font-size-md);
-  line-height: var(--line-height-md);
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-lg);
   font-weight: var(--font-weight-regular);
   letter-spacing: var(--letter-spacing-normal);
 }
@@ -76,7 +76,7 @@
 .label {
   display: inline-block;
   font-family: var(--font-tilt-warp);
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-sm);
   letter-spacing: -1px;
   line-height: normal;
   white-space: nowrap;
@@ -85,7 +85,7 @@
 
 @media (min-width: 640px) {
   .label {
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-md);
   }
 }
 
