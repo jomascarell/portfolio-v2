@@ -23,6 +23,7 @@ import {
 } from '@/lib/case-studies'
 import { getI18n } from '@/lib/i18n/server'
 import { getProject, projects, type Project } from '@/lib/projects'
+import { keepHyphens } from '@/lib/typography'
 import styles from './page.module.css'
 
 /* Project detail — the case-study template.
@@ -406,7 +407,7 @@ function CaseStudyArticle({ caseStudy }: { caseStudy: CaseStudy }) {
 
           <div className={styles.headerRow}>
             <div className={styles.titleBlock}>
-              <h1 className={styles.title}>{caseStudy.title}</h1>
+              <h1 className={styles.title}>{keepHyphens(caseStudy.title)}</h1>
               <p className={styles.standfirst}>{caseStudy.standfirst}</p>
 
               {/* DashboardLink (1144:611). The href is real and lives in the
@@ -553,7 +554,7 @@ async function CasePlaceholder({ project }: { project: Project }) {
         <header className={styles.header}>
           <div className={styles.headerRow}>
             <div className={styles.titleBlock}>
-              <h1 className={styles.title}>{text.title}</h1>
+              <h1 className={styles.title}>{keepHyphens(text.title)}</h1>
               <p className={styles.standfirst}>{text.category}</p>
               <p className={styles.placeholderNote}>{t.placeholder.note}</p>
             </div>

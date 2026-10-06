@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { localizeHref } from '@/lib/i18n/config'
 import { useI18n } from '@/lib/i18n/client'
 import type { Project } from '@/lib/projects'
+import { keepHyphens } from '@/lib/typography'
 import styles from './ProjectListRow.module.css'
 
 /* One row of the project list: category, name, year stamp.
@@ -88,7 +89,7 @@ export default function ProjectListRow({
       <span className={styles.body}>
         <span className={styles.text}>
           <span className={styles.category}>{text.category}</span>
-          <span className={styles.title}>{text.title}</span>
+          <span className={styles.title}>{keepHyphens(text.title)}</span>
         </span>
         {/* The stamp is the last two digits behind a full stop — 2026 draws as
           ".26", which is a decision the design makes and not a shortening this
