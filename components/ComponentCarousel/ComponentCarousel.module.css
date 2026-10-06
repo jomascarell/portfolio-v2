@@ -130,20 +130,31 @@
 }
 
 .title {
-  font-size: var(--font-size-xl);
-  line-height: var(--line-height-xl);
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-lg);
   font-weight: var(--font-weight-medium);
   letter-spacing: var(--letter-spacing-normal);
   color: var(--color-text-primary);
 }
 
 .level {
-  font-size: var(--font-size-md);
-  line-height: var(--line-height-md);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
   font-weight: var(--font-weight-regular);
   letter-spacing: var(--letter-spacing-wide);
   /* text-transform: uppercase; */
   color: var(--color-text-primary);
+}
+
+@media (min-width: 1024px) {
+  .title {
+    font-size: var(--font-size-xl);
+    line-height: var(--line-height-xl);
+  }
+  .level {
+    font-size: var(--font-size-md);
+    line-height: var(--line-height-md);
+  }
 }
 
 /* ---- Progress --------------------------------------------------------------
