@@ -132,7 +132,7 @@ export default function GalleryPage() {
           <NavPreview state="about" />
         </Specimen>
         <Specimen label="State = project-detail">
-          <NavPreview state="project-detail" label="Emotional UX in e-commerce" />
+          <NavPreview state="project-detail" label="Emotional UX" />
         </Specimen>
       </Section>
 
