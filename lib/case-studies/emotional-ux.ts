@@ -78,13 +78,13 @@ export const emotionalUx: CaseStudy = {
     },
   },
   meta: [
-    { label: 'Role', value: 'Research, design & front-end' },
+    { label: 'Role', value: 'Research, design & front-end — solo' },
     {
       label: 'Tools',
       value:
         'Next.js 16 · React 19 · TypeScript · Tailwind v4 · shadcn/UI · Stripe',
     },
-    { label: 'Timeframe', value: '2026' },
+    { label: 'Timeframe', value: 'Apr–Jul 2026' },
     { label: 'Context', value: 'Master’s thesis (UNIR)' },
   ],
   sections: [
@@ -391,8 +391,17 @@ export const emotionalUx: CaseStudy = {
       heading: 'Same template, real competitor, same people',
       blocks: [
         {
+          /* Names the stores once, so the Joies Laia branding in the cover and
+             loops isn't read as a test on a client's live shop. The user's
+             account, 2026-10-06: the components came first and were built on
+             a Next.js template they meant to reuse; Joies Laia joined as a
+             client who needed to go digital and build the brand. */
           kind: 'prose',
-          text: 'To isolate the system, I compared it against a live jewellery store built on the same template rather than against the bare demo.',
+          text: 'The redesign wears Joies Laia’s brand. I built the system on a template I meant to reuse after the thesis, and Joies Laia, a jewellery brand that needed to go digital, became its first client.',
+        },
+        {
+          kind: 'prose',
+          text: 'To isolate the system, I compared it against sinesilk.com, a live store built on the same template, rather than against the bare demo.',
         },
         {
           kind: 'list',
@@ -421,7 +430,8 @@ export const emotionalUx: CaseStudy = {
             { value: '+0.58', label: 'Perceived trust, on a 7-point scale' },
             { value: '6/6', label: 'Participants who preferred the redesign' },
           ],
-          caption: 'Usability scores were identical: 82.9 vs 83.3.',
+          caption:
+            'With six participants, read these as a direction, not proof. Usability scores were identical: 82.9 vs 83.3.',
         },
       ],
     },
