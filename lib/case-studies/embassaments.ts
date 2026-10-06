@@ -22,6 +22,7 @@
 import statusImage from '@/public/case-studies/embassaments/status.png'
 import sketchImage from '@/public/case-studies/embassaments/process-sketch.png'
 import dashboardStill from '@/public/case-studies/embassaments/dashboard-still.png'
+import acaDrop from '@/public/case-studies/embassaments/aca-drop.png'
 import type { CaseStudy } from './types'
 
 export const embassaments: CaseStudy = {
@@ -62,7 +63,7 @@ export const embassaments: CaseStudy = {
   meta: [
     { label: 'Role', value: 'Research, design, and development — solo' },
     { label: 'Tools', value: 'D3.js · Observable Framework' },
-    { label: 'Timeframe', value: '2024' },
+    { label: 'Timeframe', value: 'Mar–Aug 2024' },
     { label: 'Context', value: 'Bachelor’s thesis' },
   ],
   sections: [
@@ -160,7 +161,7 @@ export const embassaments: CaseStudy = {
       blocks: [
         {
           kind: 'prose',
-          text: 'Sketches in Procreate → wireframes in Figma → build in D3.js, published through Observable Framework.',
+          text: 'Sketches in Procreate → build in D3.js, published through Observable Framework.',
         },
         {
           /* Was a three-up strip (sketch, wireframe, shipped chart); cut to the
@@ -178,6 +179,22 @@ export const embassaments: CaseStudy = {
         {
           kind: 'prose',
           text: 'The first instinct was to mirror the ACA tool’s “drop” visual — reservoirs shown as filled circles. It was dropped: human perception of area isn’t linear, so a circle at 25% capacity can visually read as more or less full than it actually is.',
+        },
+        {
+          /* The hiring review's "strongest decision has no picture" (audit
+             2026-10-01), added 2026-10-06. The user's 1x screenshot of the
+             ACA page (files-need/brave_RvxtStTcFf.png) cropped to the drop
+             and its labels, upscaled 2x. Shown alone: a before/after pair
+             with the stacked bar was built and cut by the user, because the
+             bar already appears in the current-status view and the cover. */
+          kind: 'media',
+          slot: 'The ACA drop the design moved away from',
+          caption:
+            'The ACA’s drop, the visual the first sketches mirrored. How full it looks depends on its area, which the eye doesn’t read linearly.',
+          image: {
+            src: acaDrop,
+            alt: 'The Agència Catalana de l’Aigua’s drop: a glossy circle filled about three quarters with blue, labelled “Reserves totals 100%” at the top and “Reserves actuals conques internes 74.61%” beside the water line.',
+          },
         },
         {
           kind: 'prose',
@@ -246,7 +263,7 @@ export const embassaments: CaseStudy = {
       blocks: [
         {
           kind: 'prose',
-          text: 'The “correct” path was rebuilding every chart natively inside Framework’s own structure — reorganizing the data, the code, and the inputs of each visualization from scratch, which demanded time and depth across several languages I didn’t have a strong base in.',
+          text: 'The “correct” path was rebuilding every chart natively inside Framework’s own structure — reorganizing the data, the code, and the inputs of each visualization from scratch, which demanded time and depth across several languages I was still learning.',
         },
         {
           kind: 'prose',
@@ -260,7 +277,7 @@ export const embassaments: CaseStudy = {
     },
     {
       id: 'findings',
-      label: 'Findings',
+      label: 'The data',
       heading: 'What the data found',
       blocks: [
         {
