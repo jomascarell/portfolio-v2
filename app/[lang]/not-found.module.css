@@ -28,7 +28,7 @@
   max-inline-size: 100%;
 }
 
-/* heading/h3, Medium 18/30. The question in primary ink, the aside in
+/* heading/h3-lg, Medium 22/30. The question in primary ink, the aside in
    secondary: one text node with two fills in the file. */
 .headline {
   font-size: var(--font-size-xl);

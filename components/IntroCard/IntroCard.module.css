@@ -107,7 +107,7 @@
   );
 }
 
-/* Figma text style: body/base-medium — 16/26.2 SemiBold. Becomes heading/h3
+/* Figma text style: body/base-medium — 16/26.2 Medium (SemiBold until 2026-10-07). Becomes heading/h3
    (18/30 Medium) from 640 up. Both measured on the phase 7 frames and both
    already correct before this rewrite. */
 .current {
