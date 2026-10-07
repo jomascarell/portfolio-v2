@@ -11,13 +11,13 @@ export const ca: Messages = {
     fallbackProject: 'Projecte',
   },
   intro: {
-    tagline: 'Convertint dissenys en interfícies que resisteixen el pas del temps',
-    statusCurrent: 'Actualment treballe en projectes en solitari',
+    tagline: 'Transformant dissenys en interfícies mantenibles',
+    statusCurrent: 'Cercant rols junior / graduate, Barcelona o en remot',
     statusPrevious: 'Experiència prèvia, pràctiques a ',
   },
   projects: {
-    'emotional-ux': { category: 'Provant disseny emocional', title: "UX Emocional a l'e-commerce" },
-    'joies-laia': { category: 'Brànding i comerç electrònic desenvolupats pro bono.', title: 'Joies Laia' },
+    'emotional-ux': { category: 'Posant a prova el disseny emocional', title: "UX emocional a l'e-commerce" },
+    'joies-laia': { category: 'Brànding i e-commerce desenvolupats pro bono', title: 'Joies Laia' },
     embassaments: {
       category: 'Convertint dades sobre la sequera persistent en un panell de control públic.',
       title: 'Embassaments',
@@ -25,24 +25,25 @@ export const ca: Messages = {
   },
   about: {
     bio: [
-      [['Molt de gust, soc Joan'], [{ em: 'Dissenyador' }, ', que es dedica a crear interfícies per a la web.']],
-      [['Graduat de màster, especialitzat en disseny frontend, amb una formació de grau en disseny digital.']],
+      [['Molt de gust, soc Joan'], [{ em: 'Design Engineer' }, ', interessat en construir interfícies per a la web.']],
+      [['Màster en desenvolupament frontend, amb un grau en disseny digital.']],
       [
         [
-          'Fa poc vaig realitzar les pràctiques del màster a ',
+          'Fa poc vaig estar fent pràctiques a ',
           OKISAM,
           ', una agència de disseny orientada a solucions digitals, on vaig desenvolupar des de zero el meu primer design system CSS basat en components.',
         ],
       ],
-      [['Fora del disseny, pots trobar-me a ', STRAVA, " o al cim d'alguna muntanya perduda."]],
+      [['Més enllà del disseny, pots trobar-me a ', STRAVA, " o al cim d'alguna muntanya perduda."]],
     ],
-    contactIntro: "Si vols posar-te en contacte amb mi, pots escriure'm a la següent adreça electrònica.",
+    contactIntro: 'Em vols contactar? Escriu-me a la següent adreça electrònica.',
     mailLabel: 'Correu:',
   },
   footer: {
-    changelogLabel: 'Registre de canvis',
+    changelogLabel: 'Changelog',
     credits: 'Desenvolupat amb NextJS, Claude, Figma.',
     languageLabel: 'Idioma',
+    languageNote: 'Els projectes no estan traduïts',
   },
   caseEnd: {
     label: 'Més projectes',
@@ -51,14 +52,14 @@ export const ca: Messages = {
     allWork: 'Tots els projectes',
   },
   placeholder: {
-    note: 'Aquest projecte encara s’està construint i necessita una mica més de temps.',
+    note: 'Aquest projecte necessita un poc més de temps.',
   },
   notFound: {
     lost: 'T’has perdut?',
     lostAside: 'No estem tots una mica perduts?',
     tiltLabel: 'Inclina el 404',
     home: 'Torna a l’inici',
-    projects: 'Mira tots els projectes',
+    projects: 'Ves-hi als projectes',
     metaTitle: 'Pàgina no trobada — Joan Mascarell',
   },
   common: {
@@ -66,10 +67,13 @@ export const ca: Messages = {
     newTab: "(s'obre en una pestanya nova)",
   },
   meta: {
-    title: 'Joan Mascarell',
-    description:
-      "Joan Mascarell — Dissenyador que també construeix el que dissenya. Casos d'estudi sobre sistemes de disseny, UX emocional en e-commerce i front-end.",
+    title: 'Joan Mascarell — Design Engineer',
+    description: 'El portfoli creatiu de Joan Mascarell, design engineer que dissenya i construeix interfícies web.',
     projectsTitle: 'Projectes — Joan Mascarell',
     aboutTitle: 'Sobre mi — Joan Mascarell',
+    projectsDescription:
+      'Casos d’estudi: avaluació del disseny emocional en l’e-commerce, un dashboard públic de dades de sequera i una marca i botiga pro bono.',
+    aboutDescription:
+      'Design engineer amb màster en desenvolupament frontend. Obert a rols junior i programes graduate a Barcelona i arreu d’Europa.',
   },
 }

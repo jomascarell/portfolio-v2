@@ -42,7 +42,11 @@ export default async function Footer() {
           sequence never disagrees with what the eye follows. That is the
           constraint worth holding if these are ever reordered again. */}
       <ChangelogText className={styles.changelog} />
-      <LanguageSwitcher className={styles.language} />
+      {/* The note belongs to the switcher: one cell on phones, two from 640. */}
+      <div className={styles.languageCell}>
+        <LanguageSwitcher className={styles.language} />
+        <p className={styles.languageNote}>{t.footer.languageNote}</p>
+      </div>
       <p className={styles.credits}>{t.footer.credits}</p>
     </footer>
   )

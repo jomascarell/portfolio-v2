@@ -11,38 +11,39 @@ export const es: Messages = {
     fallbackProject: 'Proyecto',
   },
   intro: {
-    tagline: 'Convirtiendo diseños en interfaces que resisten el paso del tiempo',
-    statusCurrent: 'Actualmente trabajo en proyectos en solitario',
+    tagline: 'Transformando diseños en interfaces estables',
+    statusCurrent: 'En busca de posiciones junior / graduate, Barcelona o remoto',
     statusPrevious: 'Experiencia previa, prácticas en ',
   },
   projects: {
-    'emotional-ux': { category: 'Probando diseño emocional', title: 'UX Emocional en e-commerce' },
-    'joies-laia': { category: 'Branding y e-commerce desarrollados pro bono.', title: 'Joies Laia' },
+    'emotional-ux': { category: 'Haciendo válido el diseño emocional', title: 'UX emocional en e-commerce' },
+    'joies-laia': { category: 'Branding y e-commerce desarrollados pro bono', title: 'Joies Laia' },
     embassaments: {
-      category: 'Convirtiendo datos sobre la sequía persistente en un panel de control público',
+      category: 'Transformando datos sobre la sequía persistente en un panel de control público',
       title: 'Embassaments',
     },
   },
   about: {
     bio: [
-      [['Hola, soy Joan'], [{ em: 'Diseñador' }, ', que se dedica a crear interfaces para la web.']],
-      [['Graduado de máster, especializado en diseño frontend, con una formación de grado en diseño digital.']],
+      [['Hola, soy Joan'], [{ em: 'Design Engineer' }, ', interesado en desarrollar interfaces para la web.']],
+      [['Máster en desarrollo frontend, con un grado en diseño digital.']],
       [
         [
-          'Hace poco realicé las prácticas del máster en ',
+          'Hace poco estuve de prácticas en ',
           OKISAM,
           ', una agencia de diseño orientada a soluciones digitales, donde desarrollé desde cero mi primer design system CSS basado en componentes.',
         ],
       ],
-      [['Fuera del diseño, puedes encontrarme en ', STRAVA, ' o en la cima de alguna montaña perdida.']],
+      [['Más allá del diseño, puedes encontrarme en ', STRAVA, ' o en la cima de alguna montaña perdida.']],
     ],
-    contactIntro: 'Si quieres ponerte en contacto conmigo, puedes escribirme al siguiente correo electrónico.',
+    contactIntro: 'Sin ataduras, puedes contactarme al siguiente correo electrónico.',
     mailLabel: 'Correo:',
   },
   footer: {
-    changelogLabel: 'Registro de cambios',
-    credits: 'Creado con NextJS, Claude, Figma.',
+    changelogLabel: 'Changelog',
+    credits: 'Desarrollado con NextJS, Claude, Figma.',
     languageLabel: 'Idioma',
+    languageNote: 'Los proyectos no están traducidos',
   },
   caseEnd: {
     label: 'Más proyectos',
@@ -66,10 +67,13 @@ export const es: Messages = {
     newTab: '(se abre en una pestaña nueva)',
   },
   meta: {
-    title: 'Joan Mascarell',
-    description:
-      'Joan Mascarell — Diseñador que también construye lo que diseña. Casos de estudio sobre sistemas de diseño, UX emocional en e-commerce y front-end.',
+    title: 'Joan Mascarell — Design Engineer',
+    description: 'El portfolio creativo de Joan Mascarell, design engineer que diseña y desarrolla interfaces web.',
     projectsTitle: 'Proyectos — Joan Mascarell',
     aboutTitle: 'Sobre mí — Joan Mascarell',
+    projectsDescription:
+      'Casos de estudio: evaluación del diseño emocional en e-commerce, un dashboard público de datos de sequía y una marca y tienda pro bono.',
+    aboutDescription:
+      'Design engineer con máster en desarrollo front-end. Con interés en puestos junior y programas graduate en Barcelona y el resto de Europa.',
   },
 }
