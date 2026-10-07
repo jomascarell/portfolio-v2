@@ -92,12 +92,31 @@
   text-align: center;
 }
 
+/* The language cell: the switcher with its note underneath (2026-10-07,
+   the user's "Projects are English only"). One cell on phones so the note
+   hugs the switcher instead of taking a full row gap; from 640 the wrapper
+   dissolves and each part takes its own grid cell. */
+.languageCell {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.languageNote {
+  margin: 0;
+  text-align: center;
+}
+
 /* The changelog is the only text in the footer that is not full white. Figma
    paints it white at 80%, which has no token — the neutral ramp carries no
    alpha steps, and --color-neutral-400 is a different colour rather than a
    dimmer white. Left as the literal so it reads as deliberately outside the
    system, the same call Phase 5 made. */
-.changelog {
+.changelog,
+.languageNote {
   color: var(--color-neutral-400);
 }
 
@@ -127,10 +146,21 @@
     text-align: right;
   }
 
+  .languageCell {
+    display: contents;
+  }
+
   .language {
     grid-column: 1 / span 2;
     grid-row: 1;
     justify-content: flex-start;
+  }
+
+  /* Row 2 under the switcher, which is empty at md and lg. */
+  .languageNote {
+    grid-column: 1 / span 4;
+    grid-row: 2;
+    text-align: left;
   }
 }
 
@@ -160,6 +190,10 @@
   .language {
     grid-column: 3 / span 3;
     grid-row: 1;
+  }
+
+  .languageNote {
+    grid-column: 3 / span 4;
   }
 
   .credits {

@@ -31,8 +31,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const { locale, t } = await getI18n()
   return {
     title: t.meta.aboutTitle,
+    description: t.meta.aboutDescription,
     alternates: languageAlternates('/about'),
-    ...shareMetadata({ locale, path: '/about', title: t.meta.aboutTitle, description: t.meta.description }),
+    ...shareMetadata({ locale, path: '/about', title: t.meta.aboutTitle, description: t.meta.aboutDescription }),
   }
 }
 

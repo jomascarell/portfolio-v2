@@ -87,6 +87,8 @@
   letter-spacing: var(--letter-spacing-normal);
   color: var(--color-text-secondary);
   text-align: center;
+  /* Phones wrap it; balance keeps a lone word off the last line. */
+  text-wrap: balance;
 }
 
 .status {
@@ -94,6 +96,11 @@
   flex-direction: column;
   gap: var(--space-xs);
   align-items: center;
+  /* The 2026-10-07 status line wraps on phones; a wrapped line has to
+     centre its text as well as its box. Balanced like the tagline
+     (inherited by both lines). */
+  text-align: center;
+  text-wrap: balance;
 }
 
 /* The footer button sits 64px under the status lines in Figma 1509:1957: the

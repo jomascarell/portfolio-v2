@@ -34,6 +34,8 @@ export type Messages = {
     changelogLabel: string
     credits: string
     languageLabel: string
+    /* The line under the switcher: case studies stay in English. */
+    languageNote: string
   }
   /* The links at the end of a case page. The "Projects" label is nav.projects. */
   caseEnd: {
@@ -71,5 +73,8 @@ export type Messages = {
     description: string
     projectsTitle: string
     aboutTitle: string
+    /* Meta and share descriptions of /projects and /about. */
+    projectsDescription: string
+    aboutDescription: string
   }
 }

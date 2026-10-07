@@ -14,7 +14,7 @@ export const en: Messages = {
   },
   intro: {
     tagline: 'Translating design into interfaces that hold up.',
-    statusCurrent: 'Currently working in solo projects',
+    statusCurrent: 'Open to junior / graduate roles, Barcelona or remote',
     statusPrevious: 'Previously interned ',
   },
   projects: {
@@ -24,7 +24,7 @@ export const en: Messages = {
   },
   about: {
     bio: [
-      [["Hi, I'm Joan."], [{ em: 'Designer' }, ', crafting UI for the web.']],
+      [["Hi, I'm Joan."], [{ em: 'Design Engineer' }, ', crafting UI for the web.']],
       [["Master's grad, specializing in frontend design, building on a bachelor's in digital design."]],
       [
         [
@@ -42,6 +42,7 @@ export const en: Messages = {
     changelogLabel: 'Changelog',
     credits: 'Built with NextJS, Claude, Figma.',
     languageLabel: 'Language',
+    languageNote: 'Projects are English only',
   },
   caseEnd: {
     label: 'More projects',
@@ -65,10 +66,14 @@ export const en: Messages = {
     newTab: '(opens in a new tab)',
   },
   meta: {
-    title: 'Joan Mascarell',
+    title: 'Joan Mascarell — Design Engineer',
     description:
-      'Joan Mascarell — Designer who also builds what he designs. Case studies on design systems, emotional UX in e-commerce, and front-end work.',
+      'The creative portfolio of Joan Mascarell, a design engineer designing and producing web interfaces.',
     projectsTitle: 'Projects — Joan Mascarell',
     aboutTitle: 'About — Joan Mascarell',
+    projectsDescription:
+      'Case studies: testing emotional design in e-commerce, a public drought-data dashboard, and a pro bono brand and store.',
+    aboutDescription:
+      'Design engineer with a master’s in front-end design. Open to junior and graduate roles in Barcelona and across Europe.',
   },
 }
