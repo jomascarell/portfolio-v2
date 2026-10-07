@@ -321,7 +321,9 @@ export const emotionalUx: CaseStudy = {
           slot: 'Product card, three states',
           caption:
             'The card’s states as designed. Products without sizes go straight to the cart.',
-          inset: true,
+          /* No `inset`: the 2026-10-06 re-export carries its own
+             surface/subtle ground, so it sits in the grey frame like the
+             screenshots instead of a grey box floating on white. */
           image: {
             src: statesImage,
             phone: statesPhone,
