@@ -16,18 +16,19 @@
 </g>
 <path d="M19 8.05469C20.0743 8.05469 20.9453 8.92569 20.9453 10C20.9453 11.0743 20.0743 11.9453 19 11.9453C17.9257 11.9453 17.0547 11.0743 17.0547 10C17.0547 8.92569 17.9257 8.05469 19 8.05469Z" stroke="#58A942" stroke-width="0.109563"/>
 </g>
-<rect x="9.98047" y="34.9717" width="85.4635" height="5.61439" rx="2" fill="#DCDCDC"/>
+<rect x="9.98047" y="34.9717" width="85.4635" height="5.61439" rx="2.80719" fill="#DCDCDC"/>
 <rect x="9.98047" y="51.0018" width="90.1046" height="68.3541" rx="2" fill="#DCDCDC"/>
 <rect x="107.57" y="51.0018" width="90.1046" height="68.3541" rx="2" fill="#DCDCDC"/>
-<rect x="202.666" y="51.0018" width="91.3522" height="110.017" rx="2" fill="#6BC0F4" fill-opacity="0.4"/>
-<rect x="210.666" y="60.9829" width="32.7506" height="3.11911" rx="1" fill="#1996DE"/>
-<rect x="210.666" y="69.0927" width="12.4764" height="12.4764" rx="1" fill="#1996DE" fill-opacity="0.4"/>
-<rect x="225.639" y="73.7714" width="31.1911" height="3.11911" rx="1" fill="#1996DE" fill-opacity="0.8"/>
-<rect x="210.666" y="86.5597" width="12.4764" height="12.4764" rx="1" fill="#1996DE" fill-opacity="0.4"/>
-<rect x="225.639" y="91.2384" width="31.1911" height="3.11911" rx="1" fill="#1996DE" fill-opacity="0.8"/>
-<rect x="210.666" y="104.027" width="12.4764" height="12.4764" rx="1" fill="#1996DE" fill-opacity="0.4"/>
-<rect x="225.639" y="108.705" width="31.1911" height="3.11911" rx="1" fill="#1996DE" fill-opacity="0.8"/>
-<rect x="210.916" y="121.744" width="74.8522" height="11.9764" rx="0.75" stroke="#1996DE" stroke-width="0.5"/>
+<rect x="202.966" y="51.3018" width="90.7522" height="109.417" rx="1.7" fill="#6BC0F4" fill-opacity="0.4"/>
+<rect x="202.966" y="51.3018" width="90.7522" height="109.417" rx="1.7" stroke="#1996DE" stroke-width="0.6" stroke-dasharray="6 4"/>
+<rect x="211.266" y="61.583" width="32.7506" height="3.11911" rx="1" fill="#1996DE"/>
+<rect x="211.266" y="69.6926" width="12.4764" height="12.4764" rx="1" fill="#1996DE" fill-opacity="0.4"/>
+<rect x="226.238" y="74.3713" width="31.1911" height="3.11911" rx="1" fill="#1996DE" fill-opacity="0.8"/>
+<rect x="211.266" y="87.1597" width="12.4764" height="12.4764" rx="1" fill="#1996DE" fill-opacity="0.4"/>
+<rect x="226.238" y="91.8384" width="31.1911" height="3.11911" rx="1" fill="#1996DE" fill-opacity="0.8"/>
+<rect x="211.266" y="104.627" width="12.4764" height="12.4764" rx="1" fill="#1996DE" fill-opacity="0.4"/>
+<rect x="226.238" y="109.305" width="31.1911" height="3.11911" rx="1" fill="#1996DE" fill-opacity="0.8"/>
+<rect x="211.516" y="122.344" width="73.6522" height="11.9764" rx="2.75" stroke="#1996DE" stroke-width="0.5"/>
 </g>
 <defs>
 <filter id="filter0_di_1456_1222" x="0" y="0" width="304" height="20.1096" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
