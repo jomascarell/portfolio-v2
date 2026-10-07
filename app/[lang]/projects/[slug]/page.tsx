@@ -23,6 +23,7 @@ import {
 } from '@/lib/case-studies'
 import { getI18n } from '@/lib/i18n/server'
 import { getProject, projects, type Project } from '@/lib/projects'
+import { shareMetadata } from '@/lib/share-metadata'
 import { keepHyphens } from '@/lib/typography'
 import styles from './page.module.css'
 
@@ -71,18 +72,16 @@ export async function generateMetadata(
   props: PageProps<'/[lang]/projects/[slug]'>,
 ): Promise<Metadata> {
   const { slug } = await props.params
+  const { locale } = await getI18n()
   const project = getProject(slug)
   const title = `${project?.title ?? 'Project'} — Joan Mascarell`
   const description = project?.description
-  const images = project?.shareImage
-    ? [{ url: project.shareImage.src, width: 1200, height: 630, alt: project.shareImage.alt }]
-    : undefined
 
-  /* PER-PROJECT DESCRIPTION AND SHARE CARD (2026-10-01). Paths are relative;
-     the root layout's metadataBase makes them absolute. A project without a
-     description keeps the site-wide one; without a share card, Twitter falls
-     back to the small `summary` card rather than a large card with no
-     image. The share card is a static PNG per project in /public, not the
+  /* PER-PROJECT DESCRIPTION AND SHARE CARD (2026-10-01, cards added
+     2026-10-07). A project without a description keeps the site-wide one;
+     without a share card it falls back to the site card (lib/share-metadata).
+     og:url carries the language prefix, so a /ca link previews as /ca.
+     The share card is a static image per project in /public, not the
      opengraph-image file convention: a static opengraph-image.png in this
      [slug] folder would give every project the same image, and a generated
      opengraph-image.tsx would redraw the Figma frame in JSX instead of
@@ -94,19 +93,14 @@ export async function generateMetadata(
     title,
     ...(description ? { description } : {}),
     ...(robots ? { robots } : {}),
-    openGraph: {
+    ...shareMetadata({
+      locale,
+      path: `/projects/${slug}`,
       title,
-      ...(description ? { description } : {}),
-      url: `/projects/${slug}`,
+      description,
+      image: project?.shareImage,
       type: 'article',
-      ...(images ? { images } : {}),
-    },
-    twitter: {
-      card: images ? 'summary_large_image' : 'summary',
-      title,
-      ...(description ? { description } : {}),
-      ...(images ? { images } : {}),
-    },
+    }),
   }
 }
 

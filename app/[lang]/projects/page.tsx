@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { languageAlternates } from '@/lib/i18n/alternates'
 import { getI18n } from '@/lib/i18n/server'
+import { shareMetadata } from '@/lib/share-metadata'
 import PanelLayout from '@/components/PanelLayout/PanelLayout'
 import ProjectList from '@/components/ProjectList/ProjectList'
 
@@ -32,8 +33,12 @@ import ProjectList from '@/components/ProjectList/ProjectList'
  * is a routing change we can still make — going the other way is not. */
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { t } = await getI18n()
-  return { title: t.meta.projectsTitle, alternates: languageAlternates('/projects') }
+  const { locale, t } = await getI18n()
+  return {
+    title: t.meta.projectsTitle,
+    alternates: languageAlternates('/projects'),
+    ...shareMetadata({ locale, path: '/projects', title: t.meta.projectsTitle, description: t.meta.description }),
+  }
 }
 
 export default function ProjectsPage() {
