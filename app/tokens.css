@@ -117,9 +117,9 @@
   --font-size-sm: 14px; /* UI labels, meta rows, captions. */
   --font-size-md: 16px; /* Secondary body copy. (was 16, "text-base") */
   --font-size-lg: 18px; /* Default body copy. (was 18, "text") */
-  --font-size-xl: 22px; /* Section headings at md+ on case pages. NEW 2026-09-23. */
+  --font-size-xl: 22px; /* heading/h3-lg: the carousel slide title from 1024, the 404 headline. NEW 2026-09-23. */
   --font-size-2xl: 28px; /* Card and section titles. (was 28.48; was --font-size-xl) */
-  --font-size-3xl: 36px; /* Case-study titles at md+. NEW 2026-09-23. */
+  --font-size-3xl: 36px; /* Defined, not currently used. NEW 2026-09-23 for a case-title step at md+ that was dropped (user, 2026-10-07). */
   --font-size-4xl: 46px; /* Page headings and the wordmark. (was 46.08; was --font-size-2xl) */
   --font-size-5xl: 74px; /* Display. Defined, not currently used. (was 74.56; was --font-size-3xl) */
   --font-size-6xl: 120px; /* Display XL. Defined, not currently used. (was 120.64; was --font-size-4xl) */
@@ -171,7 +171,7 @@
   --line-height-xl: 30px;
 
   --line-height-2xl: 36px; /* with font-size-2xl (28px) — 1.29 (was --line-height-xl) */
-  --line-height-3xl: 44px; /* with font-size-3xl (36px) — 1.22. Case-study title at md+. NEW 2026-09-23. */
+  --line-height-3xl: 44px; /* with font-size-3xl (36px) — 1.22. Defined, not currently used. NEW 2026-09-23. */
   --line-height-4xl: 52px; /* with font-size-4xl (46px) — 1.13 (was --line-height-2xl) */
   --line-height-5xl: 80px; /* with font-size-5xl (74px) — 1.08 (was --line-height-3xl) */
   --line-height-6xl: 128px; /* with font-size-6xl (120px) — 1.07 (was --line-height-4xl) */
