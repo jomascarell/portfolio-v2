@@ -54,7 +54,8 @@ export type Project = {
      has no case study. */
   cover?: { photo: string; logo: string }
   /* A 1200x630 share card for og:image and twitter:image, a path under
-     /public. None exists yet: the Figma file has no share frames. */
+     /public. Exported by the user 2026-10-07; without one the page uses the
+     site card (lib/share-metadata). */
   shareImage?: { src: string; alt: string }
 }
 
@@ -68,6 +69,10 @@ export const projects: Project[] = [
     description:
       'I redesigned an e-commerce template for trust: usability scores didn’t move, but trust did, and every participant preferred it.',
     icon: '/case-studies/emotional-ux/icon.svg',
+    shareImage: {
+      src: '/case-studies/emotional-ux/share.png',
+      alt: 'The redesigned store’s checkout flow: product page, cart drawer, cart footer and Stripe’s hosted checkout, ending in a webhook that confirms the order and the success page.',
+    },
   },
   {
     slug: 'joies-laia',
@@ -75,6 +80,13 @@ export const projects: Project[] = [
     title: 'Joies Laia',
     year: 2026,
     icon: '/case-studies/joies-laia/icon.svg',
+    /* A JPG, unlike the other two: the photo ran to 774 KB as PNG. The
+       export's blurred edges were transparent; they are filled with the
+       photo itself, enlarged, rather than with white. */
+    shareImage: {
+      src: '/case-studies/joies-laia/share.jpg',
+      alt: 'The Laia script logo over a blurred photo of a woman wearing the brand’s rings and a key pendant.',
+    },
     cover: {
       photo: '/case-studies/joies-laia/cover.jpg',
       /* The PNG that the original logo.svg only wrapped as base64 (313 KB,
@@ -94,6 +106,10 @@ export const projects: Project[] = [
     year: 2024,
     description: 'Turning drought data into a public dashboard',
     icon: '/case-studies/embassaments/icon.svg',
+    shareImage: {
+      src: '/case-studies/embassaments/share.png',
+      alt: 'An early hand-drawn sketch for the dashboard: nine reservoirs, their total capacity, absolute level and stored volume, and the first chart ideas.',
+    },
   },
 ]
 

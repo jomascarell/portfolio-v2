@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { languageAlternates } from '@/lib/i18n/alternates'
 import { getI18n } from '@/lib/i18n/server'
+import { shareMetadata } from '@/lib/share-metadata'
 import AboutBio from '@/components/AboutBio/AboutBio'
 import PanelLayout from '@/components/PanelLayout/PanelLayout'
 
@@ -27,8 +28,12 @@ import PanelLayout from '@/components/PanelLayout/PanelLayout'
  * "Designer" is an <em> and not a third link. */
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { t } = await getI18n()
-  return { title: t.meta.aboutTitle, alternates: languageAlternates('/about') }
+  const { locale, t } = await getI18n()
+  return {
+    title: t.meta.aboutTitle,
+    alternates: languageAlternates('/about'),
+    ...shareMetadata({ locale, path: '/about', title: t.meta.aboutTitle, description: t.meta.description }),
+  }
 }
 
 export default function AboutPage() {

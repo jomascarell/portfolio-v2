@@ -7,6 +7,7 @@ import SkipLink, { SKIP_TARGET_ID } from '@/components/SkipLink/SkipLink'
 import { LOCALES, isLocale } from '@/lib/i18n/config'
 import { LocaleProvider } from '@/lib/i18n/client'
 import { MESSAGES } from '@/lib/i18n/messages'
+import { shareMetadata } from '@/lib/share-metadata'
 import { siteUrl } from '@/lib/site-config'
 import shell from './layout.module.css'
 import '../tokens.css'
@@ -100,7 +101,8 @@ export function generateStaticParams() {
 
 export async function generateMetadata(props: LayoutProps<'/[lang]'>): Promise<Metadata> {
   const { lang } = await props.params
-  const t = MESSAGES[isLocale(lang) ? lang : 'en']
+  const locale = isLocale(lang) ? lang : 'en'
+  const t = MESSAGES[locale]
   return {
     /* Turns the relative og:image and og:url paths the project pages return
        into absolute URLs, which link previews require. See lib/site-config. */
@@ -108,6 +110,9 @@ export async function generateMetadata(props: LayoutProps<'/[lang]'>): Promise<M
     // The retired build shipped "Jan Mascarell" here for months. It is Joan.
     title: t.meta.title,
     description: t.meta.description,
+    /* The landing's share card, and the fallback for any page that sets no
+       share metadata of its own (the 404, the gallery). */
+    ...shareMetadata({ locale, path: '/', title: t.meta.title, description: t.meta.description }),
   }
 }
 
