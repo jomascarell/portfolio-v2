@@ -185,7 +185,9 @@ export const embassaments: CaseStudy = {
              2026-10-01), added 2026-10-06. The user's zoomed-in capture of
              the ACA page (ShareX brave_Sd7N3Hmknh.png, 2026-10-07, 530x441,
              already cropped to the drop and its labels; replaced a 1x crop
-             upscaled 2x that read soft). Shown alone: a before/after pair
+             upscaled 2x that read soft). Its white made transparent by
+             colour-to-alpha against white (exact on white, so the glass and
+             shadows survive) to sit in the grey frame. Shown alone: a before/after pair
              with the stacked bar was built and cut by the user, because the
              bar already appears in the current-status view and the cover. */
           kind: 'media',
