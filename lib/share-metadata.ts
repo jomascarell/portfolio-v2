@@ -17,7 +17,7 @@ export type ShareImage = { src: string; alt: string }
    the English tagline and status lines. */
 export const siteShareImage: ShareImage = {
   src: '/share.png',
-  alt: 'Joan Mascarell’s landing page: the joan wordmark, the tagline “Translating design into interfaces that hold up.” and links to Projects and About.',
+  alt: 'Joan Mascarell’s landing page: the joan wordmark, the tagline “Translating design into interfaces that hold up.”, the status “Open to junior / graduate roles, Barcelona or remote” and links to Projects and About.',
 }
 
 const OG_LOCALE: Record<Locale, string> = { en: 'en_GB', ca: 'ca_ES', es: 'es_ES' }
