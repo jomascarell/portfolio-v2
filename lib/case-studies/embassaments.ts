@@ -182,9 +182,10 @@ export const embassaments: CaseStudy = {
         },
         {
           /* The hiring review's "strongest decision has no picture" (audit
-             2026-10-01), added 2026-10-06. The user's 1x screenshot of the
-             ACA page (files-need/brave_RvxtStTcFf.png) cropped to the drop
-             and its labels, upscaled 2x. Shown alone: a before/after pair
+             2026-10-01), added 2026-10-06. The user's zoomed-in capture of
+             the ACA page (ShareX brave_Sd7N3Hmknh.png, 2026-10-07, 530x441,
+             already cropped to the drop and its labels; replaced a 1x crop
+             upscaled 2x that read soft). Shown alone: a before/after pair
              with the stacked bar was built and cut by the user, because the
              bar already appears in the current-status view and the cover. */
           kind: 'media',
@@ -193,7 +194,7 @@ export const embassaments: CaseStudy = {
             'The ACA’s drop, the visual the first sketches mirrored. How full it looks depends on its area, which the eye doesn’t read linearly.',
           image: {
             src: acaDrop,
-            alt: 'The Agència Catalana de l’Aigua’s drop: a glossy circle filled about three quarters with blue, labelled “Reserves totals 100%” at the top and “Reserves actuals conques internes 74.61%” beside the water line.',
+            alt: 'The Agència Catalana de l’Aigua’s drop: a glossy circle filled about three quarters with blue, labelled “Reserves totals 100%” at the top and “Reserves actuals conques internes 74.94%” beside the water line.',
           },
         },
         {
