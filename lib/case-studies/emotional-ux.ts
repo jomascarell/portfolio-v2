@@ -43,7 +43,7 @@ export const emotionalUx: CaseStudy = {
   slug: 'emotional-ux',
   title: 'Emotional UX in e-commerce',
   standfirst:
-    "I took a production e-commerce template, audited what it leaves out, designed a small component system to put it back and tested it against a live store built on the same template. Usability didn't move. Trust and purchase intent did, and every participant preferred the redesigned store. The gap between those two results is the point of this project.",
+    "I took a production e-commerce template, audited what it leaves out, designed a small component system to put it back and tested it against a live store built on the same template. Usability scores were nearly identical. Perceived trust moved in the redesign's favour, and all six participants preferred it. The gap between those results is the point of this project.",
   liveUrl: 'https://github.com/jomascarell/yournextstore',
   liveLabel: 'Repository',
   /* The project icon, Norman's three levels as nested arches, the same file
@@ -468,12 +468,42 @@ export const emotionalUx: CaseStudy = {
             columns: ['1st store evaluated', '2nd store evaluated'],
             columnsShort: ['1st store', '2nd store'],
             series: [
-              { label: 'P4 · A', detail: 'saw the live store first', from: 97.5, to: 100 },
-              { label: 'P2 · B', detail: 'saw the redesign first', from: 82.5, to: 95 },
-              { label: 'P3 · B', detail: 'saw the redesign first', from: 70, to: 95 },
-              { label: 'P6 · A', detail: 'saw the live store first', from: 65, to: 90 },
-              { label: 'P1 · B', detail: 'saw the redesign first', from: 57.5, to: 90 },
-              { label: 'P5 · A', detail: 'saw the live store first', from: 55, to: 100 },
+              {
+                label: 'P4 · A',
+                detail: 'saw the live store first',
+                from: 97.5,
+                to: 100,
+              },
+              {
+                label: 'P2 · B',
+                detail: 'saw the redesign first',
+                from: 82.5,
+                to: 95,
+              },
+              {
+                label: 'P3 · B',
+                detail: 'saw the redesign first',
+                from: 70,
+                to: 95,
+              },
+              {
+                label: 'P6 · A',
+                detail: 'saw the live store first',
+                from: 65,
+                to: 90,
+              },
+              {
+                label: 'P1 · B',
+                detail: 'saw the redesign first',
+                from: 57.5,
+                to: 90,
+              },
+              {
+                label: 'P5 · A',
+                detail: 'saw the live store first',
+                from: 55,
+                to: 100,
+              },
             ],
             mean: { from: 71.25, to: 95 },
           },
