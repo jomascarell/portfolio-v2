@@ -68,7 +68,7 @@ export const es: Messages = {
   },
   meta: {
     title: 'Joan Mascarell — Design Engineer',
-    description: 'El portfolio creativo de Joan Mascarell, design engineer que diseña y desarrolla interfaces web.',
+    description: 'El portfolio creativo de Joan Mascarell, design engineer que estudia y desarrolla interfaces web.',
     projectsTitle: 'Proyectos — Joan Mascarell',
     aboutTitle: 'Sobre mí — Joan Mascarell',
     projectsDescription:

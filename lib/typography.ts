@@ -13,3 +13,12 @@
 export function keepHyphens(text: string): string {
   return text.replace(/(\p{L})-(?=\p{L})/gu, '$1-⁠')
 }
+
+/* Keeps "a / b" pairs on one line ("junior / graduate" in the status line
+ * was splitting after the slash on phones in Spanish, leaving "junior /" at
+ * the end of a line). The spaces either side of the slash become no-break
+ * spaces (U+00A0), so the pair wraps as one unit. Display text only, like
+ * keepHyphens. */
+export function keepSlashPairs(text: string): string {
+  return text.replace(/(\S) \/ (?=\S)/g, '$1 / ')
+}
