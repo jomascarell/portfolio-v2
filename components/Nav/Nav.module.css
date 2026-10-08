@@ -296,6 +296,34 @@
   transition: color var(--duration-fast) var(--ease-standard);
 }
 
+/* The case page's home crumb: the house alone (2026-10-08, see
+   buildItems). The word is clipped rather than removed, so it stays the
+   link's accessible name, and taken out of flow, so it drops out of the
+   flex gap and the slot's measured width. Not the global .visually-hidden:
+   on /projects the same span is visible, so it needs a class it can lose. */
+.homeCompact .homeLabel {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* The case page's Projects crumb below 375: the folder alone, the word kept
+   as its accessible name (2026-10-08, see buildItems). 374 because the
+   longest pill only crowds the gutter under 375. */
+@media (max-width: 374px) {
+  .projectsLabel {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
 /* Outside the hover query, so a keyboard reaches it on a touch device too —
    the precedent Phase 5 settled on SocialIcons. */
 .home:focus-visible {
