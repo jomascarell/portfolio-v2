@@ -36,7 +36,7 @@ export const ca: Messages = {
       ],
       [['Més enllà del disseny, pots trobar-me a ', STRAVA, " o al cim d'alguna muntanya perduda."]],
     ],
-    contactIntro: 'Em vols contactar? Escriu-me a la següent adreça electrònica.',
+    contactIntro: "Busqueu algú per a un rol de design engineer o UI? M'encantarà saber-ne més.",
     mailLabel: 'Correu:',
   },
   footer: {
