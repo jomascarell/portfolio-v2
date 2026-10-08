@@ -68,7 +68,7 @@ export const en: Messages = {
   meta: {
     title: 'Joan Mascarell — Design Engineer',
     description:
-      'The creative portfolio of Joan Mascarell, a design engineer designing and producing web interfaces.',
+      'The creative portfolio of Joan Mascarell, a design engineer studying and producing web interfaces.',
     projectsTitle: 'Projects — Joan Mascarell',
     aboutTitle: 'About — Joan Mascarell',
     projectsDescription:
