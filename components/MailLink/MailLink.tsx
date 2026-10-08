@@ -7,7 +7,7 @@ import styles from './MailLink.module.css'
  *
  * The "Mail:" prefix is a visible label, not part of the address, so it sits
  * outside the <a>. Putting it inside would make the link's accessible name
- * "Mail: jmjvilallonga@gmail.com", which reads wrong in a screen reader's link
+ * "E-mail: hello@joanmascarell.dev", which reads wrong in a screen reader's link
  * list — the link is the address.
  *
  * The component was renamed on the way over: in the retired build it was named
