@@ -20,7 +20,7 @@
 export const siteUrl = new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://joanmascarell.dev')
 
 export const siteConfig = {
-  contactEmail: 'jmjvilallonga@gmail.com',
+  contactEmail: 'hello@joanmascarell.dev',
 
   /* The footer's language control. It had no states in the design and shipped
      as the static string 'EN'; Figma gained a three-variant `language` set
