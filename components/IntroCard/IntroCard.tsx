@@ -3,6 +3,7 @@ import NewTabNote from '@/components/NewTabNote/NewTabNote'
 import Wordmark from '@/components/Wordmark/Wordmark'
 import { getI18n } from '@/lib/i18n/server'
 import { siteConfig } from '@/lib/site-config'
+import { keepSlashPairs } from '@/lib/typography'
 import styles from './IntroCard.module.css'
 
 /* The intro block's card. Figma: IntroCard, Breakpoint = lg | md | sm ×
@@ -96,7 +97,7 @@ export default async function IntroCard({
 
       {type === 'intro' && (
         <div className={styles.status} data-intro-step="status">
-          <p className={styles.current}>{t.intro.statusCurrent}</p>
+          <p className={styles.current}>{keepSlashPairs(t.intro.statusCurrent)}</p>
           <p className={styles.previous}>
             {t.intro.statusPrevious}
             {/* rel="noopener noreferrer" written out rather than relying on the
