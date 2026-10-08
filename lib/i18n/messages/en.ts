@@ -35,7 +35,7 @@ export const en: Messages = {
       ],
       [['Outside of design, you can find me on ', STRAVA, ', or on the peak of some random mountain.']],
     ],
-    contactIntro: 'Feel free to contact me, and send an e-mail to the following address.',
+    contactIntro: "Hiring for a design engineer or UI role? I'd love to hear about it.",
     mailLabel: 'E-mail:',
   },
   footer: {
