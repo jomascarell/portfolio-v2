@@ -43,7 +43,7 @@ export const emotionalUx: CaseStudy = {
   slug: 'emotional-ux',
   title: 'Emotional UX in e-commerce',
   standfirst:
-    'I took a production e-commerce template, audited what it leaves out, designed a small component system to put it back, and tested it against a live store built on the same template. Usability didn’t move. Trust and purchase intent did, and every participant preferred the redesigned store. The gap between those two results is the point of this project.',
+    "I took a production e-commerce template, audited what it leaves out, designed a small component system to put it back and tested it against a live store built on the same template. Usability didn't move. Trust and purchase intent did, and every participant preferred the redesigned store. The gap between those two results is the point of this project.",
   liveUrl: 'https://github.com/jomascarell/yournextstore',
   liveLabel: 'Repository',
   /* The project icon, Norman's three levels as nested arches, the same file
@@ -74,18 +74,18 @@ export const emotionalUx: CaseStudy = {
       width: 960,
       height: 960,
       label:
-        'The redesigned store, from home page to cart: the hero, “Formas, texturas y plata”, then “Comprar ahora” into the catalog, scrolled down to the Sardines earrings and the Estrella ring. Hovering each card swaps its photo; adding Estrella opens a size dialog, size 12 is chosen, and the cart drawer opens with the ring, “Te faltan $5.00 para conseguir el envío gratis”, and secure payment, 30-day returns and 24/48h delivery above the pay button.',
+        'The redesigned store, from home page to cart: the hero, “Formas, texturas y plata”, then “Comprar ahora” into the catalog, scrolled down to the Sardines earrings and the Estrella ring. Hovering each card swaps its photo; adding Estrella opens a size dialog, size 12 is chosen and the cart drawer opens with the ring, “Te faltan $5.00 para conseguir el envío gratis” and secure payment, 30-day returns and 24/48h delivery above the pay button.',
     },
   },
   meta: [
-    { label: 'Role', value: 'Research, design & front-end — solo' },
+    { label: 'Role', value: 'Research, design & frontend — solo' },
     {
       label: 'Tools',
       value:
         'Next.js 16 · React 19 · TypeScript · Tailwind v4 · shadcn/UI · Stripe',
     },
     { label: 'Timeframe', value: 'Apr–Jul 2026' },
-    { label: 'Context', value: 'Master’s thesis (UNIR)' },
+    { label: 'Context', value: "Master's thesis (UNIR)" },
   ],
   sections: [
     {
@@ -99,13 +99,13 @@ export const emotionalUx: CaseStudy = {
         },
         {
           kind: 'prose',
-          text: 'But a template optimises what it can measure. Load time, bundle size and task completion all have a number. Whether a first-time visitor believes the shop will actually ship their order doesn’t. So it goes unbuilt, in this template and in every store that ships on top of it unchanged.',
+          text: "But a template optimises what it can measure. Load time, bundle size and task completion all have a number. Whether a first-time visitor believes the shop will actually ship their order doesn't. So it goes unbuilt, in this template and in every store that ships on top of it unchanged.",
         },
         {
           /* Pull quote (2026-10-05, user): the section's closing line, moved
              out of the prose rather than repeated. */
           kind: 'quote',
-          text: 'That isn’t a styling problem. In e-commerce, trust is what turns a visit into a payment.',
+          text: "That isn't a styling problem. In e-commerce, trust is what turns a visit into a payment.",
         },
       ],
     },
@@ -116,7 +116,7 @@ export const emotionalUx: CaseStudy = {
       blocks: [
         {
           kind: 'prose',
-          text: 'I ran a heuristic evaluation across Nielsen’s ten heuristics and mapped each finding to Norman’s three levels of emotional design: visceral (first impression), behavioural (ease of use) and reflective (trust and meaning).',
+          text: "I ran a heuristic evaluation across Nielsen's ten heuristics and mapped each finding to Norman's three levels of emotional design: visceral (first impression), behavioural (ease of use) and reflective (trust and meaning).",
         },
         {
           kind: 'prose',
@@ -168,7 +168,7 @@ export const emotionalUx: CaseStudy = {
     {
       id: 'reframe',
       label: 'The reframe',
-      heading: 'Emotional design isn’t decoration',
+      heading: "Emotional design isn't decoration",
       blocks: [
         {
           kind: 'prose',
@@ -176,14 +176,14 @@ export const emotionalUx: CaseStudy = {
         },
         {
           kind: 'media',
-          slot: 'Norman’s three levels as a simple diagram',
+          slot: "Norman's three levels as a simple diagram",
           caption:
-            'Norman’s three levels. Every severity-3 finding in the audit sat on the reflective one: no returns policy, no visible contact, thin checkout validation.',
+            "Norman's three levels. Every severity-3 finding in the audit sat on the reflective one: no returns policy, no visible contact, thin checkout validation.",
           inset: true,
           image: {
             src: normanImage,
             phone: normanPhone,
-            alt: 'Diagram: designer, product, user. The user’s response splits into Norman’s three levels — visceral (perceptually induced), behavioural (expectation induced) and reflective (intellectually induced) reactions.',
+            alt: "Diagram: designer, product, user. The user's response splits into Norman's three levels — visceral (perceptually induced), behavioural (expectation induced) and reflective (intellectually induced) reactions.",
           },
         },
         {
@@ -231,14 +231,14 @@ export const emotionalUx: CaseStudy = {
         },
         {
           kind: 'prose',
-          text: 'One constraint shaped everything: no libraries beyond the template’s own stack. If emotional design needs extra weight to exist, it’s the first thing to get cut. Every component extends existing shadcn/Radix primitives instead.',
+          text: "One constraint shaped everything: no libraries beyond the template's own stack. If emotional design needs extra weight to exist, it's the first thing to get cut. Every component extends existing shadcn/Radix primitives instead.",
         },
         {
           kind: 'list',
           items: [
             [
               { b: 'Trust bar' },
-              ': a Server Component. It’s visible on every page and ships zero JavaScript to the browser.',
+              ": a Server Component. It's visible on every page and ships zero JavaScript to the browser.",
             ],
             [
               { b: 'Product card' },
@@ -246,7 +246,7 @@ export const emotionalUx: CaseStudy = {
             ],
             [
               { b: 'Cart drawer' },
-              ': built on React 19’s useOptimistic. Quantities update before the network responds and roll back automatically if the request fails. Removing an item, whether by the bin icon or by going below one, always asks first.',
+              ": built on React 19's useOptimistic. Quantities update before the network responds and roll back automatically if the request fails. Removing an item, whether by the bin icon or by going below one, always asks first.",
             ],
           ],
         },
@@ -262,13 +262,13 @@ export const emotionalUx: CaseStudy = {
         {
           kind: 'pair',
           caption:
-            'The drawer’s footer, before and after: payment, returns and delivery now sit beside checkout.',
+            "The drawer's footer, before and after: payment, returns and delivery now sit beside checkout.",
           items: [
             {
               label: 'Before · YNS template',
               image: {
                 src: drawerBefore,
-                alt: 'The template’s cart drawer footer: a discount-code field with an Apply button, the subtotal of $61.50, “Shipping calculated at checkout”, a Checkout button and “Continue Shopping”.',
+                alt: "The template's cart drawer footer: a discount-code field with an Apply button, the subtotal of $61.50, “Shipping calculated at checkout”, a Checkout button and “Continue Shopping”.",
               },
             },
             {
@@ -301,7 +301,7 @@ export const emotionalUx: CaseStudy = {
             width: 776,
             height: 776,
             label:
-              'On a phone, “Añadir a la cesta” adds the $40 Roba pin. The cart drawer opens: “Te faltan $10.00 para conseguir el envío gratis” above a progress bar at four fifths. Pressing plus makes it two, the bar fills, and the message turns green: “¡Enhorabuena! Tienes envío gratuito.”',
+              'On a phone, “Añadir a la cesta” adds the $40 Roba pin. The cart drawer opens: “Te faltan $10.00 para conseguir el envío gratis” above a progress bar at four fifths. Pressing plus makes it two, the bar fills and the message turns green: “¡Enhorabuena! Tienes envío gratuito.”',
           },
         },
       ],
@@ -314,13 +314,13 @@ export const emotionalUx: CaseStudy = {
       blocks: [
         {
           kind: 'prose',
-          text: 'The prototype showed sizes directly on hover. Once built, it crowded the overlay and fought the link wrapping the card. I replaced it with a dialog that confirms automatically once every option is chosen. It’s one tap for single-attribute products, and it’s properly accessible.',
+          text: "The prototype showed sizes directly on hover. Once built, it crowded the overlay and fought the link wrapping the card. I replaced it with a dialog that confirms automatically once every option is chosen. It's one tap for single-attribute products, and it's properly accessible.",
         },
         {
           kind: 'media',
           slot: 'Product card, three states',
           caption:
-            'The card’s states as designed. Products without sizes go straight to the cart.',
+            "The card's states as designed. Products without sizes go straight to the cart.",
           /* No `inset`: the 2026-10-06 re-export carries its own
              surface/subtle ground, so it sits in the grey frame like the
              screenshots instead of a grey box floating on white. */
@@ -358,11 +358,11 @@ export const emotionalUx: CaseStudy = {
     {
       id: 'wall',
       label: 'Wall',
-      heading: 'The most anxious moment is the one the store doesn’t own',
+      heading: "The most anxious moment is the one the store doesn't own",
       blocks: [
         {
           kind: 'prose',
-          text: 'The fourth component never shipped as designed. Payment is fully delegated to Stripe’s hosted checkout, and the store’s code can’t touch that page.',
+          text: "The fourth component never shipped as designed. Payment is fully delegated to Stripe's hosted checkout, and the store's code can't touch that page.",
         },
         {
           kind: 'prose',
@@ -377,12 +377,12 @@ export const emotionalUx: CaseStudy = {
           image: {
             src: checkoutImage,
             phone: checkoutPhone,
-            alt: 'Flow diagram: product page (add to cart), cart drawer (review items), cart footer (checkout button), then Stripe’s hosted checkout — the one step drawn in a different colour. Stripe returns to a success page and confirms the order by webhook.',
+            alt: "Flow diagram: product page (add to cart), cart drawer (review items), cart footer (checkout button), then Stripe's hosted checkout — the one step drawn in a different colour. Stripe returns to a success page and confirms the order by webhook.",
           },
         },
         {
           kind: 'prose',
-          text: 'Emotional design can walk someone up to the payment step. It can’t go through it. Every delegated surface (payments, auth, embedded widgets) is a place where nobody is designing for trust.',
+          text: "Emotional design can walk someone up to the payment step. It can't go through it. Every delegated surface (payments, auth, embedded widgets) is a place where nobody is designing for trust.",
         },
       ],
     },
@@ -399,7 +399,7 @@ export const emotionalUx: CaseStudy = {
              a Next.js template they meant to reuse; Joies Laia joined as a
              client who needed to go digital and build the brand. */
           kind: 'prose',
-          text: 'The redesign wears Joies Laia’s brand. I built the system on a template I meant to reuse after the thesis, and Joies Laia, a jewellery brand that needed to go digital, became its first client.',
+          text: "The redesign wears Joies Laia's brand. I built the system on a template I meant to reuse after the thesis, and Joies Laia, a jewellery brand that needed to go digital, became its first client.",
         },
         {
           kind: 'prose',
@@ -445,7 +445,7 @@ export const emotionalUx: CaseStudy = {
         {
           kind: 'prose',
           text: [
-            'None of the differences reached statistical significance; with six people, they couldn’t. And one effect dwarfed everything else. Whichever store participants saw second scored about ',
+            "None of the differences reached statistical significance; with six people, they couldn't. And one effect dwarfed everything else. Whichever store participants saw second scored about ",
             { b: '24 SUS points higher' },
             ', for all six of them. The difference between versions was under one point.',
           ],
@@ -461,7 +461,7 @@ export const emotionalUx: CaseStudy = {
           chart: {
             type: 'slope',
             label:
-              'Order effect on the SUS score: each participant’s first evaluation against their second',
+              "Order effect on the SUS score: each participant's first evaluation against their second",
             axisLabel: 'SUS score (0–100)',
             domain: [50, 100],
             step: 10,
@@ -484,26 +484,26 @@ export const emotionalUx: CaseStudy = {
         },
         {
           kind: 'prose',
-          text: 'There’s also one failure worth owning. One participant removed an item from the cart and believed the task was done when it wasn’t. The confirmation dialog still isn’t clear enough.',
+          text: "There's also one failure worth owning. One participant removed an item from the cart and believed the task was done when it wasn't. The confirmation dialog still isn't clear enough.",
         },
       ],
     },
     {
       id: 'what-it-means',
       label: 'What it means',
-      heading: 'Measure only efficiency, and you’ll only build efficiency',
+      heading: "Measure only efficiency, and you'll only build efficiency",
       blocks: [
         {
           kind: 'prose',
-          text: 'This study didn’t prove that emotional design sells more. It showed something more uncomfortable: the standard instrument rated both stores as equivalent, and every participant chose the same one.',
+          text: "This study didn't prove that emotional design sells more. It showed something more uncomfortable: the standard instrument rated both stores as equivalent, and every participant chose the same one.",
         },
         {
           kind: 'prose',
-          text: 'What made the difference lived on the reflective level. That’s trust, and it’s exactly the dimension a usability score, a performance audit or a component library doesn’t register.',
+          text: "What made the difference lived on the reflective level. That's trust, and it's exactly the dimension a usability score, a performance audit or a component library doesn't register.",
         },
         {
           kind: 'prose',
-          text: 'That’s the blind spot. It isn’t that teams don’t care how people feel. It’s that the tools we use to decide whether something is done can’t see it.',
+          text: "That's the blind spot. It isn't that teams don't care how people feel. It's that the tools we use to decide whether something is done can't see it.",
         },
         {
           /* Pull quote (2026-10-05, user), split out of the paragraph above.
@@ -519,13 +519,13 @@ export const emotionalUx: CaseStudy = {
       label: 'Next',
       navLabel: null,
       tone: 'callout',
-      heading: 'What I’d change',
+      heading: "What I'd change",
       blocks: [
         {
           kind: 'list',
           items: [
             [
-              { b: 'Remove the order effect' },
+              { b: 'Control for the order effect' },
               '. Replicate with a larger, pre-registered sample, or switch to a between-subjects design.',
             ],
             [

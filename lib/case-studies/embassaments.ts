@@ -29,7 +29,7 @@ export const embassaments: CaseStudy = {
   slug: 'embassaments',
   title: 'Embassaments (Reservoirs)',
   standfirst:
-    'Catalonia was deep in drought, and I couldn’t get a straight answer. So I built the tool I wished existed — a live, public dashboard tracking every internal-basin reservoir in the territory.',
+    "Catalonia was deep in drought, and I couldn't get a straight answer. So I built the tool I wished existed — a live, public dashboard tracking every internal-basin reservoir in the territory.",
   liveUrl: 'https://tfgdissenydigital.observablehq.cloud/embassaments-cat/',
   liveLabel: 'View the live dashboard',
   /* The project icon, the same file the project list uses (2026-10-01). Inset
@@ -57,29 +57,29 @@ export const embassaments: CaseStudy = {
       width: 1200,
       height: 676,
       label:
-        'A tour of the dashboard: its landing page, headed “Estat dels Embassaments a Catalunya” — the state of Catalonia’s reservoirs — then the current-status, search, monitor and seasonal-trends views.',
+        "A tour of the dashboard: its landing page, headed “Estat dels Embassaments a Catalunya” — the state of Catalonia's reservoirs — then the current-status, search, monitor and seasonal-trends views.",
     },
   },
   meta: [
-    { label: 'Role', value: 'Research, design, and development — solo' },
+    { label: 'Role', value: 'Research, design & development — solo' },
     { label: 'Tools', value: 'D3.js · Observable Framework' },
     { label: 'Timeframe', value: 'Mar–Aug 2024' },
-    { label: 'Context', value: 'Bachelor’s thesis' },
+    { label: 'Context', value: "Bachelor's thesis" },
   ],
   sections: [
     {
       id: 'problem',
       label: 'Problem',
       heading:
-        'Checking a reservoir’s water level shouldn’t take four browser tabs',
+        "Checking a reservoir's water level shouldn't take four browser tabs",
       blocks: [
         {
           kind: 'prose',
-          text: 'The ACA — Catalonia’s water agency — gives you one number and a shrug. To actually understand what’s happening — how a reservoir compares to last year, whether a storm moved the needle, which basins are quietly running dry — you had to dig through multiple agencies, cross-reference PDFs, and stitch it together yourself.',
+          text: "The ACA — Catalonia's water agency — gives you one number and a shrug. To actually understand what's happening — how a reservoir compares to last year, whether a storm moved the needle, which basins are quietly running dry — you had to dig through multiple agencies, cross-reference PDFs and stitch it together yourself.",
         },
         {
           kind: 'quote',
-          text: 'I’d been doing exactly that, out of my own concern about the drought. At some point I stopped treating it as a research problem and started treating it as a design problem: the data existed and was reliable, it just had no home.',
+          text: "I'd been doing exactly that, out of my own concern about the drought. At some point I stopped treating it as a research problem and started treating it as a design problem: the data existed and was reliable, it just had no home.",
         },
       ],
     },
@@ -90,7 +90,7 @@ export const embassaments: CaseStudy = {
       blocks: [
         {
           kind: 'prose',
-          text: 'I built a live, publicly accessible dashboard covering all nine of Catalonia’s internal-basin reservoirs, refreshed daily from the region’s official open data API — over 20 years of history per site.',
+          text: "I built a live, publicly accessible dashboard covering all nine of Catalonia's internal-basin reservoirs, refreshed daily from the region's official open data API — over 20 years of history per site.",
         },
         {
           kind: 'prose',
@@ -108,7 +108,7 @@ export const embassaments: CaseStudy = {
         },
         {
           kind: 'prose',
-          text: 'The shipped product is a real, five-section app, not a single infographic: a home that frames the problem in plain language and explains how the water system works, a live current-status view, a historical search tool, a near-real-time monitor, and a seasonal-trends breakdown.',
+          text: 'The shipped product is a real, five-section app, not a single infographic: a home that frames the problem in plain language and explains how the water system works, a live current-status view, a historical search tool, a near-real-time monitor and a seasonal-trends breakdown.',
         },
       ],
     },
@@ -135,7 +135,7 @@ export const embassaments: CaseStudy = {
             ],
             [
               'Edward Tufte',
-              'His principles of comparison and integrated evidence shaped how the dashboard combines text, chart, and data into one readable narrative instead of a chart wall.',
+              'His principles of comparison and integrated evidence shaped how the dashboard combines text, chart and data into one readable narrative instead of a chart wall.',
             ],
             [
               'Nathan Yau',
@@ -173,12 +173,12 @@ export const embassaments: CaseStudy = {
           caption: 'First bash of sketches.',
           image: {
             src: sketchImage,
-            alt: 'Hand-drawn Procreate sketch planning the views: a capacity bar, each reservoir’s share of stored volume, a line chart over time, a column chart per reservoir, a heatmap and a bubble map.',
+            alt: "Hand-drawn Procreate sketch planning the views: a capacity bar, each reservoir's share of stored volume, a line chart over time, a column chart per reservoir, a heatmap and a bubble map.",
           },
         },
         {
           kind: 'prose',
-          text: 'The first instinct was to mirror the ACA tool’s “drop” visual — reservoirs shown as filled circles. It was dropped: human perception of area isn’t linear, so a circle at 25% capacity can visually read as more or less full than it actually is.',
+          text: "The first instinct was to mirror the ACA tool's “drop” visual — reservoirs shown as filled circles. It was dropped: human perception of area isn't linear, so a circle at 25% capacity can visually read as more or less full than it actually is.",
         },
         {
           /* The hiring review's "strongest decision has no picture" (audit
@@ -193,10 +193,10 @@ export const embassaments: CaseStudy = {
           kind: 'media',
           slot: 'The ACA drop the design moved away from',
           caption:
-            'The ACA’s drop, the visual the first sketches mirrored. How full it looks depends on its area, which the eye doesn’t read linearly.',
+            "The ACA's drop, the visual the first sketches mirrored. How full it looks depends on its area, which the eye doesn't read linearly.",
           image: {
             src: acaDrop,
-            alt: 'The Agència Catalana de l’Aigua’s drop: a glossy circle filled about three quarters with blue, labelled “Reserves totals 100%” at the top and “Reserves actuals conques internes 74.94%” beside the water line.',
+            alt: "The Agència Catalana de l'Aigua's drop: a glossy circle filled about three quarters with blue, labelled “Reserves totals 100%” at the top and “Reserves actuals conques internes 74.94%” beside the water line.",
           },
         },
         {
@@ -249,6 +249,8 @@ export const embassaments: CaseStudy = {
             },
             poster: '/case-studies/embassaments/search-tool-loop-poster.jpg',
             name: 'the search tool clip',
+            label:
+              "The historical search tool: all nine reservoirs' fill levels from 2003 to today on one chart, the date range set by hand, then one reservoir at a time (Sant Ponç, then Darnius Boadella) against its own average, ending on a heatmap of every reservoir by year.",
             width: 1200,
             height: 676,
           },
@@ -266,7 +268,7 @@ export const embassaments: CaseStudy = {
       blocks: [
         {
           kind: 'prose',
-          text: 'The “correct” path was rebuilding every chart natively inside Framework’s own structure — reorganizing the data, the code, and the inputs of each visualization from scratch, which demanded time and depth across several languages I was still learning.',
+          text: "The “correct” path was rebuilding every chart natively inside Framework's own structure — reorganizing the data, the code and the inputs of each visualization from scratch, which demanded time and depth across several languages I was still learning.",
         },
         {
           kind: 'prose',
@@ -311,7 +313,7 @@ export const embassaments: CaseStudy = {
           kind: 'media',
           slot: 'Live dashboard embed',
           caption:
-            'Live. Each reservoir’s monthly reserve level, where the April–June peak repeats every year.',
+            "Live. Each reservoir's monthly reserve level, where the April–June peak repeats every year.",
           dashboard: {
             /* Unpinned, so an edit to the published notebook (the English
                translation, for one) shows up here with no rebuild. It
@@ -334,19 +336,19 @@ export const embassaments: CaseStudy = {
     {
       id: 'reflection',
       label: 'Reflection',
-      heading: 'A “simple” idea can still demand a real engineering process.',
+      heading: 'A “simple” idea can still demand a real engineering process',
       blocks: [
         {
           kind: 'prose',
-          text: 'I expected to make some static charts. I ended up owning research, information architecture, visual design, and a full JavaScript/D3.js build — alone — and had to keep re-scoping as the real complexity revealed itself.',
+          text: 'I expected to make some static charts. I ended up owning research, information architecture, visual design and a full JavaScript/D3.js build — alone — and had to keep re-scoping as the real complexity revealed itself.',
         },
         {
           kind: 'prose',
-          text: 'Built for the thesis and never promoted beyond it, so there’s no traffic to report. But it’s still live, still refreshing daily, and anyone who wants to check a reservoir today can.',
+          text: "Built for the thesis and never promoted beyond it, so there's no traffic to report. But it's still live, still refreshing daily, and anyone who wants to check a reservoir today can.",
         },
         {
           kind: 'prose',
-          text: 'What I carried forward: the decisions that mattered most weren’t design decisions or engineering decisions. They were the places where the two collided — an area-based visual that looked better and read worse, a native rebuild that was correct and would never have shipped. Choosing well there takes both sides of the table, and that’s the work I want more of.',
+          text: "What I carried forward: the decisions that mattered most weren't design decisions or engineering decisions. They were the places where the two collided — an area-based visual that looked better and read worse, a native rebuild that was correct and would never have shipped. Choosing well there takes both sides of the table, and that's the work I want more of.",
         },
       ],
     },

@@ -36,13 +36,13 @@ export const en: Messages = {
       [['Outside of design, you can find me on ', STRAVA, ', or on the peak of some random mountain.']],
     ],
     contactIntro: 'Feel free to contact me, and send an e-mail to the following address.',
-    mailLabel: 'Mail:',
+    mailLabel: 'E-mail:',
   },
   footer: {
     changelogLabel: 'Changelog',
-    credits: 'Built with NextJS, Claude, Figma.',
+    credits: 'Built with Next.js, Claude, Figma.',
     languageLabel: 'Language',
-    languageNote: 'Projects are English only',
+    languageNote: 'Projects are English only.',
   },
   caseEnd: {
     label: 'More projects',
@@ -55,7 +55,7 @@ export const en: Messages = {
   },
   notFound: {
     lost: 'Are you lost?',
-    lostAside: 'Aren’t we all lost a little bit?',
+    lostAside: "Aren't we all lost a little bit?",
     tiltLabel: 'Tilt the 404',
     home: 'Back to the start',
     projects: 'See all projects',
@@ -74,6 +74,6 @@ export const en: Messages = {
     projectsDescription:
       'Case studies: testing emotional design in e-commerce, a public drought-data dashboard, and a pro bono brand and store.',
     aboutDescription:
-      'Design engineer with a master’s in front-end design. Open to junior and graduate roles in Barcelona and across Europe.',
+      "Design engineer with a master's in frontend design. Open to junior and graduate roles in Barcelona and across Europe.",
   },
 }

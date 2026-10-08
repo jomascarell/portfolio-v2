@@ -11,7 +11,7 @@ export const es: Messages = {
     fallbackProject: 'Proyecto',
   },
   intro: {
-    tagline: 'Transformando diseños en interfaces estables',
+    tagline: 'Transformando diseños en interfaces estables.',
     statusCurrent: 'En busca de posiciones junior / graduate, Barcelona o remoto',
     statusPrevious: 'Experiencia previa, prácticas en ',
   },
@@ -19,7 +19,7 @@ export const es: Messages = {
     'emotional-ux': { category: 'Haciendo válido el diseño emocional', title: 'UX emocional en e-commerce' },
     'joies-laia': { category: 'Branding y e-commerce desarrollados pro bono', title: 'Joies Laia' },
     embassaments: {
-      category: 'Transformando datos sobre la sequía persistente en un panel de control público',
+      category: 'Transformando datos sobre la sequía persistente en un dashboard público',
       title: 'Embassaments',
     },
   },
@@ -41,9 +41,9 @@ export const es: Messages = {
   },
   footer: {
     changelogLabel: 'Changelog',
-    credits: 'Desarrollado con NextJS, Claude, Figma.',
+    credits: 'Desarrollado con Next.js, Claude, Figma.',
     languageLabel: 'Idioma',
-    languageNote: 'Los proyectos no están traducidos',
+    languageNote: 'Los proyectos no están traducidos.',
   },
   caseEnd: {
     label: 'Más proyectos',
@@ -74,6 +74,6 @@ export const es: Messages = {
     projectsDescription:
       'Casos de estudio: evaluación del diseño emocional en e-commerce, un dashboard público de datos de sequía y una marca y tienda pro bono.',
     aboutDescription:
-      'Design engineer con máster en desarrollo front-end. Con interés en puestos junior y programas graduate en Barcelona y el resto de Europa.',
+      'Design engineer con máster en desarrollo frontend. Con interés en puestos junior y programas graduate en Barcelona y el resto de Europa.',
   },
 }

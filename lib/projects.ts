@@ -67,11 +67,11 @@ export const projects: Project[] = [
     navLabel: 'Emotional UX',
     year: 2026,
     description:
-      'I redesigned an e-commerce template for trust: usability scores didn’t move, but trust did, and every participant preferred it.',
+      "I redesigned an e-commerce template for trust: usability scores didn't move, but trust did, and every participant preferred it.",
     icon: '/case-studies/emotional-ux/icon.svg',
     shareImage: {
       src: '/case-studies/emotional-ux/share.png',
-      alt: 'The redesigned store’s checkout flow: product page, cart drawer, cart footer and Stripe’s hosted checkout, ending in a webhook that confirms the order and the success page.',
+      alt: "The redesigned store's checkout flow: product page, cart drawer, cart footer and Stripe's hosted checkout, ending in a webhook that confirms the order and the success page.",
     },
   },
   {
@@ -85,7 +85,7 @@ export const projects: Project[] = [
        photo itself, enlarged, rather than with white. */
     shareImage: {
       src: '/case-studies/joies-laia/share.jpg',
-      alt: 'The Laia script logo over a blurred photo of a woman wearing the brand’s rings and a key pendant.',
+      alt: "The Laia script logo over a blurred photo of a woman wearing the brand's rings and a key pendant.",
     },
     cover: {
       photo: '/case-studies/joies-laia/cover.jpg',
