@@ -11,7 +11,7 @@ export const ca: Messages = {
     fallbackProject: 'Projecte',
   },
   intro: {
-    tagline: 'Transformant dissenys en interfícies mantenibles',
+    tagline: 'Transformant dissenys en interfícies mantenibles.',
     statusCurrent: 'Cercant rols junior / graduate, Barcelona o en remot',
     statusPrevious: 'Experiència prèvia, pràctiques a ',
   },
@@ -19,7 +19,7 @@ export const ca: Messages = {
     'emotional-ux': { category: 'Posant a prova el disseny emocional', title: "UX emocional a l'e-commerce" },
     'joies-laia': { category: 'Brànding i e-commerce desenvolupats pro bono', title: 'Joies Laia' },
     embassaments: {
-      category: 'Convertint dades sobre la sequera persistent en un panell de control públic.',
+      category: 'Convertint dades sobre la sequera persistent en un dashboard públic',
       title: 'Embassaments',
     },
   },
@@ -41,9 +41,9 @@ export const ca: Messages = {
   },
   footer: {
     changelogLabel: 'Changelog',
-    credits: 'Desenvolupat amb NextJS, Claude, Figma.',
+    credits: 'Desenvolupat amb Next.js, Claude, Figma.',
     languageLabel: 'Idioma',
-    languageNote: 'Els projectes no estan traduïts',
+    languageNote: 'Els projectes no estan traduïts.',
   },
   caseEnd: {
     label: 'Més projectes',
@@ -55,10 +55,10 @@ export const ca: Messages = {
     note: 'Aquest projecte necessita un poc més de temps.',
   },
   notFound: {
-    lost: 'T’has perdut?',
+    lost: "T'has perdut?",
     lostAside: 'No estem tots una mica perduts?',
     tiltLabel: 'Inclina el 404',
-    home: 'Torna a l’inici',
+    home: "Torna a l'inici",
     projects: 'Ves-hi als projectes',
     metaTitle: 'Pàgina no trobada — Joan Mascarell',
   },
@@ -72,8 +72,8 @@ export const ca: Messages = {
     projectsTitle: 'Projectes — Joan Mascarell',
     aboutTitle: 'Sobre mi — Joan Mascarell',
     projectsDescription:
-      'Casos d’estudi: avaluació del disseny emocional en l’e-commerce, un dashboard públic de dades de sequera i una marca i botiga pro bono.',
+      "Casos d'estudi: avaluació del disseny emocional en l'e-commerce, un dashboard públic de dades de sequera i una marca i botiga pro bono.",
     aboutDescription:
-      'Design engineer amb màster en desenvolupament frontend. Obert a rols junior i programes graduate a Barcelona i arreu d’Europa.',
+      "Design engineer amb màster en desenvolupament frontend. Obert a rols junior i programes graduate a Barcelona i arreu d'Europa.",
   },
 }

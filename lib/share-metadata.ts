@@ -19,11 +19,11 @@ export type ShareImage = { src: string; alt: string }
 export const siteShareImages: Record<Locale, ShareImage> = {
   en: {
     src: '/share.png',
-    alt: 'Joan Mascarell’s landing page: the joan wordmark, the tagline “Translating design into interfaces that hold up.”, the status “Open to junior / graduate roles, Barcelona or remote” and links to Projects and About.',
+    alt: "Joan Mascarell's landing page: the joan wordmark, the tagline “Translating design into interfaces that hold up.”, the status “Open to junior / graduate roles, Barcelona or remote” and links to Projects and About.",
   },
   ca: {
     src: '/share-ca.png',
-    alt: 'La pàgina d’inici de Joan Mascarell: el logotip joan, el lema «Transformant dissenys en interfícies mantenibles», l’estat «Cercant rols junior / graduate, Barcelona o en remot» i enllaços a Projectes i Sobre mi.',
+    alt: "La pàgina d'inici de Joan Mascarell: el logotip joan, el lema «Transformant dissenys en interfícies mantenibles», l'estat «Cercant rols junior / graduate, Barcelona o en remot» i enllaços a Projectes i Sobre mi.",
   },
   es: {
     src: '/share-es.png',
