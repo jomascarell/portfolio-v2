@@ -4,6 +4,7 @@ import { type CSSProperties, type ReactNode, useLayoutEffect, useRef, useState }
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { IoMdArrowDropright } from 'react-icons/io'
+import { PiFolderSimple } from 'react-icons/pi'
 import { RiHomeLine } from 'react-icons/ri'
 import { getProject } from '@/lib/projects'
 import { localizeHref, splitLocale, type Locale } from '@/lib/i18n/config'
@@ -118,29 +119,64 @@ function buildItems(state: NavState, locale: Locale, t: Messages, label?: string
   }
 
   const current = label ?? t.nav[state as SectionState]
+  const detail = state === 'project-detail'
 
-  return [
+  /* THREE LEVELS ON A CASE PAGE (2026-10-08, from colleagues testing the
+     site): home › projects › <project>. The pill used to read Joan ›
+     <project>, so its only link went home and there was no one-tap way back
+     to the list. Spelled out it was too long (~349px at 360 against ~328
+     available), so the two parent crumbs are icons on a case page, at every
+     width (user's call): the house alone (its word kept as hidden text, so
+     the link still has a name), and PiFolderSimple beside the word Projects.
+     Below 375 the word goes too: the longest pill (ES Embassaments, 338px)
+     leaves 11px a side at 360 against the page's 16 gutter; at 375 it has 18.
+
+     `compact` is set on the home ITEM, not on the pill, so the outgoing and
+     incoming copies of the home slot measure differently and the slot
+     animates between them (see widthFor). */
+  const items: Item[] = [
     {
       key: 'home',
       node: (
         <span className={styles.crumb}>
-          <Link className={styles.home} href={localizeHref(locale, '/')}>
+          <Link
+            className={[styles.home, detail ? styles.homeCompact : ''].filter(Boolean).join(' ')}
+            href={localizeHref(locale, '/')}
+          >
             <RiHomeLine className={styles.houseIcon} aria-hidden="true" />
-            <span>{t.nav.home}</span>
+            <span className={styles.homeLabel}>{t.nav.home}</span>
           </Link>
           <CaretIcon />
         </span>
       ),
     },
-    {
-      key: `label:${current}`,
+  ]
+
+  if (detail) {
+    items.push({
+      key: 'crumb:projects',
       node: (
-        <span className={styles.current} aria-current="page">
-          {current}
+        <span className={styles.crumb}>
+          <Link className={styles.home} href={localizeHref(locale, '/projects')}>
+            <PiFolderSimple className={styles.houseIcon} aria-hidden="true" />
+            <span className={styles.projectsLabel}>{t.nav.projects}</span>
+          </Link>
+          <CaretIcon />
         </span>
       ),
-    },
-  ]
+    })
+  }
+
+  items.push({
+    key: `label:${current}`,
+    node: (
+      <span className={styles.current} aria-current="page">
+        {current}
+      </span>
+    ),
+  })
+
+  return items
 }
 
 function modeFor(state: NavState) {
@@ -213,14 +249,18 @@ function isHeld(pair: Pair) {
 
 /* The reference's own width table, kept in its shape rather than collapsed,
    because each row is a genuinely different case:
-     held        -> whatever it already is; never animates
+     held        -> old width until the flip, then new width. Usually the
+                    same number, so nothing moves; it differs when a held
+                    item changes shape in place (the compact home crumb, the
+                    Projects label gaining its caret, 2026-10-08), and then
+                    it animates like a swap, without the roll.
      both empty  -> 0
      appearing   -> 0 until the flip, then its measured width
      leaving     -> its measured width until the flip, then 0
      swapping    -> old width until the flip, then new width */
 function widthFor(pair: Pair, measured: Width | undefined, flipped: boolean) {
   const width = measured ?? { old: 0, new: 0 }
-  if (isHeld(pair)) return width.new || width.old
+  if (isHeld(pair)) return (flipped ? width.new : width.old) || width.new || width.old
   if (!pair.old && !pair.new) return 0
   if (!pair.old) return flipped ? width.new : 0
   if (!pair.new) return flipped ? 0 : width.old
